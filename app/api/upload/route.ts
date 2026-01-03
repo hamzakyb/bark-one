@@ -1,35 +1,37 @@
+import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
-import { put } from '@vercel/blob';
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
+    const body = (await request.json()) as HandleUploadBody;
+
     try {
-        const { base64, fileName, contentType } = await request.json();
-
-        if (!base64) {
-            return NextResponse.json({
-                success: false,
-                error: 'Görsel verisi eksik'
-            }, { status: 400 });
-        }
-
-        // Convert base64 to buffer
-        const base64Data = base64.split(',')[1] || base64;
-        const buffer = Buffer.from(base64Data, 'base64');
-
-        const blob = await put(fileName || 'image.webp', buffer, {
-            access: 'public',
-            contentType: contentType || 'image/webp',
+        const jsonResponse = await handleUpload({
+            body,
+            request,
+            onBeforeGenerateToken: async (
+                pathname,
+                /* clientPayload */
+            ) => {
+                // Burada yetkilendirme kontrolü yapabilirsiniz (örn: admin mi?)
+                // Şimdilik bark-one için herkese açık (admin panelinde olunduğu varsayılıyor)
+                return {
+                    allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+                    tokenPayload: JSON.stringify({
+                        // Ekstra veri göndermek isterseniz buraya ekleyebilirsiniz
+                    }),
+                };
+            },
+            onUploadCompleted: async ({ blob, tokenPayload }) => {
+                // Yükleme tamamlandığında yapılacak işlemler (opsiyonel)
+                console.log('Blob upload completed:', blob, tokenPayload);
+            },
         });
 
-        return NextResponse.json({
-            success: true,
-            url: blob.url,
-        });
-    } catch (error: any) {
-        console.error('API Upload error:', error);
-        return NextResponse.json({
-            success: false,
-            error: error.message || 'Görsel yüklenirken bir hata oluştu'
-        }, { status: 500 });
+        return NextResponse.json(jsonResponse);
+    } catch (error) {
+        return NextResponse.json(
+            { error: (error as Error).message },
+            { status: 400 },
+        );
     }
 }

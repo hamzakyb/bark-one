@@ -16,6 +16,8 @@ import {
     X,
     Home,
 } from 'lucide-react';
+import { upload } from '@vercel/blob/client';
+
 import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,14 +26,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-    });
-};
 
 
 type Feature = {
@@ -385,22 +379,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('homeHeroImage', previewUrl);
         try {
-            const base64 = await fileToBase64(file);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    base64,
-                    fileName: file.name,
-                    contentType: file.type,
-                }),
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
-            const result = await response.json();
 
-            if (result && result.success && result.url) {
-                updateSetting('homeHeroImage', result.url);
+            if (blob && blob.url) {
+                updateSetting('homeHeroImage', blob.url);
             } else {
-                alert(result?.error || 'Görsel yüklenemedi');
+                alert('Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Hero görseli yüklenirken hata oluştu:', error);
@@ -411,22 +398,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('aboutHeroImage', previewUrl);
         try {
-            const base64 = await fileToBase64(file);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    base64,
-                    fileName: file.name,
-                    contentType: file.type,
-                }),
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
-            const result = await response.json();
 
-            if (result && result.success && result.url) {
-                updateSetting('aboutHeroImage', result.url);
+            if (blob && blob.url) {
+                updateSetting('aboutHeroImage', blob.url);
             } else {
-                alert(result?.error || 'Görsel yüklenemedi');
+                alert('Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Hakkımızda hero görseli yüklenirken hata oluştu:', error);
@@ -437,22 +417,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateProductsSetting('productsHeroImage', previewUrl);
         try {
-            const base64 = await fileToBase64(file);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    base64,
-                    fileName: file.name,
-                    contentType: file.type,
-                }),
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
-            const result = await response.json();
 
-            if (result && result.success && result.url) {
-                updateProductsSetting('productsHeroImage', result.url);
+            if (blob && blob.url) {
+                updateProductsSetting('productsHeroImage', blob.url);
             } else {
-                alert(result?.error || 'Görsel yüklenemedi');
+                alert('Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Ürünler sayfası görseli yüklenirken hata oluştu:', error);
@@ -463,22 +436,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateContactSetting('contactHeroImage', previewUrl);
         try {
-            const base64 = await fileToBase64(file);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    base64,
-                    fileName: file.name,
-                    contentType: file.type,
-                }),
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
-            const result = await response.json();
 
-            if (result && result.success && result.url) {
-                updateContactSetting('contactHeroImage', result.url);
+            if (blob && blob.url) {
+                updateContactSetting('contactHeroImage', blob.url);
             } else {
-                alert(result?.error || 'Görsel yüklenemedi');
+                alert('Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('İletişim sayfası görseli yüklenirken hata oluştu:', error);
@@ -489,22 +455,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSpotlightItem(index, 'image', previewUrl);
         try {
-            const base64 = await fileToBase64(file);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    base64,
-                    fileName: file.name,
-                    contentType: file.type,
-                }),
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
-            const result = await response.json();
 
-            if (result && result.success && result.url) {
-                updateSpotlightItem(index, 'image', result.url);
+            if (blob && blob.url) {
+                updateSpotlightItem(index, 'image', blob.url);
             } else {
-                alert(result?.error || 'Görsel yüklenemedi');
+                alert('Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Spotlight görseli yüklenirken hata oluştu:', error);
@@ -515,22 +474,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateGalleryItem(index, 'image', previewUrl);
         try {
-            const base64 = await fileToBase64(file);
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    base64,
-                    fileName: file.name,
-                    contentType: file.type,
-                }),
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
             });
-            const result = await response.json();
 
-            if (result && result.success && result.url) {
-                updateGalleryItem(index, 'image', result.url);
+            if (blob && blob.url) {
+                updateGalleryItem(index, 'image', blob.url);
             } else {
-                alert(result?.error || 'Görsel yüklenemedi');
+                alert('Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Galeri görseli yüklenirken hata oluştu:', error);
@@ -540,21 +492,14 @@ export default function AdminHomePage() {
     const handleGalleryBulkUpload = useCallback(async (files: FileList) => {
         try {
             const uploadPromises = Array.from(files).map(async (file) => {
-                const base64 = await fileToBase64(file);
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        base64,
-                        fileName: file.name,
-                        contentType: file.type,
-                    }),
+                const blob = await upload(file.name, file, {
+                    access: 'public',
+                    handleUploadUrl: '/api/upload',
                 });
-                const result = await response.json();
 
-                if (result && result.success && result.url) {
+                if (blob && blob.url) {
                     return {
-                        image: result.url,
+                        image: blob.url,
                         label: '',
                         tag: '',
                         span: 'md:col-span-1 md:row-span-1',

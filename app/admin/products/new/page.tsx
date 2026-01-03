@@ -3,15 +3,9 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, ArrowLeft, Plus, X, Images } from 'lucide-react';
+import { upload } from '@vercel/blob/client';
 
-const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-    });
-};
+
 
 export default function NewProductPage() {
     const router = useRouter();
@@ -60,32 +54,25 @@ export default function NewProductPage() {
                 // Optimistically add to UI
                 setFormData(prev => ({ ...prev, images: [...prev.images, localUrl] }));
 
-                const base64 = await fileToBase64(file);
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        base64,
-                        fileName: file.name,
-                        contentType: file.type,
-                    }),
+                const blob = await upload(file.name, file, {
+                    access: 'public',
+                    handleUploadUrl: '/api/upload',
                 });
-                const result = await response.json();
 
-                if (result && result.success && result.url) {
+                if (blob && blob.url) {
                     // Update the localUrl with the real one
                     setFormData(prev => ({
                         ...prev,
-                        images: prev.images.map(img => img === localUrl ? result.url : img)
+                        images: prev.images.map(img => img === localUrl ? blob.url : img)
                     }));
-                    return result.url;
+                    return blob.url;
                 }
                 // Revert on failure
                 setFormData(prev => ({
                     ...prev,
                     images: prev.images.filter(img => img !== localUrl)
                 }));
-                throw new Error(result?.error || 'Yükleme başarısız');
+                throw new Error('Yükleme başarısız');
             });
 
             await Promise.all(uploadTasks);
