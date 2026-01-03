@@ -38,7 +38,7 @@ async function getSiteSettings(): Promise<SiteSettingsData> {
 
 export const metadata: Metadata = {
   title: "barkOne - Modern Duvar Rafları",
-  description: "Minimalist ve modern duvar rafları.",
+  description: "Minimalist ve modern duvar rafları. v1.0.1",
 };
 
 export default async function RootLayout({
