@@ -2,26 +2,18 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
     Users, 
     Award, 
-    Target, 
     Heart, 
     Shield, 
-    Clock, 
-    MapPin, 
-    Mail, 
-    Phone, 
     ArrowRight,
-    CheckCircle,
     Lightbulb,
-    TrendingUp,
     Building,
     Handshake,
     Star
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

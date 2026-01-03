@@ -29,9 +29,11 @@ async function getSiteSettings(): Promise<SiteSettingsData> {
 }
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal"],
 });
 
 export const metadata: Metadata = {
@@ -47,10 +49,16 @@ export default async function RootLayout({
   const siteSettings = await getSiteSettings();
 
   return (
-    <html lang="tr">
-      <body
-        className={`${inter.variable} font-sans antialiased flex flex-col min-h-screen bg-white bg-opacity-50 backdrop-blur-sm`}
-      >
+    <html lang="tr" className={`${inter.variable} font-sans`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="antialiased flex flex-col min-h-screen bg-white bg-opacity-50 backdrop-blur-sm">
         <SiteSettingsProvider initialSettings={siteSettings}>
           <CartProvider>
             <ConditionalLayout>
