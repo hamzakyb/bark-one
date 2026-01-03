@@ -463,6 +463,40 @@ export default function AdminHomePage() {
         }
     }, [updateGalleryItem]);
 
+    const handleGalleryBulkUpload = useCallback(async (files: FileList) => {
+        try {
+            const uploadPromises = Array.from(files).map(async (file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                const result = await uploadImage(formData);
+                if (result.success && result.url) {
+                    return {
+                        image: result.url,
+                        label: '',
+                        tag: '',
+                        span: 'md:col-span-1 md:row-span-1',
+                    };
+                }
+                return null;
+            });
+
+            const results = await Promise.all(uploadPromises);
+            const validResults = results.filter((r): r is GalleryItem => r !== null);
+
+            if (validResults.length > 0) {
+                setSettings((prev) => {
+                    if (!prev) return prev;
+                    return {
+                        ...prev,
+                        galleryItems: [...(prev.galleryItems ?? []), ...validResults],
+                    };
+                });
+            }
+        } catch (error) {
+            console.error('Toplu galeri yüklemesi sırasında hata oluştu:', error);
+        }
+    }, []);
+
     const addTestimonial = useCallback(() => {
         setSettings((prev) => (prev ? { ...prev, testimonials: [...(prev.testimonials ?? []), { ...defaultTestimonial }] } : prev));
     }, []);
@@ -620,9 +654,9 @@ export default function AdminHomePage() {
                                                             />
                                                         </div>
                                                     )}
-                                                    <Button variant="outline" className="border-slate-300/70 bg-white/70">
-                                                        <ImageIcon size={16} className="mr-2" />
-                                                        Görsel Seç
+                                                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300/70 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:border-slate-400 hover:bg-white">
+                                                        <ImageIcon size={16} />
+                                                        <span>Görsel Seç</span>
                                                         <input
                                                             type="file"
                                                             accept="image/*"
@@ -634,7 +668,7 @@ export default function AdminHomePage() {
                                                                 e.target.value = '';
                                                             }}
                                                         />
-                                                    </Button>
+                                                    </label>
                                                     {settings?.homeHeroImage && (
                                                         <Button
                                                             type="button"
@@ -1786,7 +1820,7 @@ export default function AdminHomePage() {
                                                 />
                                             </div>
                                         )}
-                                        <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold-uppercase tracking-[0.35em] text-stone-600 transition-all hover-border-wood-400 hover-text-wood-500">
+                                        <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500">
                                             <ImageIcon size={16} />
                                             <span>Görsel Seç</span>
                                             <input
@@ -2820,11 +2854,27 @@ export default function AdminHomePage() {
                                             <h2 className="text-lg font-semibold text-anthracite">Galeri Alanı</h2>
                                             <p className="text-sm text-stone-500">Mekân görselleri için rozet, metin ve görsel kartlarını düzenleyin.</p>
                                         </div>
+                                        <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500">
+                                            <ImageIcon size={16} />
+                                            <span>Toplu Yükle</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                multiple
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const files = e.target.files;
+                                                    if (!files || files.length === 0) return;
+                                                    void handleGalleryBulkUpload(files);
+                                                    e.target.value = '';
+                                                }}
+                                            />
+                                        </label>
                                         <Button
                                             onClick={addGalleryItem}
                                             className="inline-flex items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500"
                                         >
-                                            <GalleryVerticalEnd size={16} /> Görsel
+                                            <Plus size={16} /> Boş Kart
                                         </Button>
                                     </div>
                                     <div className="grid gap-4 md:grid-cols-2">
@@ -2870,7 +2920,10 @@ export default function AdminHomePage() {
                                                 <p className="text-xs text-stone-400">Grid kartı</p>
                                             </div>
                                             <Button
-                                                onClick={() => removeGalleryItem(index)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    removeGalleryItem(index);
+                                                }}
                                                 className="rounded-full border border-red-200/70 bg-red-50/70 p-2 text-red-500 transition-all hover:bg-red-500 hover:text-white"
                                                 title="Kartı Sil"
                                             >
@@ -2889,7 +2942,7 @@ export default function AdminHomePage() {
                                                             />
                                                         </div>
                                                     )}
-                                                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500">
+                                                    <label onClick={(e) => e.stopPropagation()} className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500">
                                                         <ImageIcon size={16} />
                                                         <span>Yükle</span>
                                                         <input
@@ -2907,7 +2960,10 @@ export default function AdminHomePage() {
                                                     {item.image && (
                                                         <Button
                                                             type="button"
-                                                            onClick={() => updateGalleryItem(index, 'image', '')}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                updateGalleryItem(index, 'image', '');
+                                                            }}
                                                             className="inline-flex items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-400 transition-all hover-border-red-300 hover:text-red-500"
                                                         >
                                                             Kaldır
@@ -2921,6 +2977,7 @@ export default function AdminHomePage() {
                                                 <input
                                                     type="text"
                                                     value={item.span ?? ''}
+                                                    onClick={(e) => e.stopPropagation()}
                                                     onChange={(e) => updateGalleryItem(index, 'span', e.target.value)}
                                                     className="w-full rounded-2xl border border-stone-200/70 bg-white/85 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                                                     placeholder="md:col-span-2 md:row-span-2"
@@ -2931,6 +2988,7 @@ export default function AdminHomePage() {
                                                 <input
                                                     type="text"
                                                     value={item.label ?? ''}
+                                                    onClick={(e) => e.stopPropagation()}
                                                     onChange={(e) => updateGalleryItem(index, 'label', e.target.value)}
                                                     className="w-full rounded-2xl border border-stone-200/70 bg-white/85 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                                                     placeholder="Oturma Odası"
@@ -2941,6 +2999,7 @@ export default function AdminHomePage() {
                                                 <input
                                                     type="text"
                                                     value={item.tag ?? ''}
+                                                    onClick={(e) => e.stopPropagation()}
                                                     onChange={(e) => updateGalleryItem(index, 'tag', e.target.value)}
                                                     className="w-full rounded-2xl border border-stone-200/70 bg-white/85 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                                                     placeholder="Raf Ürünleri"
