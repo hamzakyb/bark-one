@@ -8,6 +8,7 @@ export interface IProduct extends Document {
     stock: number;
     images: string[];
     specifications: Record<string, any>;
+    category: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -21,6 +22,7 @@ const ProductSchema: Schema = new Schema(
         stock: { type: Number, required: true, default: 0 },
         images: [{ type: String }],
         specifications: { type: Schema.Types.Mixed, default: {} },
+        category: { type: String, default: 'signature' },
     },
     { timestamps: true }
 );

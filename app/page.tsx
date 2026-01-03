@@ -23,6 +23,8 @@ const MOCK_PRODUCTS = [
     images: ['https://images.unsplash.com/photo-1616628182504-9ff4b95d0c5c?q=80&w=1200&auto=format&fit=crop'],
     slug: 'atelier-01-raf-sistemi',
     description: 'Mat siyah metal detaylarla tamamlanan doğal ceviz raf sistemi.',
+    stock: 10,
+    specifications: {},
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -33,6 +35,8 @@ const MOCK_PRODUCTS = [
     images: ['https://images.unsplash.com/photo-1523419409543-0c1df022bdd1?q=80&w=1200&auto=format&fit=crop'],
     slug: 'ligne-02-yuzer-raf',
     description: 'İnce profil silüetiyle minimal yaşam alanları için tasarlandı.',
+    stock: 15,
+    specifications: {},
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -43,6 +47,8 @@ const MOCK_PRODUCTS = [
     images: ['https://images.unsplash.com/photo-1616627562221-877ed9b674b1?q=80&w=1200&auto=format&fit=crop'],
     slug: 'studio-03-moduler-raf',
     description: 'Modüler yapısıyla farklı kombinasyonlara uyum sağlayan raf sistemi.',
+    stock: 5,
+    specifications: {},
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -53,6 +59,8 @@ const MOCK_PRODUCTS = [
     images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop'],
     slug: 'atelier-04-konsol-raf',
     description: 'Şampanya tonlu metal aksanlar ve naturel meşe yüzeylerin buluşması.',
+    stock: 8,
+    specifications: {},
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -170,14 +178,19 @@ export default async function Home() {
   const [products, siteSettings] = await Promise.all([getProducts(), getSiteSettings()]);
 
   const heroSettings = {
-    badge: siteSettings?.homeHeroBadge,
-    title: siteSettings?.homeHeroTitle,
-    subtitle: siteSettings?.homeHeroSubtitle,
-    image: siteSettings?.homeHeroImage,
-    primaryCtaLabel: siteSettings?.homeHeroPrimaryCtaLabel,
-    primaryCtaUrl: siteSettings?.homeHeroPrimaryCtaUrl,
-    secondaryCtaLabel: siteSettings?.homeHeroSecondaryCtaLabel,
-    secondaryCtaUrl: siteSettings?.homeHeroSecondaryCtaUrl,
+    slides: [
+      {
+        id: 'home-hero',
+        badge: siteSettings?.homeHeroBadge,
+        title: siteSettings?.homeHeroTitle,
+        subtitle: siteSettings?.homeHeroSubtitle,
+        image: siteSettings?.homeHeroImage,
+        primaryCtaLabel: siteSettings?.homeHeroPrimaryCtaLabel,
+        primaryCtaUrl: siteSettings?.homeHeroPrimaryCtaUrl,
+        secondaryCtaLabel: siteSettings?.homeHeroSecondaryCtaLabel,
+        secondaryCtaUrl: siteSettings?.homeHeroSecondaryCtaUrl,
+      },
+    ],
   };
 
   const featureSettings = {

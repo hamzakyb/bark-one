@@ -248,10 +248,6 @@ const SiteSettingsSchema = new mongoose.Schema({
         type: String,
         default: '+90 555 123 45 67',
     },
-    contactAddress: {
-        type: String,
-        default: 'İstanbul, Türkiye',
-    },
 
     // Company Info
     companyName: {
@@ -377,10 +373,6 @@ const SiteSettingsSchema = new mongoose.Schema({
     contactEmailSecondary: {
         type: String,
         default: 'destek@barkone.com',
-    },
-    contactPhone: {
-        type: String,
-        default: '+90 555 123 45 67',
     },
     contactPhoneHours: {
         type: String,

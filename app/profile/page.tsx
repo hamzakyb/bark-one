@@ -74,6 +74,7 @@ export default function ProfilePage() {
     });
     const [user, setUser] = useState<MeResponse['data'] | null>(null);
     const [orders, setOrders] = useState<UserOrder[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const load = async () => {

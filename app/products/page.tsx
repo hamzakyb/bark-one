@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { 
-  Search, 
-  Grid, 
-  List, 
-  ShoppingCart, 
-  Heart, 
+import {
+  Search,
+  Grid,
+  List,
+  ShoppingCart,
+  Heart,
   SlidersHorizontal,
   Eye
 } from 'lucide-react';
@@ -20,14 +20,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { 
+import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -62,7 +62,7 @@ const categories = [
   { id: 'studio', name: 'Studio Modüler' },
 ];
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
@@ -93,14 +93,14 @@ export default function ProductsPage() {
         setLoading(false);
       }
     };
-    
+
     loadProducts();
   }, []);
 
   // Filter products
   useEffect(() => {
     const filterProducts = () => {
-      let filtered = products;
+      let filtered = [...products];
 
       // Search filter
       if (searchTerm) {
@@ -116,7 +116,7 @@ export default function ProductsPage() {
       }
 
       // Price filter
-      filtered = filtered.filter(product => 
+      filtered = filtered.filter(product =>
         product.price >= priceRange[0] && product.price <= priceRange[1]
       );
 
@@ -143,7 +143,7 @@ export default function ProductsPage() {
 
       setFilteredProducts(filtered);
     };
-    
+
     filterProducts();
   }, [products, searchTerm, selectedCategory, sortBy, priceRange, inStockOnly]);
 
@@ -247,8 +247,8 @@ export default function ProductsPage() {
               </div>
 
               {/* Clear Filters Button */}
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full"
                 onClick={() => {
                   setSearchTerm('');
@@ -276,7 +276,7 @@ export default function ProductsPage() {
                 className="pl-10"
               />
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-[180px]">
@@ -350,8 +350,8 @@ export default function ProductsPage() {
                               onCheckedChange={() => setSelectedCategory(category.id)}
                               className="shrink-0 h-4 w-4"
                             />
-                            <Label 
-                              htmlFor={`mobile-${category.id}`} 
+                            <Label
+                              htmlFor={`mobile-${category.id}`}
                               className="text-xs font-medium text-slate-700 cursor-pointer flex-1"
                             >
                               {category.name}
@@ -400,8 +400,8 @@ export default function ProductsPage() {
 
                     {/* Action Buttons */}
                     <div className="space-y-3 pt-6">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         className="w-full h-10 text-xs font-medium"
                         onClick={() => {
                           setSearchTerm('');
@@ -413,12 +413,12 @@ export default function ProductsPage() {
                         Filtreleri Temizle
                       </Button>
                       <SheetClose asChild>
-                      <Button 
-                        className="w-full h-10 text-xs font-medium bg-slate-900 hover:bg-slate-800"
-                      >
-                        Filtreleri Uygula
-                      </Button>
-                    </SheetClose>
+                        <Button
+                          className="w-full h-10 text-xs font-medium bg-slate-900 hover:bg-slate-800"
+                        >
+                          Filtreleri Uygula
+                        </Button>
+                      </SheetClose>
                     </div>
                   </div>
                 </SheetContent>
@@ -426,7 +426,7 @@ export default function ProductsPage() {
             </div>
           </div>
 
-      {/* Active Filters */}
+          {/* Active Filters */}
           {(searchTerm || selectedCategory !== 'all' || inStockOnly) && (
             <div className="mb-6 flex flex-wrap gap-2">
               {searchTerm && (
@@ -484,8 +484,8 @@ export default function ProductsPage() {
               </Button>
             </div>
           ) : (
-            <div className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6' 
+            <div className={viewMode === 'grid'
+              ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
               : 'space-y-4'
             }>
               {filteredProducts.map((product) => (
@@ -631,5 +631,19 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="container px-4 pt-24 pb-8 mx-auto">
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }

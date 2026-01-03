@@ -68,16 +68,16 @@ export default function ContactPage() {
 
         try {
             contactSchema.parse(formData);
-            
+
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
+
             setIsSent(true);
             setFormData({ name: '', surname: '', email: '', message: '' });
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const fieldErrors: Partial<ContactForm> = {};
-                error.errors.forEach(err => {
+                error.issues.forEach(err => {
                     if (err.path[0]) {
                         fieldErrors[err.path[0] as keyof ContactForm] = err.message;
                     }
@@ -116,7 +116,7 @@ export default function ContactPage() {
                             <Badge className="w-fit px-4 py-2 text-sm font-semibold bg-slate-100 text-slate-700 border-slate-200">
                                 {settings.contactHeroBadge}
                             </Badge>
-                            
+
                             <div className="space-y-4">
                                 <h1 className="text-4xl lg:text-6xl font-bold bg-linear-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
                                     {settings.contactHeroTitle}
@@ -125,7 +125,7 @@ export default function ContactPage() {
                                     {settings.contactHeroSubtitle}
                                 </p>
                             </div>
-                            
+
                             <p className="text-slate-600 leading-relaxed max-w-2xl">
                                 {settings.contactHeroDescription}
                             </p>

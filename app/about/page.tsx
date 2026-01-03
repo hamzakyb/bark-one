@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { 
-    Users, 
-    Award, 
-    Heart, 
-    Shield, 
+import {
+    Users,
+    Award,
+    Heart,
+    Shield,
     ArrowRight,
     Lightbulb,
     Building,
@@ -45,8 +45,8 @@ interface AboutSettings {
     aboutHeroImage: string;
     aboutStats: Array<{
         icon: React.ComponentType<{ className?: string }>;
-        value: string;
-        label: string;
+        title: string;
+        description: string;
     }>;
     aboutValues: Array<{
         icon: React.ComponentType<{ className?: string }>;
@@ -150,14 +150,14 @@ export default function AboutPage() {
     const [isMounted, setIsMounted] = useState<boolean>(false);
     const [pageSettings, setPageSettings] = useState<AboutSettings>({
         ...DEFAULT_SETTINGS,
-        ...settings,
-        aboutTeamTitle: settings?.aboutTeamTitle || DEFAULT_SETTINGS.aboutTeamTitle,
-        aboutTeamDescription: settings?.aboutTeamDescription || DEFAULT_SETTINGS.aboutTeamDescription
+        ...(settings as any),
+        aboutTeamTitle: (settings?.aboutTeamTitle as string) || DEFAULT_SETTINGS.aboutTeamTitle,
+        aboutTeamDescription: (settings?.aboutTeamDescription as string) || DEFAULT_SETTINGS.aboutTeamDescription
     });
 
     useEffect(() => {
         setIsMounted(true);
-        
+
         const loadSettings = async () => {
             try {
                 const response = await fetch('/api/settings');
@@ -192,7 +192,7 @@ export default function AboutPage() {
                             <Badge className="w-fit px-4 py-2 text-sm font-semibold bg-slate-100 text-slate-700 border-slate-200">
                                 {pageSettings.aboutHeroBadge}
                             </Badge>
-                            
+
                             <div className="space-y-4">
                                 <h1 className="text-4xl lg:text-6xl font-bold bg-linear-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
                                     {pageSettings.aboutHeroTitle}
@@ -201,7 +201,7 @@ export default function AboutPage() {
                                     {pageSettings.aboutHeroSubtitle}
                                 </p>
                             </div>
-                            
+
                             <p className="text-slate-600 leading-relaxed max-w-2xl">
                                 {pageSettings.aboutHeroDescription}
                             </p>

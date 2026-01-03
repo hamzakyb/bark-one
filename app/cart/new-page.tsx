@@ -12,20 +12,11 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image?: string;
-  variant?: string;
-}
-
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value);
 
 export default function CartPage() {
-  const { cart, updateQuantity, removeFromCart, totalAmount } = useCart<CartItem>();
+  const { cart, updateQuantity, removeFromCart, totalAmount } = useCart();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('creditCard');
   const FREE_SHIPPING_THRESHOLD = 1500;
   const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalAmount);
@@ -72,13 +63,13 @@ export default function CartPage() {
         {/* Cart Items */}
         <div className="md:col-span-2 space-y-6">
           {cart.map((item) => (
-            <Card key={item.id} className="overflow-hidden">
+            <Card key={item.product._id} className="overflow-hidden">
               <div className="flex flex-col sm:flex-row">
                 <div className="relative h-48 w-full sm:w-48 bg-gray-100">
-                  {item.image && (
+                  {item.product.images && item.product.images.length > 0 && (
                     <Image
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.images[0]}
+                      alt={item.product.name}
                       fill
                       className="object-cover"
                     />
@@ -87,26 +78,26 @@ export default function CartPage() {
                 <div className="flex-1 p-4">
                   <div className="flex justify-between">
                     <div>
-                      <h3 className="font-medium">{item.name}</h3>
-                      {item.variant && <p className="text-sm text-muted-foreground">{item.variant}</p>}
+                      <h3 className="font-medium">{item.product.name}</h3>
+                      {item.product.category && <p className="text-sm text-muted-foreground">{item.product.category}</p>}
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item.product._id)}
                       className="h-8 w-8 text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                  
+
                   <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         <Minus className="h-4 w-4" />
@@ -116,12 +107,12 @@ export default function CartPage() {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="font-medium">{formatCurrency(item.price * item.quantity)}</p>
+                    <p className="font-medium">{formatCurrency(item.product.price * item.quantity)}</p>
                   </div>
                 </div>
               </div>
@@ -140,7 +131,7 @@ export default function CartPage() {
                 <span className="text-sm text-muted-foreground">Ara Toplam</span>
                 <span>{formatCurrency(totalAmount)}</span>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Kargo</span>
@@ -148,7 +139,7 @@ export default function CartPage() {
                     {shippingCost === 0 ? 'Ücretsiz Kargo' : formatCurrency(shippingCost)}
                   </span>
                 </div>
-                
+
                 {remainingForFreeShipping > 0 && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -161,9 +152,9 @@ export default function CartPage() {
                   </div>
                 )}
               </div>
-              
+
               <Separator className="my-2" />
-              
+
               <div className="flex justify-between font-medium">
                 <span>Toplam</span>
                 <span>{formatCurrency(orderTotal)}</span>
@@ -184,8 +175,8 @@ export default function CartPage() {
               <CardTitle className="text-lg">Ödeme Yöntemi</CardTitle>
             </CardHeader>
             <CardContent>
-              <RadioGroup 
-                value={selectedPaymentMethod} 
+              <RadioGroup
+                value={selectedPaymentMethod}
                 onValueChange={setSelectedPaymentMethod}
                 className="space-y-3"
               >
@@ -198,7 +189,7 @@ export default function CartPage() {
                     </Label>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3 rounded-lg border p-4 hover:border-primary">
                   <RadioGroupItem value="bankTransfer" id="bankTransfer" />
                   <div className="flex-1">
@@ -211,18 +202,17 @@ export default function CartPage() {
               </RadioGroup>
             </CardContent>
           </Card>
-          
+
           <div className="flex items-center justify-center space-x-2 rounded-lg bg-primary/5 p-4 text-sm">
             <ShieldCheck className="h-5 w-5 text-primary" />
             <span className="text-muted-foreground">Güvenli ödeme ile alışveriş yapın</span>
           </div>
         </div>
       </div>
-      
+
       <div className="mt-12">
         <h2 className="mb-4 text-xl font-semibold">Diğer Öneriler</h2>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {/* Recommended products would go here */}
           <div className="h-48 rounded-lg bg-gray-100"></div>
           <div className="h-48 rounded-lg bg-gray-100"></div>
           <div className="h-48 rounded-lg bg-gray-100"></div>

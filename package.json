@@ -10,8 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "vercel-build": "npm install && next build"
+    "lint": "eslint"
   },
   "optionalDependencies": {
     "@next/swc-linux-x64-gnu": "14.2.3"
