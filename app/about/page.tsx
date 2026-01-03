@@ -16,10 +16,9 @@ import {
     Star
 } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 
 interface AboutStat {
     icon: React.ReactNode;
@@ -66,7 +65,6 @@ interface AboutSettings {
     aboutCtaPrimaryHref: string;
     aboutCtaSecondaryLabel: string;
     aboutCtaSecondaryHref: string;
-    [key: string]: any; // For any additional properties
 }
 
 const DEFAULT_SETTINGS = {
@@ -142,39 +140,41 @@ const DEFAULT_SETTINGS = {
     aboutCtaPrimaryLabel: 'Ücretsiz Danışmanlık',
     aboutCtaPrimaryHref: '/contact',
     aboutCtaSecondaryLabel: 'Referansları İncele',
-    aboutCtaSecondaryHref: '/#testimonials'
+    aboutCtaSecondaryHref: '/#testimonials',
+    aboutTeamTitle: '',
+    aboutTeamDescription: ''
 };
 
 export default function AboutPage() {
     const { settings } = useSiteSettings();
-  const mergedSettings = { ...DEFAULT_SETTINGS, ...settings };
     const [isMounted, setIsMounted] = useState<boolean>(false);
-  const [pageSettings, setPageSettings] = useState<typeof DEFAULT_SETTINGS>(DEFAULT_SETTINGS);
+    const [pageSettings, setPageSettings] = useState<AboutSettings>({
+        ...DEFAULT_SETTINGS,
+        ...settings,
+        aboutTeamTitle: settings?.aboutTeamTitle || DEFAULT_SETTINGS.aboutTeamTitle,
+        aboutTeamDescription: settings?.aboutTeamDescription || DEFAULT_SETTINGS.aboutTeamDescription
+    });
 
-  useEffect(() => {
-    setIsMounted(true);
-    
-    const loadSettings = async () => {
-      try {
-        const response = await fetch('/api/settings');
-        if (!response.ok) throw new Error('Failed to load settings');
-        const data = await response.json();
-        setPageSettings(prev => ({ ...prev, ...data }));
-      } catch (error) {
-        console.error('Error fetching about settings:', error);
-      }
-    };
-
-    loadSettings();
-  }, []);
-
-  if (!isMounted) {
-    return null; // or a loading spinner
-  }
+    useEffect(() => {
+        setIsMounted(true);
+        
+        const loadSettings = async () => {
+            try {
+                const response = await fetch('/api/settings');
+                if (!response.ok) throw new Error('Failed to load settings');
+                const data = await response.json();
+                setPageSettings(prev => ({ ...prev, ...data }));
+            } catch (error) {
+                console.error('Error fetching about settings:', error);
             }
         };
-        void loadSettings();
+
+        loadSettings();
     }, []);
+
+    if (!isMounted) {
+        return null; // or a loading spinner
+    }
 
     return (
         <div className="min-h-screen bg-linear-to-br from-slate-50 to-white">

@@ -11,9 +11,11 @@ import { Toaster } from 'sonner';
 type SiteSettingsData = Record<string, unknown> & { _id?: string };
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal"],
 });
 
 async function getSiteSettings(): Promise<SiteSettingsData> {
