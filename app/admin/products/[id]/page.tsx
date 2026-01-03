@@ -22,7 +22,7 @@ type ProductFormData = {
 
 
 
-const compressImage = (file: File, maxWidth = 2048, quality = 0.85): Promise<File> => {
+const compressImage = (file: File, maxWidth = 3840, quality = 0.92): Promise<File> => {
     return new Promise((resolve) => {
         if (!file.type.startsWith('image/')) {
             resolve(file);

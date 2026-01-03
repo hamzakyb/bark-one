@@ -6,7 +6,7 @@ import { Loader2, Save, Upload, Trash2, RefreshCcw, Sparkles, CheckCircle, Alert
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { upload } from '@vercel/blob/client';
 
-const compressImage = (file: File, maxWidth = 2048, quality = 0.85): Promise<File> => {
+const compressImage = (file: File, maxWidth = 3840, quality = 0.92): Promise<File> => {
     return new Promise((resolve) => {
         if (!file.type.startsWith('image/')) {
             resolve(file);

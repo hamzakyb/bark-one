@@ -25,7 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-const compressImage = (file: File, maxWidth = 2048, quality = 0.85): Promise<File> => {
+const compressImage = (file: File, maxWidth = 3840, quality = 0.95): Promise<File> => {
     return new Promise((resolve) => {
         if (!file.type.startsWith('image/')) {
             resolve(file);
@@ -127,6 +127,16 @@ type SiteSettings = {
     homeHeroPrimaryCtaUrl?: string;
     homeHeroSecondaryCtaLabel?: string;
     homeHeroSecondaryCtaUrl?: string;
+    homeHeroSlides?: Array<{
+        badge?: string;
+        title?: string;
+        subtitle?: string;
+        image?: string;
+        primaryCtaLabel?: string;
+        primaryCtaUrl?: string;
+        secondaryCtaLabel?: string;
+        secondaryCtaUrl?: string;
+    }>;
     featuresBadge?: string;
     featuresHeading?: string;
     featuresDescription?: string;
@@ -409,6 +419,59 @@ export default function AdminHomePage() {
         });
     }, []);
 
+    const addHeroSlide = useCallback(() => {
+        setSettings((prev) => {
+            if (!prev) return prev;
+            const newSlide = {
+                badge: 'Yeni Slayt',
+                title: 'Yeni Başlık',
+                subtitle: 'Yeni Alt Başlık',
+                image: '',
+                primaryCtaLabel: 'İncele',
+                primaryCtaUrl: '/products',
+                secondaryCtaLabel: 'İletişim',
+                secondaryCtaUrl: '/contact',
+            };
+            return { ...prev, homeHeroSlides: [...(prev.homeHeroSlides ?? []), newSlide] };
+        });
+    }, []);
+
+    const removeHeroSlide = useCallback((index: number) => {
+        setSettings((prev) => {
+            if (!prev) return prev;
+            const slides = [...(prev.homeHeroSlides ?? [])];
+            slides.splice(index, 1);
+            return { ...prev, homeHeroSlides: slides };
+        });
+    }, []);
+
+    const updateHeroSlide = useCallback((index: number, field: string, value: string) => {
+        setSettings((prev) => {
+            if (!prev) return prev;
+            const slides = [...(prev.homeHeroSlides ?? [])];
+            slides[index] = { ...slides[index], [field]: value };
+            return { ...prev, homeHeroSlides: slides };
+        });
+    }, []);
+
+    const handleHeroSlideImageUpload = useCallback(async (index: number, file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateHeroSlide(index, 'image', previewUrl);
+        try {
+            const compressedFile = await compressImage(file, 4096, 0.98);
+            const blob = await upload(compressedFile.name, compressedFile, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
+            });
+
+            if (blob && blob.url) {
+                updateHeroSlide(index, 'image', blob.url);
+            }
+        } catch (error: any) {
+            console.error('Hero slayt görseli yükleme hatası:', error);
+        }
+    }, [updateHeroSlide]);
+
     const updateProductsSetting = useCallback(<K extends keyof SiteSettings>(key: K, value: SiteSettings[K]) => {
         setSettings((prev) => (prev ? { ...prev, [key]: value } : prev));
     }, []);
@@ -421,7 +484,7 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('homeHeroImage', previewUrl);
         try {
-            const compressedFile = await compressImage(file);
+            const compressedFile = await compressImage(file, 4096, 0.98);
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
@@ -710,137 +773,161 @@ export default function AdminHomePage() {
 
                                 {editingModal.type === 'home-hero' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-2xl font-semibold text-slate-900">Hero Bölümü Düzenle</h2>
-                                        <div className="grid gap-5 md:grid-cols-2">
-                                            <div className="space-y-3">
-                                                <Label className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Rozet</Label>
-                                                <Input
-                                                    value={settings.homeHeroBadge ?? ''}
-                                                    onChange={(e) => updateSetting('homeHeroBadge', e.target.value)}
-                                                    placeholder="Raf Çözümleri"
-                                                    className="border-slate-200/60 bg-white"
-                                                />
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h2 className="text-2xl font-semibold text-slate-900">Hero Slaytları</h2>
+                                                <p className="text-xs text-slate-500 mt-1">Anasayfa başında dönecek görselleri ve içerikleri buradan yönetin.</p>
                                             </div>
-                                            <div className="space-y-3">
-                                                <Label className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Arka Plan Görseli</Label>
-                                                <div className="flex flex-wrap items-center gap-3">
-                                                    {settings?.homeHeroImage && (
-                                                        <div className="relative h-16 w-16 overflow-hidden rounded-lg border border-slate-200/60 bg-slate-100">
-                                                            <div
-                                                                className="h-full w-full bg-cover bg-center"
-                                                                style={{ backgroundImage: `url(${settings.homeHeroImage})` }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300/70 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:border-slate-400 hover:bg-white">
-                                                        <ImageIcon size={16} />
-                                                        <span>Görsel Seç</span>
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            multiple
-                                                            className="hidden"
-                                                            onChange={(e) => {
-                                                                const files = e.target.files;
-                                                                if (!files || files.length === 0) return;
-                                                                // Take the first one for hero
-                                                                void handleHeroImageUpload(files[0]);
-                                                                e.target.value = '';
-                                                            }}
-                                                        />
-                                                    </label>
-                                                    {settings?.homeHeroImage && (
-                                                        <Button
-                                                            type="button"
-                                                            variant="outline"
-                                                            size="sm"
-                                                            onClick={() => updateSetting('homeHeroImage', '')}
-                                                            className="border-red-300/70 text-red-500 hover:bg-red-50"
-                                                        >
-                                                            Kaldır
-                                                        </Button>
-                                                    )}
+                                            <Button
+                                                onClick={addHeroSlide}
+                                                variant="outline"
+                                                size="sm"
+                                                className="rounded-full border-wood-300 text-wood-600 hover:bg-wood-50"
+                                            >
+                                                <Plus size={16} className="mr-1" /> Slayt Ekle
+                                            </Button>
+                                        </div>
+
+                                        <div className="space-y-8 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                                            {(!settings?.homeHeroSlides || settings.homeHeroSlides.length === 0) && (
+                                                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-[32px] bg-slate-50/50">
+                                                    <div className="mx-auto size-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-4">
+                                                        <ImageIcon size={24} />
+                                                    </div>
+                                                    <p className="text-slate-600 font-medium">Henüz slayt eklenmedi.</p>
+                                                    <p className="text-slate-400 text-xs mt-1">Ekranın sağ üstündeki butondan yeni slayt ekleyebilirsiniz.</p>
                                                 </div>
-                                                <p className="text-xs text-stone-500">Bilgisayarınızdan görsel seçtiğinizde otomatik olarak kaydedilecek.</p>
-                                            </div>
+                                            )}
+
+                                            {(settings?.homeHeroSlides ?? []).map((slide, index) => (
+                                                <div key={index} className="p-6 rounded-[32px] border border-slate-200 bg-white shadow-sm space-y-6 relative group">
+                                                    <div className="absolute -left-3 top-6 size-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold border-4 border-white shadow-sm">
+                                                        {index + 1}
+                                                    </div>
+                                                    <button
+                                                        onClick={() => removeHeroSlide(index)}
+                                                        className="absolute -right-3 -top-3 size-10 rounded-full bg-white text-rose-500 flex items-center justify-center border border-slate-100 shadow-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-50 hover:scale-110 active:scale-95 z-20"
+                                                        title="Slaytı Sil"
+                                                    >
+                                                        <X size={20} />
+                                                    </button>
+
+                                                    <div className="grid gap-6 md:grid-cols-2">
+                                                        <div className="space-y-3">
+                                                            <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Slayt Görseli</Label>
+                                                            <div className="flex items-center gap-4">
+                                                                <div className="relative aspect-[4/3] w-32 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50 shadow-inner">
+                                                                    {slide.image ? (
+                                                                        <img src={slide.image} className="size-full object-cover" alt={`Slayt ${index + 1}`} />
+                                                                    ) : (
+                                                                        <div className="size-full flex items-center justify-center text-slate-300">
+                                                                            <ImageIcon size={32} />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <label className="flex-1 h-24 border-2 border-dashed border-slate-200 rounded-2xl hover:border-wood-300 hover:bg-wood-50/30 cursor-pointer flex flex-col items-center justify-center transition-all group/upload">
+                                                                    <Upload size={20} className="text-slate-400 group-hover/upload:text-wood-500 mb-1 transition-colors" />
+                                                                    <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Görsel Yükle</span>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="hidden"
+                                                                        accept="image/*"
+                                                                        onChange={(e) => {
+                                                                            const file = e.target.files?.[0];
+                                                                            if (file) handleHeroSlideImageUpload(index, file);
+                                                                            e.target.value = '';
+                                                                        }}
+                                                                    />
+                                                                </label>
+                                                            </div>
+                                                            <p className="text-[10px] text-slate-400 italic font-medium mt-1">Önerilen: 2000x1000px+, Yatay Format</p>
+                                                        </div>
+
+                                                        <div className="space-y-3">
+                                                            <div className="space-y-2">
+                                                                <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Rozet Metni</Label>
+                                                                <Input
+                                                                    value={slide.badge ?? ''}
+                                                                    onChange={(e) => updateHeroSlide(index, 'badge', e.target.value)}
+                                                                    placeholder="Örn: Yeni Koleksiyon"
+                                                                    className="rounded-xl border-slate-200 focus:ring-wood-500"
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-2">
+                                                                <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Başlık</Label>
+                                                                <Input
+                                                                    value={slide.title ?? ''}
+                                                                    onChange={(e) => updateHeroSlide(index, 'title', e.target.value)}
+                                                                    placeholder="Modern \n Duvar Rafları"
+                                                                    className="rounded-xl border-slate-200 focus:ring-wood-500 font-medium"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-3">
+                                                        <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Alt Başlık / Açıklama</Label>
+                                                        <Textarea
+                                                            value={slide.subtitle ?? ''}
+                                                            onChange={(e) => updateHeroSlide(index, 'subtitle', e.target.value)}
+                                                            rows={2}
+                                                            placeholder="Slayt için kısa açıklama metni..."
+                                                            className="rounded-xl border-slate-200 focus:ring-wood-500 resize-none"
+                                                        />
+                                                    </div>
+
+                                                    <div className="grid gap-4 md:grid-cols-2 bg-slate-50/80 p-5 rounded-2xl border border-slate-100">
+                                                        <div className="space-y-4">
+                                                            <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-2">Birincil Buton (Koyu)</p>
+                                                            <div className="grid gap-3">
+                                                                <Input
+                                                                    value={slide.primaryCtaLabel ?? ''}
+                                                                    onChange={(e) => updateHeroSlide(index, 'primaryCtaLabel', e.target.value)}
+                                                                    placeholder="Buton Metni"
+                                                                    className="h-9 text-xs rounded-lg"
+                                                                />
+                                                                <Input
+                                                                    value={slide.primaryCtaUrl ?? ''}
+                                                                    onChange={(e) => updateHeroSlide(index, 'primaryCtaUrl', e.target.value)}
+                                                                    placeholder="Buton Linki (/products)"
+                                                                    className="h-9 text-xs rounded-lg"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-4">
+                                                            <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-2">İkincil Buton (Şeffaf)</p>
+                                                            <div className="grid gap-3">
+                                                                <Input
+                                                                    value={slide.secondaryCtaLabel ?? ''}
+                                                                    onChange={(e) => updateHeroSlide(index, 'secondaryCtaLabel', e.target.value)}
+                                                                    placeholder="Buton Metni"
+                                                                    className="h-9 text-xs rounded-lg"
+                                                                />
+                                                                <Input
+                                                                    value={slide.secondaryCtaUrl ?? ''}
+                                                                    onChange={(e) => updateHeroSlide(index, 'secondaryCtaUrl', e.target.value)}
+                                                                    placeholder="Buton Linki (/contact)"
+                                                                    className="h-9 text-xs rounded-lg"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
-                                        <div className="space-y-3">
-                                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Başlık</label>
-                                            <input
-                                                type="text"
-                                                value={settings.homeHeroTitle ?? ''}
-                                                onChange={(e) => updateSetting('homeHeroTitle', e.target.value)}
-                                                className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                                                placeholder="Modern Duvar Rafları"
-                                            />
-                                        </div>
-                                        <div className="space-y-3">
-                                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Alt Başlık</label>
-                                            <textarea
-                                                value={settings.homeHeroSubtitle ?? ''}
-                                                onChange={(e) => updateSetting('homeHeroSubtitle', e.target.value)}
-                                                rows={4}
-                                                className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                                                placeholder="Minimalist tasarımlarla yaşam alanlarınıza şıklık katın"
-                                            ></textarea>
-                                        </div>
-                                        <div className="grid gap-5 md:grid-cols-2">
-                                            <div className="space-y-3">
-                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Birincil CTA Metni</label>
-                                                <input
-                                                    type="text"
-                                                    value={settings.homeHeroPrimaryCtaLabel ?? ''}
-                                                    onChange={(e) => updateSetting('homeHeroPrimaryCtaLabel', e.target.value)}
-                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                                                    placeholder="Rafları İncele"
-                                                />
-                                            </div>
-                                            <div className="space-y-3">
-                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Birincil CTA Linki</label>
-                                                <input
-                                                    type="text"
-                                                    value={settings.homeHeroPrimaryCtaUrl ?? ''}
-                                                    onChange={(e) => updateSetting('homeHeroPrimaryCtaUrl', e.target.value)}
-                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                                                    placeholder="/products"
-                                                />
-                                            </div>
-                                            <div className="space-y-3">
-                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">İkincil CTA Metni</label>
-                                                <input
-                                                    type="text"
-                                                    value={settings.homeHeroSecondaryCtaLabel ?? ''}
-                                                    onChange={(e) => updateSetting('homeHeroSecondaryCtaLabel', e.target.value)}
-                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                                                    placeholder="Destek Al"
-                                                />
-                                            </div>
-                                            <div className="space-y-3">
-                                                <label className="text-xs font-semibold-uppercase tracking-[0.35em] text-stone-500">İkincil CTA Linki</label>
-                                                <input
-                                                    type="text"
-                                                    value={settings.homeHeroSecondaryCtaUrl ?? ''}
-                                                    onChange={(e) => updateSetting('homeHeroSecondaryCtaUrl', e.target.value)}
-                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                                                    placeholder="/contact"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-3">
+
+                                        <div className="pt-6 border-t border-slate-100 flex gap-4">
                                             <Button
                                                 onClick={() => setEditingModal(null)}
-                                                className="flex-1 rounded-full border border-stone-300/70 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-stone-400 hover:bg-white"
+                                                className="flex-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors font-semibold py-6"
                                             >
                                                 Kapat
                                             </Button>
                                             <Button
-                                                onClick={() => {
-                                                    setEditingModal(null);
-                                                    handleSave();
-                                                }}
-                                                className="flex-1 rounded-full border border-wood-400/70 bg-wood-50 px-4 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-wood-600 transition-all hover:border-wood-500 hover:bg-wood-100"
+                                                onClick={() => { setEditingModal(null); handleSave(); }}
+                                                className="flex-2 rounded-full bg-slate-900 text-white hover:bg-black transition-all font-semibold py-6 shadow-xl shadow-slate-200"
                                             >
-                                                Kaydet
+                                                Değişiklikleri Yayınla
                                             </Button>
                                         </div>
                                     </div>

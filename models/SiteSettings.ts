@@ -48,6 +48,16 @@ const SiteSettingsSchema = new mongoose.Schema({
         type: String,
         default: '/contact',
     },
+    homeHeroSlides: [{
+        badge: String,
+        title: String,
+        subtitle: String,
+        image: String,
+        primaryCtaLabel: String,
+        primaryCtaUrl: String,
+        secondaryCtaLabel: String,
+        secondaryCtaUrl: String,
+    }],
 
     // Homepage Features
     featuresBadge: {

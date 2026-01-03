@@ -109,6 +109,17 @@ type SiteSettingsData = {
   homeHeroPrimaryCtaUrl?: string;
   homeHeroSecondaryCtaLabel?: string;
   homeHeroSecondaryCtaUrl?: string;
+  homeHeroSlides?: Array<{
+    _id?: string;
+    badge?: string;
+    title?: string;
+    subtitle?: string;
+    image?: string;
+    primaryCtaLabel?: string;
+    primaryCtaUrl?: string;
+    secondaryCtaLabel?: string;
+    secondaryCtaUrl?: string;
+  }>;
   featuresBadge?: string;
   featuresHeading?: string;
   featuresDescription?: string;
@@ -178,19 +189,24 @@ export default async function Home() {
   const [products, siteSettings] = await Promise.all([getProducts(), getSiteSettings()]);
 
   const heroSettings = {
-    slides: [
-      {
-        id: 'home-hero',
-        badge: siteSettings?.homeHeroBadge,
-        title: siteSettings?.homeHeroTitle,
-        subtitle: siteSettings?.homeHeroSubtitle,
-        image: siteSettings?.homeHeroImage,
-        primaryCtaLabel: siteSettings?.homeHeroPrimaryCtaLabel,
-        primaryCtaUrl: siteSettings?.homeHeroPrimaryCtaUrl,
-        secondaryCtaLabel: siteSettings?.homeHeroSecondaryCtaLabel,
-        secondaryCtaUrl: siteSettings?.homeHeroSecondaryCtaUrl,
-      },
-    ],
+    slides: siteSettings?.homeHeroSlides && siteSettings.homeHeroSlides.length > 0
+      ? siteSettings.homeHeroSlides.map((slide: any, idx: number) => ({
+        ...slide,
+        id: slide._id?.toString() || `hero-slide-${idx}`
+      }))
+      : [
+        {
+          id: 'home-hero',
+          badge: siteSettings?.homeHeroBadge,
+          title: siteSettings?.homeHeroTitle,
+          subtitle: siteSettings?.homeHeroSubtitle,
+          image: siteSettings?.homeHeroImage,
+          primaryCtaLabel: siteSettings?.homeHeroPrimaryCtaLabel,
+          primaryCtaUrl: siteSettings?.homeHeroPrimaryCtaUrl,
+          secondaryCtaLabel: siteSettings?.homeHeroSecondaryCtaLabel,
+          secondaryCtaUrl: siteSettings?.homeHeroSecondaryCtaUrl,
+        },
+      ],
   };
 
   const featureSettings = {
