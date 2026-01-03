@@ -18,7 +18,7 @@ type ProductFormData = {
     };
 };
 
-import { uploadImage } from '@/lib/upload';
+
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -112,7 +112,13 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
                 const formData = new FormData();
                 formData.append('file', file);
-                const result = await uploadImage(formData);
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
                 if (result && result.success && result.url) {
                     // Update the localUrl with the real one
                     setFormData(prev => ({

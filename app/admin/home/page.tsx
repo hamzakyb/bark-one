@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { uploadImage } from '@/lib/upload';
+
 
 type Feature = {
     title: string;
@@ -379,7 +379,13 @@ export default function AdminHomePage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const result = await uploadImage(formData);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result && result.success && result.url) {
                 updateSetting('homeHeroImage', result.url);
             } else {
@@ -396,7 +402,13 @@ export default function AdminHomePage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const result = await uploadImage(formData);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result && result.success && result.url) {
                 updateSetting('aboutHeroImage', result.url);
             } else {
@@ -413,7 +425,13 @@ export default function AdminHomePage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const result = await uploadImage(formData);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result && result.success && result.url) {
                 updateProductsSetting('productsHeroImage', result.url);
             } else {
@@ -430,7 +448,13 @@ export default function AdminHomePage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const result = await uploadImage(formData);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result && result.success && result.url) {
                 updateContactSetting('contactHeroImage', result.url);
             } else {
@@ -447,7 +471,13 @@ export default function AdminHomePage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const result = await uploadImage(formData);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result && result.success && result.url) {
                 updateSpotlightItem(index, 'image', result.url);
             } else {
@@ -464,7 +494,13 @@ export default function AdminHomePage() {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const result = await uploadImage(formData);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
             if (result && result.success && result.url) {
                 updateGalleryItem(index, 'image', result.url);
             } else {
@@ -480,7 +516,13 @@ export default function AdminHomePage() {
             const uploadPromises = Array.from(files).map(async (file) => {
                 const formData = new FormData();
                 formData.append('file', file);
-                const result = await uploadImage(formData);
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
                 if (result && result.success && result.url) {
                     return {
                         image: result.url,

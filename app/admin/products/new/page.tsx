@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, ArrowLeft, Plus, X, Images } from 'lucide-react';
 
-import { uploadImage } from '@/lib/upload';
+
 
 export default function NewProductPage() {
     const router = useRouter();
@@ -55,7 +55,13 @@ export default function NewProductPage() {
 
                 const formData = new FormData();
                 formData.append('file', file);
-                const result = await uploadImage(formData);
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
                 if (result && result.success && result.url) {
                     // Update the localUrl with the real one
                     setFormData(prev => ({
