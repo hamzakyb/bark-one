@@ -3,18 +3,22 @@ import { put } from '@vercel/blob';
 
 export async function POST(request: Request) {
     try {
-        const formData = await request.formData();
-        const file = formData.get('file');
+        const { base64, fileName, contentType } = await request.json();
 
-        if (!file || !(file instanceof File)) {
+        if (!base64) {
             return NextResponse.json({
                 success: false,
-                error: 'Dosya seçilmedi veya geçersiz dosya formatı'
+                error: 'Görsel verisi eksik'
             }, { status: 400 });
         }
 
-        const blob = await put(file.name, file, {
+        // Convert base64 to buffer
+        const base64Data = base64.split(',')[1] || base64;
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        const blob = await put(fileName || 'image.webp', buffer, {
             access: 'public',
+            contentType: contentType || 'image/webp',
         });
 
         return NextResponse.json({

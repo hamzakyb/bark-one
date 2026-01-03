@@ -24,6 +24,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+    });
+};
 
 
 type Feature = {
@@ -377,12 +385,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('homeHeroImage', previewUrl);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-
+            const base64 = await fileToBase64(file);
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    base64,
+                    fileName: file.name,
+                    contentType: file.type,
+                }),
             });
             const result = await response.json();
 
@@ -400,12 +411,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('aboutHeroImage', previewUrl);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-
+            const base64 = await fileToBase64(file);
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    base64,
+                    fileName: file.name,
+                    contentType: file.type,
+                }),
             });
             const result = await response.json();
 
@@ -423,12 +437,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateProductsSetting('productsHeroImage', previewUrl);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-
+            const base64 = await fileToBase64(file);
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    base64,
+                    fileName: file.name,
+                    contentType: file.type,
+                }),
             });
             const result = await response.json();
 
@@ -446,12 +463,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateContactSetting('contactHeroImage', previewUrl);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-
+            const base64 = await fileToBase64(file);
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    base64,
+                    fileName: file.name,
+                    contentType: file.type,
+                }),
             });
             const result = await response.json();
 
@@ -469,12 +489,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSpotlightItem(index, 'image', previewUrl);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-
+            const base64 = await fileToBase64(file);
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    base64,
+                    fileName: file.name,
+                    contentType: file.type,
+                }),
             });
             const result = await response.json();
 
@@ -492,12 +515,15 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateGalleryItem(index, 'image', previewUrl);
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-
+            const base64 = await fileToBase64(file);
             const response = await fetch('/api/upload', {
                 method: 'POST',
-                body: formData,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    base64,
+                    fileName: file.name,
+                    contentType: file.type,
+                }),
             });
             const result = await response.json();
 
@@ -514,12 +540,15 @@ export default function AdminHomePage() {
     const handleGalleryBulkUpload = useCallback(async (files: FileList) => {
         try {
             const uploadPromises = Array.from(files).map(async (file) => {
-                const formData = new FormData();
-                formData.append('file', file);
-
+                const base64 = await fileToBase64(file);
                 const response = await fetch('/api/upload', {
                     method: 'POST',
-                    body: formData,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        base64,
+                        fileName: file.name,
+                        contentType: file.type,
+                    }),
                 });
                 const result = await response.json();
 

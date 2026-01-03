@@ -18,6 +18,14 @@ type ProductFormData = {
     };
 };
 
+const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+    });
+};
 
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -110,12 +118,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 // Optimistically add to UI
                 setFormData(prev => ({ ...prev, images: [...prev.images, localUrl] }));
 
-                const formData = new FormData();
-                formData.append('file', file);
-
+                const base64 = await fileToBase64(file);
                 const response = await fetch('/api/upload', {
                     method: 'POST',
-                    body: formData,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        base64,
+                        fileName: file.name,
+                        contentType: file.type,
+                    }),
                 });
                 const result = await response.json();
 
