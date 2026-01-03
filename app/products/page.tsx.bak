@@ -1,0 +1,374 @@
+'use client';
+
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import ProductCard from '@/components/ProductCard';
+import ProductFilter from '@/components/ProductFilter';
+import { Loader2, Search } from 'lucide-react';
+
+type ProductItem = {
+    _id: string;
+    name: string;
+    price: number;
+    images: string[];
+    slug: string;
+    description: string;
+    category: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
+type ApiProduct = Partial<ProductItem> & {
+    images?: string[];
+    category?: string;
+};
+
+const MOCK_PRODUCTS = [
+    {
+        _id: 'mock-atelier-01',
+        name: 'BarkOne 01 Raf Sistemi',
+        price: 12990,
+        images: ['https://images.unsplash.com/photo-1616628182504-9ff4b95d0c5c?q=80&w=1600&auto=format&fit=crop'],
+        slug: 'atelier-01-raf-sistemi',
+        description: 'Mat siyah metal detaylarla tamamlanan doğal ceviz raf sistemi.',
+        category: 'signature',
+        createdAt: new Date('2024-01-12').toISOString(),
+        updatedAt: new Date('2024-03-18').toISOString(),
+    },
+    {
+        _id: 'mock-ligne-02',
+        name: 'Ligne 02 Yüzer Raf',
+        price: 8990,
+        images: ['https://images.unsplash.com/photo-1523419409543-0c1df022bdd1?q=80&w=1600&auto=format&fit=crop'],
+        slug: 'ligne-02-yuzer-raf',
+        description: 'İnce profil silüetiyle minimal yaşam alanları için tasarlandı.',
+        category: 'atelier',
+        createdAt: new Date('2024-02-04').toISOString(),
+        updatedAt: new Date('2024-03-22').toISOString(),
+    },
+    {
+        _id: 'mock-studio-03',
+        name: 'Studio 03 Modüler Raf',
+        price: 14990,
+        images: ['https://images.unsplash.com/photo-1616627562221-877ed9b674b1?q=80&w=1600&auto=format&fit=crop'],
+        slug: 'studio-03-moduler-raf',
+        description: 'Modüler yapısıyla farklı kombinasyonlara uyum sağlayan raf sistemi.',
+        category: 'signature',
+        createdAt: new Date('2024-03-10').toISOString(),
+        updatedAt: new Date('2024-04-02').toISOString(),
+    },
+    {
+        _id: 'mock-atelier-04',
+        name: 'BarkOne 04 Konsol Raf',
+        price: 11990,
+        images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1600&auto=format&fit=crop'],
+        slug: 'atelier-04-konsol-raf',
+        description: 'Şampanya tonlu metal aksanlar ve naturel meşe yüzeylerin buluşması.',
+        category: 'atelier',
+        createdAt: new Date('2024-04-14').toISOString(),
+        updatedAt: new Date('2024-05-01').toISOString(),
+    },
+];
+
+const DEFAULT_SETTINGS = {
+    productsHeroBadge: 'Ürün Kataloğu',
+    productsHeroTitle: 'Duvar raflarımızı karşılaştırın',
+    productsHeroSubtitle:
+        'Farklı ölçü, kaplama ve kullanım senaryolarına göre raf çözümlerimizi filtreleyin. İhtiyacınıza uygun modeli seçerken stok ve fiyat bilgisine hızlıca ulaşın.',
+    productsHeroDescription:
+        'Filtreleri kullanarak koleksiyonumuzu daraltabilir, aradığınız raf modelini kolayca bulabilirsiniz.',
+    productsHeroSearchPlaceholder: 'Ürün ara...',
+    productsHeroImage: 'https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?q=80&w=2000&auto=format&fit=crop',
+    productsEmptyStateDescription:
+        'Aradığınız kriterlere uygun ürün bulamadık. Filtreleri sıfırlayarak tüm seçkiye göz atabilirsiniz.',
+    productsEmptyStateCtaLabel: 'Filtreleri Temizle',
+};
+
+function ProductsContent() {
+    const searchParams = useSearchParams();
+    const initialSearch = searchParams.get('search') || '';
+
+    const [products, setProducts] = useState<ProductItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [settings, setSettings] = useState<typeof DEFAULT_SETTINGS>(DEFAULT_SETTINGS);
+
+    // Filter states
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+    const [sort, setSort] = useState<'newest' | 'price_asc' | 'price_desc'>('newest');
+    const [categories, setCategories] = useState<string[]>([]);
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(10000);
+    const listRef = useRef<HTMLElement | null>(null);
+    const hasInteractedRef = useRef(false);
+    const handleSearchChange = useCallback((value: string) => {
+        if (!hasInteractedRef.current) {
+            hasInteractedRef.current = true;
+        }
+        setSearchQuery(value);
+    }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadProducts = async () => {
+            try {
+                const response = await fetch('/api/products');
+                const rawData = await response.json();
+
+                const normalized = (Array.isArray(rawData) ? rawData : []).map((product: ApiProduct, index: number): ProductItem => ({
+                    _id: product._id ?? `product-${index}`,
+                    name: product.name ?? 'Bilinmeyen Ürün',
+                    price: typeof product.price === 'number' ? product.price : 0,
+                    images: product.images && product.images.length > 0
+                        ? product.images
+                        : ['https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?q=80&w=1600&auto=format&fit=crop'],
+                    slug: product.slug ?? `product-${index}`,
+                    description: product.description ?? 'Ürün açıklaması yakında eklenecek.',
+                    category: product.category ?? 'signature',
+                    createdAt: product.createdAt ?? new Date().toISOString(),
+                    updatedAt: product.updatedAt ?? new Date().toISOString(),
+                }));
+
+                const effectiveProducts = normalized.length ? normalized : MOCK_PRODUCTS;
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setProducts(effectiveProducts);
+
+                const cats = Array.from(new Set(effectiveProducts.map((p) => p.category))).filter(Boolean);
+                setCategories(cats);
+
+                const prices = effectiveProducts.map((p) => p.price);
+                const min = prices.length ? Math.min(...prices) : 0;
+                const max = prices.length ? Math.max(...prices) : 0;
+                setMinPrice(min);
+                setMaxPrice(max);
+                setPriceRange([min, max]);
+
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                if (!isMounted) {
+                    return;
+                }
+                setProducts(MOCK_PRODUCTS);
+                setCategories(Array.from(new Set(MOCK_PRODUCTS.map((p) => p.category))));
+                const prices = MOCK_PRODUCTS.map((p) => p.price);
+                const min = Math.min(...prices);
+                const max = Math.max(...prices);
+                setMinPrice(min);
+                setMaxPrice(max);
+                setPriceRange([min, max]);
+                setIsLoading(false);
+            }
+        };
+
+        void loadProducts();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const loadSettings = async () => {
+            try {
+                const response = await fetch('/api/settings');
+                if (!response.ok) {
+                    throw new Error('Settings fetch failed');
+                }
+                const data = await response.json();
+                if (!isMounted) {
+                    return;
+                }
+                setSettings((prev) => ({
+                    ...prev,
+                    productsHeroBadge: data.productsHeroBadge ?? prev.productsHeroBadge,
+                    productsHeroTitle: data.productsHeroTitle ?? prev.productsHeroTitle,
+                    productsHeroSubtitle: data.productsHeroSubtitle ?? prev.productsHeroSubtitle,
+                    productsHeroDescription: data.productsHeroDescription ?? prev.productsHeroDescription,
+                    productsHeroSearchPlaceholder: data.productsHeroSearchPlaceholder ?? prev.productsHeroSearchPlaceholder,
+                    productsHeroImage: data.productsHeroImage ?? prev.productsHeroImage,
+                    productsEmptyStateDescription: data.productsEmptyStateDescription ?? prev.productsEmptyStateDescription,
+                    productsEmptyStateCtaLabel: data.productsEmptyStateCtaLabel ?? prev.productsEmptyStateCtaLabel,
+                }));
+            } catch (error) {
+                console.error('Error fetching site settings:', error);
+            }
+        };
+
+        void loadSettings();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!hasInteractedRef.current) {
+            return;
+        }
+
+        if (window.innerWidth < 1024 && listRef.current) {
+            window.requestAnimationFrame(() => {
+                listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+    }, [searchQuery]);
+
+    const handleSortChange = useCallback((value: string) => {
+        if (value === 'newest' || value === 'price_asc' || value === 'price_desc') {
+            setSort(value);
+        }
+    }, []);
+
+    const filteredProducts = useMemo(() => {
+        let result = [...products];
+
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter((p) =>
+                p.name.toLowerCase().includes(query) ||
+                p.description.toLowerCase().includes(query)
+            );
+        }
+
+        if (selectedCategory !== 'all') {
+            result = result.filter((p) => p.category === selectedCategory);
+        }
+
+        result = result.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+
+        if (sort === 'price_asc') {
+            result.sort((a, b) => a.price - b.price);
+        } else if (sort === 'price_desc') {
+            result.sort((a, b) => b.price - a.price);
+        } else {
+            const fallbackDate = '1970-01-01T00:00:00.000Z';
+            result.sort(
+                (a, b) => new Date(b.createdAt ?? fallbackDate).getTime() - new Date(a.createdAt ?? fallbackDate).getTime()
+            );
+        }
+
+        return result;
+    }, [products, selectedCategory, priceRange, sort, searchQuery]);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="animate-spin text-wood-500" size={40} />
+            </div>
+        );
+    }
+
+    return (
+        <main className="bg-white text-anthracite">
+            {/* Hero Section */}
+            <section
+                className="relative overflow-hidden py-28 md:py-36 text-white"
+                style={{
+                    backgroundImage: settings.productsHeroImage
+                        ? `linear-gradient(to bottom, rgba(15,15,15,0.92), rgba(15,15,15,0.92)), url(${settings.productsHeroImage})`
+                        : undefined,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}
+            >
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_1200px_at_15%_10%,rgba(198,180,155,0.18),transparent)]" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_900px_at_85%_0%,rgba(198,180,155,0.12),transparent)]" />
+                <div className="pointer-events-none absolute inset-x-0 top-24 mx-auto h-px max-w-5xl bg-linear-to-r from-transparent via-white/20 to-transparent" />
+
+                <div className="container relative z-10 mx-auto px-4">
+                    <div className="max-w-3xl space-y-8">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2 text-xs font-medium uppercase tracking-[0.35em] text-white/70">
+                            {settings.productsHeroBadge}
+                        </span>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
+                            {settings.productsHeroTitle}
+                        </h1>
+                        {settings.productsHeroSubtitle && (
+                            <p className="text-base md:text-lg font-light leading-relaxed text-white/60">
+                                {settings.productsHeroSubtitle}
+                            </p>
+                        )}
+                        <p className="text-lg md:text-xl font-light leading-relaxed text-white/70">
+                            {settings.productsHeroDescription}
+                        </p>
+                        <div className="relative max-w-xl w-full">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => handleSearchChange(e.target.value)}
+                                placeholder={settings.productsHeroSearchPlaceholder}
+                                className="w-full rounded-full border border-white/20 bg-white/90 px-14 py-4 text-sm font-medium tracking-[0.2em] text-anthracite placeholder:text-stone-400 focus:border-white focus:outline-none focus:ring-0"
+                            />
+                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Products Section */}
+            <section
+                ref={listRef}
+                className="relative overflow-hidden bg-linear-to-b from-[#fdfbf7] via-white to-[#f4eee4] py-24"
+            >
+                <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px max-w-6xl bg-linear-to-r from-transparent via-stone-300/70 to-transparent" />
+                <div className="pointer-events-none absolute -left-24 top-24 h-[520px] w-[520px] rounded-full bg-wood-200/30 blur-3xl" />
+                <div className="pointer-events-none absolute -right-24 bottom-0 h-[480px] w-[480px] rounded-full bg-wood-100/35 blur-3xl" />
+
+                <div className="container relative z-10 mx-auto px-4">
+                    <div className="flex flex-col gap-10 lg:flex-row">
+                        <ProductFilter
+                            categories={categories}
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                            priceRange={priceRange}
+                            setPriceRange={setPriceRange}
+                            sort={sort}
+                            setSort={handleSortChange}
+                            minPrice={minPrice}
+                            maxPrice={maxPrice}
+                        />
+
+                        <div className="flex-1">
+                            {filteredProducts.length === 0 ? (
+                                <div className="relative overflow-hidden rounded-[32px] border border-dashed border-stone-300/70 bg-white/70 px-10 py-24 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+                                    <p className="text-lg font-light text-stone-500">
+                                        {settings.productsEmptyStateDescription}
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setSearchQuery('');
+                                            setSelectedCategory('all');
+                                            setPriceRange([minPrice, maxPrice]);
+                                        }}
+                                        className="mt-6 inline-flex items-center justify-center rounded-full border border-stone-300/70 bg-white/80 px-6 py-3 text-xs font-medium uppercase tracking-[0.35em] text-stone-600 transition-colors duration-300 hover:border-wood-500 hover:text-wood-600"
+                                    >
+                                        {settings.productsEmptyStateCtaLabel}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 xl:gap-12">
+                                    {filteredProducts.map((product) => (
+                                        <ProductCard key={product._id} product={product} />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    );
+}
+
+export default function ProductsPage() {
+    return <ProductsContent />;
+}

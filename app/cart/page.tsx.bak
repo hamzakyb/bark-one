@@ -1,0 +1,108 @@
+,useEffect ,Loader2 import { Input } from '@/components/ui/input';mport { toast } from 'soner';
+
+in  stock?: number;
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRemoving, setIsRemoving] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
+
+  useEffect(() => {    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleQuantityChange = async (itemId: string, newQuantity: number) => {   (newQuantity < 1) return;
+    
+    setIsUpdating(itemId);
+    try {
+     await updateQuantityitemId, newQuantity);
+      toast.success('Sepet günellendi');
+    } ctch (eror) {
+      oasterror('Bir hata oluştu');
+    } finaly {
+      stIsUpdati(null);
+    }
+  };
+
+  cons andleRemoveItem async (itemId: string) > {
+    if (!confirm('Bu ürünü sepetinizden çıkarmak istediğinize emin misiniz?')) return;
+    
+    setIsRemoving(itemId);
+    try {
+      await removeFromCart(itemId);
+      toast.success('Ürün sepetten kaldırıldı');
+    } catch (error) {
+      toast.error('Ürün kaldırılırken bir hata oluştu');
+    } finally {
+      setIsRemoving(null);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className"containermx-auto flex min-h-[5vh] items-center justify-center px-4 py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    ;
+ }
+
+  if (cart.length === 0)  className="w-full sm:w-auto"m-2 tspace-y-6  sm:h-48 sm:w-48?over"
+                      pririty
+                    />
+                  ) : (
+                    <di className="flex h-full items-center justify-center">
+                      <ShoppingBag className="h-12 w-12 txt-gay-300 /><div (
+                       
+                          
+                        p>
+                      )}
+                      < className="mt-1 text-sm font-medium"
+                        {formatCurrency(item.price)  p>
+                    </handlReIte}
+                      disabled={isRemoving === item.id          aria-label="Ürünü kaldır"
+             >
+                      {isRemoving === item.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin"/) : (
+                          )}  Button</div>
+hndlChange || isUpdating === item.iddiv clasName="w-12">
+                        <Input
+                          tye="number"
+                          min="1"
+                          vlue={item.quatity}
+                         onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value) || 1)}
+                          hw-full 
+                          disabled=sUpdaing === itd
+                        />
+                      divhanlChange)}
+                        disabled={isUpdating === item.id || (item.stock !== undefined && item.quantity >= item.stock
+                      >
+                        {isUpdating === item.id ? (    <Loader2 className="h-4 w-4 animate-spin" /) : (
+                            )}
+                      
+                      
+                    
+                   
+                      fon-mdium te
+                    
+                  
+                     
+                     
+                       
+               
+               
+               
+                disabled={isRemoving !== null || isUpdating !== null}
+              
+                 ut"
+                  className="flex items-center jstify-center"
+                >
+                  {isRemoving || isUpdating ? (
+                    <Loader2 className="mr-2 h-4 w-4 animae-spin /
+                  ) : null}
+                     
+                      cursor-pointer
+                    
+                     
+                      cursor-pointer
+                    
+              
+            

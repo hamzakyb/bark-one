@@ -1,0 +1,68 @@
+const MOCK_PRODUCTS = [
+  {
+    _id: 'demo-atelier-01',
+    name: 'BarkOne 01 Raf Sistemi',
+    price: 12990,
+    images: ['https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?q=80&w=1200&auto=format&fit=crop'],
+    slug: 'atelier-01-raf-sistemi',
+    description: 'Mat siyah metal detaylarla tamamlanan doğal ceviz raf sistemi.',
+    stock: 12,
+    specifications: {
+      malzeme: 'Masif ceviz & mat siyah çelik',
+      kaplama: 'Su bazlı koruyucu cila',
+      genişlik: '180 cm',
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    _id: 'demo-ligne-02',
+    name: 'Ligne 02 Yüzer Raf',
+    price: 8990,
+    images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop'],
+    slug: 'ligne-02-yuzer-raf',
+    description: 'İnce profil silüetiyle minimal yaşam alanları için tasarlandı.',
+    stock: 8,
+    specifications: {
+      malzeme: 'Doğal meşe kaplama',
+      montaj: 'Gizli konsol sistemi',
+      derinlik: '25 cm',
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    _id: 'demo-studio-03',
+    name: 'Studio 03 Modüler Raf',
+    price: 14990,
+    images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop'],
+    slug: 'studio-03-moduler-raf',
+    description: 'Modüler yapısıyla farklı kombinasyonlara uyum sağlayan raf sistemi.',
+    stock: 5,
+    specifications: {
+      modül: '3 ana modül + 2 ek panel',
+      renk: 'Saten şampanya & doğal ceviz',
+      yükseklik: '210 cm',
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    _id: 'demo-atelier-04',
+    name: 'BarkOne 04 Konsol Raf',
+    price: 11990,
+    images: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1200&auto=format&fit=crop'],
+    slug: 'atelier-04-konsol-raf',
+    description: 'Şampanya tonlu metal aksanlar ve naturel meşe yüzeylerin buluşması.',
+    stock: 9,
+    specifications: {
+      malzeme: 'Natürel meşe & şampanya metal',
+      raf: '3 adet taşıyıcı raf',
+      genişlik: '160 cm',
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
+export default MOCK_PRODUCTS;
