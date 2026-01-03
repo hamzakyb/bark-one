@@ -19,6 +19,7 @@ const nextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: ['bark-one.vercel.app', 'localhost:3000'],
+      bodySizeLimit: '20mb',
     },
   },
 };

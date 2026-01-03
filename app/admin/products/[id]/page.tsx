@@ -22,6 +22,47 @@ type ProductFormData = {
 
 
 
+const compressImage = (file: File, maxWidth = 2048, quality = 0.85): Promise<File> => {
+    return new Promise((resolve) => {
+        if (!file.type.startsWith('image/')) {
+            resolve(file);
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target?.result as string;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx?.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                        resolve(new File([blob], newName, { type: 'image/webp' }));
+                    } else {
+                        resolve(file);
+                    }
+                }, 'image/webp', quality);
+            };
+            img.onerror = () => resolve(file);
+        };
+        reader.onerror = () => resolve(file);
+    });
+};
+
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
@@ -112,7 +153,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 // Optimistically add to UI
                 setFormData(prev => ({ ...prev, images: [...prev.images, localUrl] }));
 
-                const blob = await upload(file.name, file, {
+                const compressedFile = await compressImage(file);
+                const blob = await upload(compressedFile.name, compressedFile, {
                     access: 'public',
                     handleUploadUrl: '/api/upload',
                 });

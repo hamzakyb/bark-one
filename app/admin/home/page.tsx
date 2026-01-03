@@ -25,7 +25,49 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+const compressImage = (file: File, maxWidth = 2048, quality = 0.85): Promise<File> => {
+    return new Promise((resolve) => {
+        if (!file.type.startsWith('image/')) {
+            resolve(file);
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target?.result as string;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx?.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                        resolve(new File([blob], newName, { type: 'image/webp' }));
+                    } else {
+                        resolve(file);
+                    }
+                }, 'image/webp', quality);
+            };
+            img.onerror = () => resolve(file);
+        };
+        reader.onerror = () => resolve(file);
+    });
+};
+
 import { cn } from '@/lib/utils';
+
 
 
 type Feature = {
@@ -379,7 +421,8 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('homeHeroImage', previewUrl);
         try {
-            const blob = await upload(file.name, file, {
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
             });
@@ -389,8 +432,9 @@ export default function AdminHomePage() {
             } else {
                 alert('Görsel yüklenemedi');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Hero görseli yüklenirken hata oluştu:', error);
+            alert('Görsel yükleme hatası: ' + (error?.message || 'Bilinmeyen hata'));
         }
     }, [updateSetting]);
 
@@ -398,7 +442,8 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSetting('aboutHeroImage', previewUrl);
         try {
-            const blob = await upload(file.name, file, {
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
             });
@@ -417,7 +462,8 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateProductsSetting('productsHeroImage', previewUrl);
         try {
-            const blob = await upload(file.name, file, {
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
             });
@@ -436,7 +482,8 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateContactSetting('contactHeroImage', previewUrl);
         try {
-            const blob = await upload(file.name, file, {
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
             });
@@ -455,7 +502,8 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateSpotlightItem(index, 'image', previewUrl);
         try {
-            const blob = await upload(file.name, file, {
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
             });
@@ -474,7 +522,8 @@ export default function AdminHomePage() {
         const previewUrl = URL.createObjectURL(file);
         updateGalleryItem(index, 'image', previewUrl);
         try {
-            const blob = await upload(file.name, file, {
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
             });
@@ -492,7 +541,8 @@ export default function AdminHomePage() {
     const handleGalleryBulkUpload = useCallback(async (files: FileList) => {
         try {
             const uploadPromises = Array.from(files).map(async (file) => {
-                const blob = await upload(file.name, file, {
+                const compressedFile = await compressImage(file);
+                const blob = await upload(compressedFile.name, compressedFile, {
                     access: 'public',
                     handleUploadUrl: '/api/upload',
                 });
@@ -688,11 +738,13 @@ export default function AdminHomePage() {
                                                         <input
                                                             type="file"
                                                             accept="image/*"
+                                                            multiple
                                                             className="hidden"
                                                             onChange={(e) => {
-                                                                const file = e.target.files?.[0];
-                                                                if (!file) return;
-                                                                void handleHeroImageUpload(file);
+                                                                const files = e.target.files;
+                                                                if (!files || files.length === 0) return;
+                                                                // Take the first one for hero
+                                                                void handleHeroImageUpload(files[0]);
                                                                 e.target.value = '';
                                                             }}
                                                         />
@@ -1263,11 +1315,12 @@ export default function AdminHomePage() {
                                                         <input
                                                             type="file"
                                                             accept="image/*"
+                                                            multiple
                                                             className="hidden"
                                                             onChange={(e) => {
-                                                                const file = e.target.files?.[0];
-                                                                if (!file) return;
-                                                                void handleAboutHeroImageUpload(file);
+                                                                const files = e.target.files;
+                                                                if (!files || files.length === 0) return;
+                                                                void handleAboutHeroImageUpload(files[0]);
                                                                 e.target.value = '';
                                                             }}
                                                         />
@@ -2001,11 +2054,12 @@ export default function AdminHomePage() {
                                             <input
                                                 type="file"
                                                 accept="image/*"
+                                                multiple
                                                 className="hidden"
                                                 onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (!file) return;
-                                                    void handleAboutHeroImageUpload(file);
+                                                    const files = e.target.files;
+                                                    if (!files || files.length === 0) return;
+                                                    void handleAboutHeroImageUpload(files[0]);
                                                     e.target.value = '';
                                                 }}
                                             />
@@ -2461,11 +2515,12 @@ export default function AdminHomePage() {
                                             <input
                                                 type="file"
                                                 accept="image/*"
+                                                multiple
                                                 className="hidden"
                                                 onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (!file) return;
-                                                    void handleContactHeroImageUpload(file);
+                                                    const files = e.target.files;
+                                                    if (!files || files.length === 0) return;
+                                                    void handleContactHeroImageUpload(files[0]);
                                                     e.target.value = '';
                                                 }}
                                             />
@@ -2826,11 +2881,12 @@ export default function AdminHomePage() {
                                                         <input
                                                             type="file"
                                                             accept="image/*"
+                                                            multiple
                                                             className="hidden"
                                                             onChange={(e) => {
-                                                                const file = e.target.files?.[0];
-                                                                if (!file) return;
-                                                                void handleSpotlightImageUpload(index, file);
+                                                                const files = e.target.files;
+                                                                if (!files || files.length === 0) return;
+                                                                void handleSpotlightImageUpload(index, files[0]);
                                                                 e.target.value = '';
                                                             }}
                                                         />
@@ -2976,11 +3032,12 @@ export default function AdminHomePage() {
                                                         <input
                                                             type="file"
                                                             accept="image/*"
+                                                            multiple
                                                             className="hidden"
                                                             onChange={(e) => {
-                                                                const file = e.target.files?.[0];
-                                                                if (!file) return;
-                                                                void handleGalleryImageUpload(index, file);
+                                                                const files = e.target.files;
+                                                                if (!files || files.length === 0) return;
+                                                                void handleGalleryImageUpload(index, files[0]);
                                                                 e.target.value = '';
                                                             }}
                                                         />
