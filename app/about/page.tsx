@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -20,22 +21,53 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-type AboutStat = {
-    icon: any;
+interface AboutStat {
+    icon: React.ReactNode;
     title: string;
     description: string;
-};
+}
 
-type AboutValue = {
-    icon: any;
+interface AboutValue {
+    icon: React.ReactNode;
     title: string;
     description: string;
-};
+}
 
-type AboutProcessItem = {
+interface AboutProcessItem {
     title: string;
     description: string;
-};
+}
+
+interface AboutSettings {
+    aboutHeroBadge: string;
+    aboutHeroTitle: string;
+    aboutHeroSubtitle: string;
+    aboutHeroDescription: string;
+    aboutHeroImage: string;
+    aboutStats: Array<{
+        icon: React.ComponentType<{ className?: string }>;
+        value: string;
+        label: string;
+    }>;
+    aboutValues: Array<{
+        icon: React.ComponentType<{ className?: string }>;
+        title: string;
+        description: string;
+    }>;
+    aboutProcess: Array<{
+        title: string;
+        description: string;
+    }>;
+    aboutTeamTitle: string;
+    aboutTeamDescription: string;
+    aboutCtaTitle: string;
+    aboutCtaSubtitle: string;
+    aboutCtaPrimaryLabel: string;
+    aboutCtaPrimaryHref: string;
+    aboutCtaSecondaryLabel: string;
+    aboutCtaSecondaryHref: string;
+    [key: string]: any; // For any additional properties
+}
 
 const DEFAULT_SETTINGS = {
     aboutHeroBadge: 'Hakkımızda',
@@ -115,17 +147,30 @@ const DEFAULT_SETTINGS = {
 
 export default function AboutPage() {
     const { settings } = useSiteSettings();
-    const [pageSettings, setPageSettings] = useState(DEFAULT_SETTINGS);
+  const mergedSettings = { ...DEFAULT_SETTINGS, ...settings };
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [pageSettings, setPageSettings] = useState<typeof DEFAULT_SETTINGS>(DEFAULT_SETTINGS);
 
-    useEffect(() => {
-        const loadSettings = async () => {
-            try {
-                const response = await fetch('/api/settings');
-                if (!response.ok) throw new Error('Failed to load settings');
-                const data = await response.json();
-                setPageSettings(prev => ({ ...prev, ...data }));
-            } catch (error) {
-                console.error('Error fetching about settings:', error);
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        if (!response.ok) throw new Error('Failed to load settings');
+        const data = await response.json();
+        setPageSettings(prev => ({ ...prev, ...data }));
+      } catch (error) {
+        console.error('Error fetching about settings:', error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  if (!isMounted) {
+    return null; // or a loading spinner
+  }
             }
         };
         void loadSettings();

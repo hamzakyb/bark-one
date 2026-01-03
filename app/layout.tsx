@@ -10,6 +10,12 @@ import { Toaster } from 'sonner';
 
 type SiteSettingsData = Record<string, unknown> & { _id?: string };
 
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 async function getSiteSettings(): Promise<SiteSettingsData> {
   try {
     await connectDB();
@@ -27,14 +33,6 @@ async function getSiteSettings(): Promise<SiteSettingsData> {
     return {};
   }
 }
-
-const inter = Inter({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal"],
-});
 
 export const metadata: Metadata = {
   title: "barkOne - Modern Duvar Rafları",
