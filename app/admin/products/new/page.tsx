@@ -4,13 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, ArrowLeft, Plus, X, Images } from 'lucide-react';
 
-const convertFileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-    });
+import { uploadImage } from '@/lib/upload';
 
 export default function NewProductPage() {
     const router = useRouter();
@@ -50,16 +44,29 @@ export default function NewProductPage() {
         const files = Array.from(event.target.files ?? []);
         if (!files.length) return;
 
+        setIsLoading(true);
+        setError('');
+
         try {
-            const encodedImages = await Promise.all(files.map((file) => convertFileToBase64(file)));
+            const uploadTasks = files.map(async (file) => {
+                const result = await uploadImage(file);
+                if (result.success && result.url) {
+                    return result.url;
+                }
+                throw new Error(result.error || 'Yükleme başarısız');
+            });
+
+            const uploadedUrls = await Promise.all(uploadTasks);
+
             setFormData((prev) => ({
                 ...prev,
-                images: [...prev.images, ...encodedImages],
+                images: [...prev.images, ...uploadedUrls],
             }));
-        } catch (uploadError) {
+        } catch (uploadError: any) {
             console.error('Görseller yüklenirken hata oluştu', uploadError);
-            setError('Görseller yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+            setError(uploadError.message || 'Görseller yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
         } finally {
+            setIsLoading(false);
             if (event.target) {
                 event.target.value = '';
             }

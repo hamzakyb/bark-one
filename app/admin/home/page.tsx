@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { uploadImage } from '@/lib/upload';
 
 type Feature = {
     title: string;
@@ -246,19 +247,6 @@ const ADMIN_SECTION_LINKS: { id: string; label: string; description: string; ico
     },
 ];
 
-const fileToDataUrl = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            if (typeof reader.result === 'string') {
-                resolve(reader.result);
-            } else {
-                reject(new Error('Dosya verisi okunamadı.'));
-            }
-        };
-        reader.onerror = () => reject(reader.error ?? new Error('Dosya verisi okunamadı.'));
-        reader.readAsDataURL(file);
-    });
 
 export default function AdminHomePage() {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -387,55 +375,79 @@ export default function AdminHomePage() {
 
     const handleHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const dataUrl = await fileToDataUrl(file);
-            updateSetting('homeHeroImage', dataUrl);
+            const result = await uploadImage(file);
+            if (result.success && result.url) {
+                updateSetting('homeHeroImage', result.url);
+            } else {
+                alert(result.error);
+            }
         } catch (error) {
-            console.error('Hero görseli okunurken hata oluştu:', error);
+            console.error('Hero görseli yüklenirken hata oluştu:', error);
         }
     }, [updateSetting]);
 
     const handleAboutHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const dataUrl = await fileToDataUrl(file);
-            updateSetting('aboutHeroImage', dataUrl);
+            const result = await uploadImage(file);
+            if (result.success && result.url) {
+                updateSetting('aboutHeroImage', result.url);
+            } else {
+                alert(result.error);
+            }
         } catch (error) {
-            console.error('Hakkımızda hero görseli okunurken hata oluştu:', error);
+            console.error('Hakkımızda hero görseli yüklenirken hata oluştu:', error);
         }
     }, [updateSetting]);
 
     const handleProductsHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const dataUrl = await fileToDataUrl(file);
-            updateProductsSetting('productsHeroImage', dataUrl);
+            const result = await uploadImage(file);
+            if (result.success && result.url) {
+                updateProductsSetting('productsHeroImage', result.url);
+            } else {
+                alert(result.error);
+            }
         } catch (error) {
-            console.error('Ürünler sayfası görseli okunurken hata oluştu:', error);
+            console.error('Ürünler sayfası görseli yüklenirken hata oluştu:', error);
         }
     }, [updateProductsSetting]);
 
     const handleContactHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const dataUrl = await fileToDataUrl(file);
-            updateContactSetting('contactHeroImage', dataUrl);
+            const result = await uploadImage(file);
+            if (result.success && result.url) {
+                updateContactSetting('contactHeroImage', result.url);
+            } else {
+                alert(result.error);
+            }
         } catch (error) {
-            console.error('İletişim sayfası görseli okunurken hata oluştu:', error);
+            console.error('İletişim sayfası görseli yüklenirken hata oluştu:', error);
         }
     }, [updateContactSetting]);
 
     const handleSpotlightImageUpload = useCallback(async (index: number, file: File) => {
         try {
-            const dataUrl = await fileToDataUrl(file);
-            updateSpotlightItem(index, 'image', dataUrl);
+            const result = await uploadImage(file);
+            if (result.success && result.url) {
+                updateSpotlightItem(index, 'image', result.url);
+            } else {
+                alert(result.error);
+            }
         } catch (error) {
-            console.error('Spotlight görseli okunurken hata oluştu:', error);
+            console.error('Spotlight görseli yüklenirken hata oluştu:', error);
         }
     }, [updateSpotlightItem]);
 
     const handleGalleryImageUpload = useCallback(async (index: number, file: File) => {
         try {
-            const dataUrl = await fileToDataUrl(file);
-            updateGalleryItem(index, 'image', dataUrl);
+            const result = await uploadImage(file);
+            if (result.success && result.url) {
+                updateGalleryItem(index, 'image', result.url);
+            } else {
+                alert(result.error);
+            }
         } catch (error) {
-            console.error('Galeri görseli okunurken hata oluştu:', error);
+            console.error('Galeri görseli yüklenirken hata oluştu:', error);
         }
     }, [updateGalleryItem]);
 
@@ -1706,8 +1718,8 @@ export default function AdminHomePage() {
                                     }}
                                     aria-pressed={isActive}
                                     className={`group flex h-full flex-col items-start gap-3 rounded-2xl border px-5 py-4 text-left text-slate-200 transition-all ${isActive
-                                            ? 'border-white/30 bg-slate-900/80 text-white shadow-[0_20px_45px_-25px_rgba(8,10,15,0.65)]'
-                                            : 'border-white/10 bg-slate-900/50 hover:border-white/25 hover:bg-slate-900/70'
+                                        ? 'border-white/30 bg-slate-900/80 text-white shadow-[0_20px_45px_-25px_rgba(8,10,15,0.65)]'
+                                        : 'border-white/10 bg-slate-900/50 hover:border-white/25 hover:bg-slate-900/70'
                                         }`}
                                 >
                                     <span className={`flex h-10 w-10 items-center justify-center rounded-xl border ${isActive ? 'border-white/30 bg-white/15 text-white' : 'border-white/15 bg-white/10 text-slate-100'
