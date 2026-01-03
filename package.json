@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "vercel-build": "npm install --platform=linux --arch=x64 && next build"
+    "postinstall": "rm -rf node_modules/.cache && npm install @next/swc-linux-x64-gnu@14.2.3 --no-save",
+    "vercel-build": "npm install --platform=linux --arch=x64 --force && next build"
   },
   "resolutions": {
     "@next/swc-darwin-arm64": "npm:@next/swc-linux-x64-gnu@14.2.3",
@@ -48,6 +49,7 @@
     "lucide-react": "^0.554.0",
     "mongoose": "^9.0.0",
     "next": "14.2.3",
+    "@next/swc-linux-x64-gnu": "14.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
