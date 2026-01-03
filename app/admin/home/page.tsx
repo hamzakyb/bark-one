@@ -375,7 +375,9 @@ export default function AdminHomePage() {
 
     const handleHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const result = await uploadImage(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const result = await uploadImage(formData);
             if (result.success && result.url) {
                 updateSetting('homeHeroImage', result.url);
             } else {
@@ -388,7 +390,9 @@ export default function AdminHomePage() {
 
     const handleAboutHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const result = await uploadImage(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const result = await uploadImage(formData);
             if (result.success && result.url) {
                 updateSetting('aboutHeroImage', result.url);
             } else {
@@ -401,7 +405,9 @@ export default function AdminHomePage() {
 
     const handleProductsHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const result = await uploadImage(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const result = await uploadImage(formData);
             if (result.success && result.url) {
                 updateProductsSetting('productsHeroImage', result.url);
             } else {
@@ -414,7 +420,9 @@ export default function AdminHomePage() {
 
     const handleContactHeroImageUpload = useCallback(async (file: File) => {
         try {
-            const result = await uploadImage(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const result = await uploadImage(formData);
             if (result.success && result.url) {
                 updateContactSetting('contactHeroImage', result.url);
             } else {
@@ -427,7 +435,9 @@ export default function AdminHomePage() {
 
     const handleSpotlightImageUpload = useCallback(async (index: number, file: File) => {
         try {
-            const result = await uploadImage(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const result = await uploadImage(formData);
             if (result.success && result.url) {
                 updateSpotlightItem(index, 'image', result.url);
             } else {
@@ -440,7 +450,9 @@ export default function AdminHomePage() {
 
     const handleGalleryImageUpload = useCallback(async (index: number, file: File) => {
         try {
-            const result = await uploadImage(file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const result = await uploadImage(formData);
             if (result.success && result.url) {
                 updateGalleryItem(index, 'image', result.url);
             } else {

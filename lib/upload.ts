@@ -2,8 +2,10 @@
 
 import { put } from '@vercel/blob';
 
-export async function uploadImage(file: File | FormDataEntryValue) {
-    if (!(file instanceof File)) {
+export async function uploadImage(formData: FormData) {
+    const file = formData.get('file');
+
+    if (!file || !(file instanceof File)) {
         throw new Error('Dosya seçilmedi');
     }
 

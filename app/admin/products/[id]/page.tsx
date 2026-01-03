@@ -106,7 +106,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
         try {
             const uploadTasks = files.map(async (file) => {
-                const result = await uploadImage(file);
+                const formData = new FormData();
+                formData.append('file', file);
+                const result = await uploadImage(formData);
                 if (result.success && result.url) {
                     return result.url;
                 }
