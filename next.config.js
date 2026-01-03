@@ -16,6 +16,11 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['bark-one.vercel.app', 'localhost:3000'],
+    },
+  },
 };
 
 export default nextConfig;

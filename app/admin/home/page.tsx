@@ -276,7 +276,7 @@ export default function AdminHomePage() {
         setIsSaving(true);
         try {
             const response = await fetch('/api/settings', {
-                method: 'PUT',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings),
             });
@@ -374,14 +374,16 @@ export default function AdminHomePage() {
     }, []);
 
     const handleHeroImageUpload = useCallback(async (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateSetting('homeHeroImage', previewUrl);
         try {
             const formData = new FormData();
             formData.append('file', file);
             const result = await uploadImage(formData);
-            if (result.success && result.url) {
+            if (result && result.success && result.url) {
                 updateSetting('homeHeroImage', result.url);
             } else {
-                alert(result.error);
+                alert(result?.error || 'Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Hero görseli yüklenirken hata oluştu:', error);
@@ -389,14 +391,16 @@ export default function AdminHomePage() {
     }, [updateSetting]);
 
     const handleAboutHeroImageUpload = useCallback(async (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateSetting('aboutHeroImage', previewUrl);
         try {
             const formData = new FormData();
             formData.append('file', file);
             const result = await uploadImage(formData);
-            if (result.success && result.url) {
+            if (result && result.success && result.url) {
                 updateSetting('aboutHeroImage', result.url);
             } else {
-                alert(result.error);
+                alert(result?.error || 'Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Hakkımızda hero görseli yüklenirken hata oluştu:', error);
@@ -404,14 +408,16 @@ export default function AdminHomePage() {
     }, [updateSetting]);
 
     const handleProductsHeroImageUpload = useCallback(async (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateProductsSetting('productsHeroImage', previewUrl);
         try {
             const formData = new FormData();
             formData.append('file', file);
             const result = await uploadImage(formData);
-            if (result.success && result.url) {
+            if (result && result.success && result.url) {
                 updateProductsSetting('productsHeroImage', result.url);
             } else {
-                alert(result.error);
+                alert(result?.error || 'Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Ürünler sayfası görseli yüklenirken hata oluştu:', error);
@@ -419,14 +425,16 @@ export default function AdminHomePage() {
     }, [updateProductsSetting]);
 
     const handleContactHeroImageUpload = useCallback(async (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateContactSetting('contactHeroImage', previewUrl);
         try {
             const formData = new FormData();
             formData.append('file', file);
             const result = await uploadImage(formData);
-            if (result.success && result.url) {
+            if (result && result.success && result.url) {
                 updateContactSetting('contactHeroImage', result.url);
             } else {
-                alert(result.error);
+                alert(result?.error || 'Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('İletişim sayfası görseli yüklenirken hata oluştu:', error);
@@ -434,14 +442,16 @@ export default function AdminHomePage() {
     }, [updateContactSetting]);
 
     const handleSpotlightImageUpload = useCallback(async (index: number, file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateSpotlightItem(index, 'image', previewUrl);
         try {
             const formData = new FormData();
             formData.append('file', file);
             const result = await uploadImage(formData);
-            if (result.success && result.url) {
+            if (result && result.success && result.url) {
                 updateSpotlightItem(index, 'image', result.url);
             } else {
-                alert(result.error);
+                alert(result?.error || 'Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Spotlight görseli yüklenirken hata oluştu:', error);
@@ -449,14 +459,16 @@ export default function AdminHomePage() {
     }, [updateSpotlightItem]);
 
     const handleGalleryImageUpload = useCallback(async (index: number, file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        updateGalleryItem(index, 'image', previewUrl);
         try {
             const formData = new FormData();
             formData.append('file', file);
             const result = await uploadImage(formData);
-            if (result.success && result.url) {
+            if (result && result.success && result.url) {
                 updateGalleryItem(index, 'image', result.url);
             } else {
-                alert(result.error);
+                alert(result?.error || 'Görsel yüklenemedi');
             }
         } catch (error) {
             console.error('Galeri görseli yüklenirken hata oluştu:', error);
@@ -469,7 +481,7 @@ export default function AdminHomePage() {
                 const formData = new FormData();
                 formData.append('file', file);
                 const result = await uploadImage(formData);
-                if (result.success && result.url) {
+                if (result && result.success && result.url) {
                     return {
                         image: result.url,
                         label: '',

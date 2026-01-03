@@ -49,21 +49,30 @@ export default function NewProductPage() {
 
         try {
             const uploadTasks = files.map(async (file) => {
+                const localUrl = URL.createObjectURL(file);
+                // Optimistically add to UI
+                setFormData(prev => ({ ...prev, images: [...prev.images, localUrl] }));
+
                 const formData = new FormData();
                 formData.append('file', file);
                 const result = await uploadImage(formData);
-                if (result.success && result.url) {
+                if (result && result.success && result.url) {
+                    // Update the localUrl with the real one
+                    setFormData(prev => ({
+                        ...prev,
+                        images: prev.images.map(img => img === localUrl ? result.url : img)
+                    }));
                     return result.url;
                 }
-                throw new Error(result.error || 'Yükleme başarısız');
+                // Revert on failure
+                setFormData(prev => ({
+                    ...prev,
+                    images: prev.images.filter(img => img !== localUrl)
+                }));
+                throw new Error(result?.error || 'Yükleme başarısız');
             });
 
-            const uploadedUrls = await Promise.all(uploadTasks);
-
-            setFormData((prev) => ({
-                ...prev,
-                images: [...prev.images, ...uploadedUrls],
-            }));
+            await Promise.all(uploadTasks);
         } catch (uploadError: any) {
             console.error('Görseller yüklenirken hata oluştu', uploadError);
             setError(uploadError.message || 'Görseller yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
