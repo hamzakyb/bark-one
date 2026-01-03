@@ -187,13 +187,13 @@ export default function AdminDashboard() {
         {
             label: 'İndirim Planı Oluştur',
             description: 'Haftalık kampanyanızı planlayın',
-            href: '/admin/campaigns',
+            href: '/admin/products', // Placeholder
             icon: TrendingUp,
         },
         {
             label: 'Stok Kontrolü',
             description: 'Hızlı stok dengelemesi yapın',
-            href: '/admin/inventory',
+            href: '/admin/products', // Placeholder
             icon: CheckCircle,
         },
     ];
@@ -450,7 +450,7 @@ export default function AdminDashboard() {
                                                                 ? 'Ödendi'
                                                                 : order.status === 'shipped'
                                                                     ? 'Kargoda'
-                                                                : (order.status ?? 'Bilinmiyor')}
+                                                                    : (order.status ?? 'Bilinmiyor')}
                                                     </Badge>
                                                 </td>
                                                 <td className="px-4 py-3 text-slate-500">
@@ -460,7 +460,7 @@ export default function AdminDashboard() {
                                                             month: 'short',
                                                             hour: '2-digit',
                                                             minute: '2-digit',
-                                                    })
+                                                        })
                                                         : '—'}
                                                 </td>
                                             </tr>
@@ -496,7 +496,7 @@ export default function AdminDashboard() {
                                         </div>
                                     </Link>
                                 </Button>
-            ))}
+                            ))}
                         </div>
                     </CardContent>
                 </Card>

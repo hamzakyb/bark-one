@@ -1,9 +1,51 @@
 'use client';
 
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Loader2, Save, Upload, Trash2, RefreshCcw, Sparkles, CheckCircle, AlertTriangle, X } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
+import { upload } from '@vercel/blob/client';
+
+const compressImage = (file: File, maxWidth = 2048, quality = 0.85): Promise<File> => {
+    return new Promise((resolve) => {
+        if (!file.type.startsWith('image/')) {
+            resolve(file);
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new window.Image();
+            img.src = event.target?.result as string;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth) {
+                    height = (maxWidth / width) * height;
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx?.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+                        resolve(new File([blob], newName, { type: 'image/webp' }));
+                    } else {
+                        resolve(file);
+                    }
+                }, 'image/webp', quality);
+            };
+            img.onerror = () => resolve(file);
+        };
+        reader.onerror = () => resolve(file);
+    });
+};
 
 type SiteSettings = Record<string, any>;
 
@@ -48,8 +90,9 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
     };
 
     const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0] ?? null;
-        await processFile(file);
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+        await processFile(files[0]);
         event.target.value = '';
     };
 
@@ -74,11 +117,10 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
         await processFile(file);
     };
 
-    const dropzoneClasses = `relative mt-6 overflow-hidden rounded-[28px] border-2 border-dashed transition-all duration-300 ${
-        isDragging
-            ? 'border-wood-500/90 bg-gradient-to-br from-wood-100/80 via-white to-wood-50 shadow-[0_26px_80px_-40px_rgba(214,162,88,0.55)]'
-            : 'border-stone-200/80 bg-white/80 hover:border-wood-400/70 hover:bg-wood-50/50'
-    }`;
+    const dropzoneClasses = `relative mt-6 overflow-hidden rounded-[28px] border-2 border-dashed transition-all duration-300 ${isDragging
+        ? 'border-wood-500/90 bg-gradient-to-br from-wood-100/80 via-white to-wood-50 shadow-[0_26px_80px_-40px_rgba(214,162,88,0.55)]'
+        : 'border-stone-200/80 bg-white/80 hover:border-wood-400/70 hover:bg-wood-50/50'
+        }`;
 
     return (
         <section className="rounded-[24px] border border-stone-200 bg-wood-50/40 p-6 shadow-[0_18px_60px_-45px_rgba(15,15,15,0.45)]">
@@ -92,7 +134,7 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
                 <div className="flex gap-3">
                     <label className="inline-flex items-center gap-2 rounded-full border border-wood-500/60 bg-wood-500 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition-all duration-300 hover:border-wood-600 hover:bg-wood-600 cursor-pointer">
                         <Upload size={16} /> Görsel Yükle
-                        <input type="file" accept="image/*" className="hidden" onChange={handleInputChange} />
+                        <input type="file" accept="image/*" multiple className="hidden" onChange={handleInputChange} />
                     </label>
                     {value && (
                         <button
@@ -115,7 +157,7 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(139,92,52,0.08),transparent_70%)]" />
                 {value ? (
                     <div className="relative z-10 h-[260px] w-full">
-                        <Image
+                        <NextImage
                             src={value}
                             alt={`${label} önizleme`}
                             fill
@@ -134,9 +176,8 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
                     </div>
                 ) : (
                     <div className="relative z-10 flex h-[260px] w-full flex-col items-center justify-center gap-4 text-stone-500">
-                        <span className={`flex h-14 w-14 items-center justify-center rounded-full border ${
-                            isDragging ? 'border-wood-400 bg-white/80 text-wood-500 shadow-[0_20px_50px_-30px_rgba(214,162,88,0.6)]' : 'border-stone-200 bg-white/70 text-wood-400'
-                        } transition-all duration-300`}>
+                        <span className={`flex h-14 w-14 items-center justify-center rounded-full border ${isDragging ? 'border-wood-400 bg-white/80 text-wood-500 shadow-[0_20px_50px_-30px_rgba(214,162,88,0.6)]' : 'border-stone-200 bg-white/70 text-wood-400'
+                            } transition-all duration-300`}>
                             <Upload size={24} />
                         </span>
                         <div className="text-center">
@@ -259,17 +300,31 @@ export default function AdminSettingsPage() {
     const handleFile = useCallback(async (file: File, key: string) => {
         try {
             setPendingUploads((prev) => ({ ...prev, [key]: true }));
-            const dataUrl = await fileToDataUrl(file);
-            updateSetting(key, dataUrl);
-            setToasts((prev) => [
-                ...prev,
-                {
-                    id: Date.now() + Math.random(),
-                    type: 'success',
-                    title: 'Görsel Yüklendi',
-                    description: `${labelMap[key] ?? 'Görsel'} başarıyla güncellendi.`,
-                },
-            ]);
+
+            // Optimistic feedback with local URL
+            const previewUrl = URL.createObjectURL(file);
+            updateSetting(key, previewUrl);
+
+            const compressedFile = await compressImage(file);
+            const blob = await upload(compressedFile.name, compressedFile, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
+            });
+
+            if (blob && blob.url) {
+                updateSetting(key, blob.url);
+                setToasts((prev) => [
+                    ...prev,
+                    {
+                        id: Date.now() + Math.random(),
+                        type: 'success',
+                        title: 'Görsel Yüklendi',
+                        description: `${labelMap[key] ?? 'Görsel'} başarıyla güncellendi.`,
+                    },
+                ]);
+            } else {
+                throw new Error('Yükleme başarısız');
+            }
         } catch (error) {
             console.error('Görsel yüklenirken hata oluştu:', error);
             setToasts((prev) => [
@@ -774,18 +829,16 @@ export default function AdminSettingsPage() {
                 {toasts.map((toast) => (
                     <div
                         key={toast.id}
-                        className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border px-4 py-3 shadow-[0_30px_90px_-45px_rgba(15,15,15,0.5)] backdrop-blur transition-all duration-300 ${
-                            toast.type === 'success'
-                                ? 'border-emerald-200/70 bg-emerald-50/80 text-emerald-900'
-                                : 'border-rose-200/70 bg-rose-50/85 text-rose-900'
-                        }`}
+                        className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border px-4 py-3 shadow-[0_30px_90px_-45px_rgba(15,15,15,0.5)] backdrop-blur transition-all duration-300 ${toast.type === 'success'
+                            ? 'border-emerald-200/70 bg-emerald-50/80 text-emerald-900'
+                            : 'border-rose-200/70 bg-rose-50/85 text-rose-900'
+                            }`}
                     >
                         <span
-                            className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
-                                toast.type === 'success'
-                                    ? 'border-emerald-200 bg-white text-emerald-500'
-                                    : 'border-rose-200 bg-white text-rose-500'
-                            }`}
+                            className={`flex h-10 w-10 items-center justify-center rounded-xl border ${toast.type === 'success'
+                                ? 'border-emerald-200 bg-white text-emerald-500'
+                                : 'border-rose-200 bg-white text-rose-500'
+                                }`}
                         >
                             {toast.type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
                         </span>
@@ -844,11 +897,10 @@ export default function AdminSettingsPage() {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative overflow-hidden rounded-full border px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] transition-all duration-300 ${
-                            activeTab === tab.id
-                                ? 'border-wood-500 bg-wood-500 text-white shadow-[0_18px_46px_-28px_rgba(214,162,88,0.85)]'
-                                : 'border-stone-200 bg-white text-stone-500 hover:border-wood-400 hover:text-wood-500'
-                        }`}
+                        className={`relative overflow-hidden rounded-full border px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] transition-all duration-300 ${activeTab === tab.id
+                            ? 'border-wood-500 bg-wood-500 text-white shadow-[0_18px_46px_-28px_rgba(214,162,88,0.85)]'
+                            : 'border-stone-200 bg-white text-stone-500 hover:border-wood-400 hover:text-wood-500'
+                            }`}
                     >
                         {tab.label}
                     </button>
