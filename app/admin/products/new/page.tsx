@@ -99,7 +99,8 @@ export default function NewProductPage() {
                 const blob = await upload(compressedFile.name, compressedFile, {
                     access: 'public',
                     handleUploadUrl: '/api/upload',
-                });
+                    addRandomSuffix: true,
+                } as any);
 
                 if (blob && blob.url) {
                     // Update the localUrl with the real one

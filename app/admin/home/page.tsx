@@ -463,7 +463,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateHeroSlide(index, 'image', blob.url);
@@ -489,7 +490,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateSetting('homeHeroImage', blob.url);
@@ -510,7 +512,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateSetting('aboutHeroImage', blob.url);
@@ -530,7 +533,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateProductsSetting('productsHeroImage', blob.url);
@@ -550,7 +554,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateContactSetting('contactHeroImage', blob.url);
@@ -570,7 +575,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateSpotlightItem(index, 'image', blob.url);
@@ -590,7 +596,8 @@ export default function AdminHomePage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-            });
+                addRandomSuffix: true,
+            } as any);
 
             if (blob && blob.url) {
                 updateGalleryItem(index, 'image', blob.url);
@@ -609,7 +616,8 @@ export default function AdminHomePage() {
                 const blob = await upload(compressedFile.name, compressedFile, {
                     access: 'public',
                     handleUploadUrl: '/api/upload',
-                });
+                    addRandomSuffix: true,
+                } as any);
 
                 if (blob && blob.url) {
                     return {
