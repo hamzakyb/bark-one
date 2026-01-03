@@ -54,8 +54,8 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "baseline-browser-mapping": "^2.9.2",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.2.3",
