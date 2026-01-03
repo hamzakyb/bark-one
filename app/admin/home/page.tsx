@@ -15,6 +15,7 @@ import {
     Stars,
     X,
     Home,
+    Upload,
 } from 'lucide-react';
 import { upload } from '@vercel/blob/client';
 
