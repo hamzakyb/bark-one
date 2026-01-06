@@ -1,9 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Star } from 'lucide-react';
+import { Quote } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type TestimonialItem = {
     _id?: string;
@@ -22,9 +21,9 @@ type TestimonialsProps = {
     };
 };
 
-const DEFAULT_BADGE = 'Müşteri Memnuniyeti';
-const DEFAULT_HEADING = 'Kullanıcılarımızın BarkOne Deneyimleri';
-const DEFAULT_DESCRIPTION = 'Binlerce mutlu müşterimizden bazıları görüşlerini paylaşıyor.';
+const DEFAULT_BADGE = 'Müşteri Yorumları';
+const DEFAULT_HEADING = 'Raf çözümlerimizi tercih edenlerin deneyimleri';
+const DEFAULT_DESCRIPTION = 'BarkOne raflarıyla yaşam alanlarını düzenleyen kullanıcılarımızın geri bildirimleri.';
 
 const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
     {
@@ -43,7 +42,7 @@ const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
         name: 'Murat Aras',
         role: 'Fotoğrafçı',
         quote: 'Ekipmanlarımı sergilemek için Atelier serisini tercih ettim. Hem sağlam hem de estetik.',
-        rating: 4,
+        rating: 5,
     },
 ];
 
@@ -54,54 +53,69 @@ export default function Testimonials({ settings }: TestimonialsProps) {
     const testimonials = settings?.testimonials?.length ? settings.testimonials : DEFAULT_TESTIMONIALS;
 
     return (
-        <section id="testimonials" className="py-24 bg-white relative overflow-hidden">
-            {/* Abstract Background Decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full -mr-32 -mt-32 blur-3xl opacity-50"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-50 rounded-full -ml-48 -mb-48 blur-3xl opacity-50"></div>
+        <section className="py-32 bg-stone-50 relative overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-wood-100/30 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-stone-200/30 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
             <div className="container mx-auto px-4 relative z-10">
-                {/* Section Header */}
-                <div className="text-center mb-16 max-w-3xl mx-auto">
-                    <Badge variant="outline" className="mb-4 text-sm font-medium border-slate-200 text-slate-600">
-                        {badge}
-                    </Badge>
-                    <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-                        {heading}
-                    </h2>
-                    <p className="text-lg text-slate-600 leading-relaxed font-light">
-                        {description}
-                    </p>
+                {/* Header */}
+                <div className="text-center max-w-2xl mx-auto mb-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-stone-200 bg-white/50 backdrop-blur-sm mb-6">
+                            <span className="w-1.5 h-1.5 rounded-full bg-wood-500" />
+                            <span className="text-xs font-semibold uppercase tracking-widest text-stone-500">
+                                {badge}
+                            </span>
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-serif text-anthracite mb-6 leading-tight">
+                            {heading}
+                        </h2>
+                        <p className="text-lg text-stone-500 font-light leading-relaxed">
+                            {description}
+                        </p>
+                    </motion.div>
                 </div>
 
-                {/* Testimonials Grid */}
+                {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((testimonial, index) => (
                         <motion.div
                             key={testimonial._id ?? index}
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+                            className="group"
                         >
-                            <Card className="h-full border-slate-100 shadow-sm hover:shadow-md transition-all duration-500 rounded-2xl bg-slate-50/50">
-                                <CardContent className="p-8 flex flex-col h-full">
-                                    <div className="flex gap-1 mb-6">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className={`h-4 w-4 ${i < (testimonial.rating || 5) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <blockquote className="text-lg text-slate-700 font-light italic mb-8 flex-grow">
+                            <div className="h-full bg-white px-8 py-10 rounded-2xl border border-stone-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:shadow-wood-900/5 hover:-translate-y-1 relative overflow-hidden">
+                                {/* Subtle Wood Gradient Overlay on Hover */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-wood-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                                <div className="relative z-10 flex flex-col h-full">
+                                    <Quote className="h-8 w-8 text-wood-300 mb-6 opacity-50" />
+
+                                    <blockquote className="text-lg text-anthracite font-serif leading-relaxed mb-8 flex-grow">
                                         &ldquo;{testimonial.quote}&rdquo;
                                     </blockquote>
-                                    <div>
-                                        <h4 className="font-semibold text-slate-900">{testimonial.name}</h4>
-                                        <p className="text-sm text-slate-500 font-light">{testimonial.role}</p>
+
+                                    <div className="pt-6 border-t border-stone-100">
+                                        <div className="flex flex-col">
+                                            <span className="text-base font-semibold text-anthracite tracking-wide">
+                                                {testimonial.name}
+                                            </span>
+                                            <span className="text-xs font-medium uppercase tracking-widest text-wood-500 mt-1">
+                                                {testimonial.role}
+                                            </span>
+                                        </div>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
