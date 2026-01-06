@@ -67,7 +67,7 @@ export default function Testimonials({ settings }: TestimonialsProps) {
     const heading = settings?.heading || DEFAULT_HEADING;
     const description = settings?.description || DEFAULT_DESCRIPTION;
     // Ensure we have enough items for a nice slider loop, duplicate defaults if needed for demo
-    consttestimonialsSource = settings?.testimonials?.length ? settings.testimonials : DEFAULT_TESTIMONIALS;
+    const testimonialsSource = settings?.testimonials?.length ? settings.testimonials : DEFAULT_TESTIMONIALS;
     const testimonials = testimonialsSource.length < 4 ? [...testimonialsSource, ...testimonialsSource] : testimonialsSource;
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
