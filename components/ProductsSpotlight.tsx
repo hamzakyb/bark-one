@@ -108,13 +108,13 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
     }, [emblaApi]);
 
     return (
-        <section className="relative py-32 bg-stone-50 overflow-hidden">
+        <section className="relative py-24 bg-stone-50 overflow-hidden">
             {/* Decorative Background Elements */}
             <div className="absolute top-[20%] left-0 w-[800px] h-[800px] bg-stone-100/60 rounded-full blur-3xl -translate-x-1/2 pointer-events-none" />
 
             <div className="container mx-auto px-6 relative z-10">
                 {/* Header & Controls */}
-                <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between mb-16">
+                <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between mb-10">
                     <div className="max-w-2xl">
                         <span className="inline-block py-2 px-4 rounded-full border border-stone-200 bg-white/50 backdrop-blur-sm text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-stone-500 mb-6">
                             {badge}
@@ -162,7 +162,7 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                 </div>
 
                 {/* Trust Indicators Strip */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-16 border-y border-stone-200 py-10">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-10 border-y border-stone-200 py-10">
                     {trustItems.map((item, idx) => (
                         <div key={idx} className="flex items-center gap-4 group">
                             <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-500">
