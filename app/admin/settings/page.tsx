@@ -711,6 +711,15 @@ export default function AdminSettingsPage() {
                             className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                         />
                     </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Şirket Telefonu (Genel)</label>
+                        <input
+                            value={settings.contactPhone ?? ''}
+                            onChange={(e) => updateSetting('contactPhone', e.target.value)}
+                            className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            placeholder="+90 ..."
+                        />
+                    </div>
                 </div>
             </section>
             <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
