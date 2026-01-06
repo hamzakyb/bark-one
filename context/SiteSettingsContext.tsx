@@ -3,6 +3,14 @@
 import { createContext, useContext, useMemo, useState } from "react";
 
 export interface SiteSettings {
+  socialMedia?: {
+    instagram?: string;
+    facebook?: string;
+    twitter?: string;
+  };
+  contactEmailPrimary?: string;
+  contactAddress?: string;
+  homeHeroVerticalText?: string;
   [key: string]: unknown;
 }
 

@@ -28,6 +28,7 @@ type HeroSlide = {
 
 type HeroSettings = {
   slides?: HeroSlide[];
+  verticalText?: string;
 };
 
 type HeroProps = {
@@ -226,7 +227,7 @@ export default function Hero({ settings }: HeroProps) {
         <div className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col items-center gap-8">
           <div className="w-[1px] h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
           <span className="text-[10px] tracking-[0.5em] uppercase text-white/30 [writing-mode:vertical-rl] rotate-180">
-            Premium Craftsmanship
+            {settings?.verticalText || "Premium Craftsmanship"}
           </span>
           <div className="w-[1px] h-32 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
         </div>

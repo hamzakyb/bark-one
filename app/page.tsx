@@ -109,6 +109,7 @@ type SiteSettingsData = {
   homeHeroPrimaryCtaUrl?: string;
   homeHeroSecondaryCtaLabel?: string;
   homeHeroSecondaryCtaUrl?: string;
+  homeHeroVerticalText?: string;
   homeHeroSlides?: Array<{
     _id?: string;
     badge?: string;
@@ -207,6 +208,7 @@ export default async function Home() {
           secondaryCtaUrl: siteSettings?.homeHeroSecondaryCtaUrl,
         },
       ],
+    verticalText: siteSettings?.homeHeroVerticalText,
   };
 
   const featureSettings = {

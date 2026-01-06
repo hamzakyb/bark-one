@@ -48,6 +48,10 @@ const SiteSettingsSchema = new mongoose.Schema({
         type: String,
         default: '/contact',
     },
+    homeHeroVerticalText: {
+        type: String,
+        default: 'Premium Craftsmanship',
+    },
     homeHeroSlides: [{
         badge: String,
         title: String,

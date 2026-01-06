@@ -8,11 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-const socialLinks: { icon: LucideIcon; label: string; href: string }[] = [
-    { icon: Instagram, label: 'Instagram', href: 'https://instagram.com' },
-    { icon: Facebook, label: 'Facebook', href: 'https://facebook.com' }
-];
-
 const quickLinks = [
     { href: '/#products', label: 'Ürünler', icon: Package },
     { href: '/#inspiration', label: 'Galeri', icon: FileText },
@@ -39,7 +34,7 @@ export default function Footer() {
             <div className="container mx-auto px-4 py-6">
                 {/* Main Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    
+
                     {/* Brand Section */}
                     <div className="space-y-3">
                         <Link href="/" className="inline-flex items-center gap-3">
@@ -58,26 +53,37 @@ export default function Footer() {
                                 </span>
                             )}
                         </Link>
-                        
+
                         <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
                             Doğal dokularla rafine tasarım arasında köprü kurarak her yaşam alanına zamansız bir estetik katıyoruz.
                         </p>
-                        
+
                         {/* Social Links */}
                         <div className="flex gap-2">
-                            {socialLinks.map(({ icon: Icon, label, href }) => (
+                            {settings?.socialMedia?.instagram && (
                                 <Button
-                                    key={label}
                                     variant="outline"
                                     size="sm"
                                     asChild
                                     className="h-8 w-8 rounded-full border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 hover:scale-110 transition-all duration-300"
                                 >
-                                    <a href={href} aria-label={label}>
-                                        <Icon className="h-3 w-3 text-slate-600" />
+                                    <a href={settings.socialMedia.instagram} aria-label="Instagram">
+                                        <Instagram className="h-3 w-3 text-slate-600" />
                                     </a>
                                 </Button>
-                            ))}
+                            )}
+                            {settings?.socialMedia?.facebook && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    asChild
+                                    className="h-8 w-8 rounded-full border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 hover:scale-110 transition-all duration-300"
+                                >
+                                    <a href={settings.socialMedia.facebook} aria-label="Facebook">
+                                        <Facebook className="h-3 w-3 text-slate-600" />
+                                    </a>
+                                </Button>
+                            )}
                         </div>
                     </div>
 
@@ -141,11 +147,11 @@ export default function Footer() {
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white border border-slate-200">
                                     <Mail className="h-3 w-3 text-slate-600" />
                                 </div>
-                                <a href="mailto:info@barkone.com" className="text-xs font-medium text-slate-900 hover:text-slate-700 transition-colors">
-                                    info@barkone.com
+                                <a href={`mailto:${settings?.contactEmailPrimary || 'info@barkone.com'}`} className="text-xs font-medium text-slate-900 hover:text-slate-700 transition-colors">
+                                    {settings?.contactEmailPrimary || 'info@barkone.com'}
                                 </a>
                             </div>
-                            
+
                             <div className="group flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors duration-300">
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white border border-slate-200">
                                     <Phone className="h-3 w-3 text-slate-600" />
@@ -154,13 +160,13 @@ export default function Footer() {
                                     +90 555 123 45 67
                                 </a>
                             </div>
-                            
+
                             <div className="group flex items-center gap-3 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors duration-300">
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white border border-slate-200">
                                     <MapPin className="h-3 w-3 text-slate-600" />
                                 </div>
                                 <span className="text-xs font-medium text-slate-900">
-                                    İstanbul, Türkiye
+                                    {settings?.contactAddress || 'İstanbul, Türkiye'}
                                 </span>
                             </div>
                         </div>
@@ -169,7 +175,7 @@ export default function Footer() {
 
                 {/* Bottom Section */}
                 <Separator className="bg-slate-200 mb-4" />
-                
+
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div className="flex items-center gap-2">
                         <Badge variant="outline" className="border-slate-300 text-slate-600 text-xs px-2 py-0.5 h-5">
@@ -179,7 +185,7 @@ export default function Footer() {
                             Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by barkOne
                         </span>
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-4">
                         <a href="#" className="text-xs text-slate-500 hover:text-slate-700 transition-colors duration-300 font-medium">
                             Gizlilik Politikası

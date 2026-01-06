@@ -128,6 +128,7 @@ type SiteSettings = {
     homeHeroPrimaryCtaUrl?: string;
     homeHeroSecondaryCtaLabel?: string;
     homeHeroSecondaryCtaUrl?: string;
+    homeHeroVerticalText?: string;
     homeHeroSlides?: Array<{
         badge?: string;
         title?: string;
@@ -795,6 +796,17 @@ export default function AdminHomePage() {
                                             >
                                                 <Plus size={16} className="mr-1" /> Slayt Ekle
                                             </Button>
+                                        </div>
+
+                                        <div className="p-6 rounded-[32px] border border-slate-200 bg-slate-50/50 space-y-4">
+                                            <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Dikey Dekoratif Metin (Sol Kenar)</Label>
+                                            <Input
+                                                value={settings.homeHeroVerticalText ?? ''}
+                                                onChange={(e) => updateSetting('homeHeroVerticalText', e.target.value)}
+                                                placeholder="Örn: Premium Craftsmanship"
+                                                className="rounded-xl border-slate-200 focus:ring-wood-500 bg-white"
+                                            />
+                                            <p className="text-[10px] text-slate-400 italic">Hero bölümünün sol kenarında dikey olarak görünen yazı.</p>
                                         </div>
 
                                         <div className="space-y-8 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
