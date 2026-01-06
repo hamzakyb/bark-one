@@ -182,7 +182,7 @@ export default function Footer() {
                             &copy; {new Date().getFullYear()}
                         </Badge>
                         <span className="text-xs text-slate-600 flex items-center gap-1">
-                            Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by barkOne
+                            Made with <Heart className="h-3 w-3 text-red-500 fill-red-500" /> by <a href="https://www.hmzsolutions.com.tr" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors font-medium">HMZ Solutions</a>
                         </span>
                     </div>
 
