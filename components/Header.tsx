@@ -130,8 +130,11 @@ export default function Header() {
                                     className="h-14 w-auto md:h-16"
                                 />
                             ) : (
-                                <span className="text-2xl md:text-3xl font-bold text-foreground">
-                                    bark<span className="text-primary">One</span>
+                                <span className={cn(
+                                    "text-2xl md:text-3xl font-bold transition-colors",
+                                    isTransparent ? "text-white" : "text-foreground"
+                                )}>
+                                    bark<span className={cn(isTransparent ? "text-white" : "text-primary")}>One</span>
                                 </span>
                             )}
                         </Link>
@@ -139,7 +142,7 @@ export default function Header() {
 
                     {/* Center Section - Navigation */}
                     <div className="hidden md:flex items-center justify-center flex-1 px-4">
-                        <nav className="hidden md:flex items-center gap-1">
+                        <nav className="flex items-center gap-1">
                             {navItems.map((item) => (
                                 <motion.div
                                     key={item.href}
@@ -153,7 +156,9 @@ export default function Header() {
                                             'relative text-sm font-medium rounded-full transition-all duration-300 overflow-hidden group',
                                             pathname === item.href
                                                 ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800'
-                                                : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
+                                                : isTransparent
+                                                    ? 'text-white border border-white/20 hover:bg-white/10 hover:border-white/40' // Transparent mode styles
+                                                    : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
                                         )}
                                     >
                                         <Link href={item.href} className="relative z-10">
@@ -161,7 +166,10 @@ export default function Header() {
                                         </Link>
                                     </Button>
                                     <motion.div
-                                        className="absolute inset-0 bg-linear-to-r from-slate-100 to-slate-200 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        className={cn(
+                                            "absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+                                            isTransparent ? "bg-white/10" : "bg-linear-to-r from-slate-100 to-slate-200"
+                                        )}
                                         variants={{
                                             hover: { scale: 1.05, opacity: 1 },
                                             rest: { scale: 1, opacity: 0 }
@@ -216,7 +224,12 @@ export default function Header() {
                                     setIsSearchOpen(!isSearchOpen);
                                     setIsMenuOpen(false);
                                 }}
-                                className="h-8 w-8"
+                                className={cn(
+                                    "h-8 w-8 rounded-full",
+                                    isTransparent
+                                        ? "bg-white text-black hover:bg-white/90"
+                                        : "bg-transparent text-foreground hover:bg-accent"
+                                )}
                             >
                                 <Search className="h-4 w-4" />
                                 <span className="sr-only">Ara</span>
@@ -230,7 +243,12 @@ export default function Header() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 text-foreground hover:bg-muted/50 relative"
+                                        className={cn(
+                                            "h-8 w-8 relative rounded-full",
+                                            isTransparent
+                                                ? "bg-white text-black hover:bg-white/90"
+                                                : "text-foreground hover:bg-muted/50"
+                                        )}
                                     >
                                         <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-background">
                                             <span className="sr-only">Çevrimiçi</span>
@@ -250,7 +268,10 @@ export default function Header() {
                                         )}
                                         <span className="sr-only">Profil</span>
                                     </Button>
-                                    <span className="hidden md:inline text-sm font-normal group-hover:underline">
+                                    <span className={cn(
+                                        "hidden md:inline text-sm font-normal group-hover:underline",
+                                        isTransparent ? "text-white" : "text-foreground"
+                                    )}>
                                         {user.name.split(' ')[0]}
                                     </span>
                                 </Link>
@@ -261,7 +282,12 @@ export default function Header() {
                                         variant="outline"
                                         size="sm"
                                         onClick={handleLogout}
-                                        className="hidden md:flex items-center gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive text-xs"
+                                        className={cn(
+                                            "hidden md:flex items-center gap-1.5 text-xs",
+                                            isTransparent
+                                                ? "bg-white/10 text-white border-white/20 hover:bg-red-500 hover:text-white hover:border-red-500"
+                                                : "text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                        )}
                                     >
                                         <LogOut className="h-3.5 w-3.5" />
                                         <span>Çıkış Yap</span>
@@ -270,17 +296,45 @@ export default function Header() {
                             </>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <Button asChild variant="outline" size="sm" className="hidden md:flex h-8 text-xs">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="sm"
+                                    className={cn(
+                                        "hidden md:flex h-8 text-xs",
+                                        isTransparent
+                                            ? "bg-white/10 text-white border-white/20 hover:bg-white hover:text-black"
+                                            : ""
+                                    )}
+                                >
                                     <Link href="/login">Giriş Yap</Link>
                                 </Button>
-                                <Button asChild size="sm" className="hidden md:flex h-8 text-xs">
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(
+                                        "hidden md:flex h-8 text-xs",
+                                        isTransparent
+                                            ? "bg-white text-black hover:bg-white/90"
+                                            : ""
+                                    )}
+                                >
                                     <Link href="/register">Üye Ol</Link>
                                 </Button>
                                 <div className="md:hidden">
                                     {isMounted && (
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className={cn(
+                                                        "h-8 w-8 rounded-full",
+                                                        isTransparent
+                                                            ? "bg-white text-black hover:bg-white/90"
+                                                            : ""
+                                                    )}
+                                                >
                                                     <User className="h-4 w-4" />
                                                     <span className="sr-only">Hesap</span>
                                                 </Button>
@@ -309,7 +363,12 @@ export default function Header() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 relative"
+                            className={cn(
+                                "h-8 w-8 relative rounded-full",
+                                isTransparent
+                                    ? "bg-white text-black hover:bg-white/90"
+                                    : "bg-transparent text-foreground hover:bg-accent"
+                            )}
                             asChild
                         >
                             <Link href="/cart">
@@ -330,7 +389,12 @@ export default function Header() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="md:hidden h-8 w-8"
+                                        className={cn(
+                                            "md:hidden h-8 w-8 rounded-full",
+                                            isTransparent
+                                                ? "bg-white text-black hover:bg-white/90"
+                                                : "bg-transparent text-foreground hover:bg-accent"
+                                        )}
                                     >
                                         <Menu className="h-4 w-4" />
                                         <span className="sr-only">Menüyü Aç</span>
@@ -463,6 +527,6 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     );
 }
