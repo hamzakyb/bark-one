@@ -16,7 +16,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 const navItems = [
     { href: '/', label: 'Anasayfa' },
     { href: '/products', label: 'Ürünler' },
-    { href: '/#inspiration', label: 'Galeri' },
     { href: '/about', label: 'Hakkımızda' },
     { href: '/contact', label: 'İletişim' },
 ] as const;

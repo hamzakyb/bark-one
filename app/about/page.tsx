@@ -9,33 +9,14 @@ import {
     Award,
     Heart,
     Shield,
-    ArrowRight,
+    ArrowUpRight,
     Lightbulb,
     Building,
     Handshake,
     Star
 } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-
-interface AboutStat {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-}
-
-interface AboutValue {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-}
-
-interface AboutProcessItem {
-    title: string;
-    description: string;
-}
 
 interface AboutSettings {
     aboutHeroBadge: string;
@@ -68,79 +49,35 @@ interface AboutSettings {
 }
 
 const DEFAULT_SETTINGS = {
-    aboutHeroBadge: 'Hakkımızda',
-    aboutHeroTitle: 'Doğal Estetik, Zamansız Tasarım',
-    aboutHeroSubtitle: '1998 yılında başlayan yolculuğumuzda doğal malzemeleri modern tasarımla buluşturarak yaşam alanlarını dönüştürüyoruz.',
-    aboutHeroDescription: 'BarkOne olarak, doğanın sunduğu eşsiz dokuları işçilik ve yenilikçi yaklaşımlarla birleştirerek her projede zamansız eserler yaratıyoruz.',
+    aboutHeroBadge: 'Hikayemiz',
+    aboutHeroTitle: 'Zamanın ötesinde estetik.',
+    aboutHeroSubtitle: 'Doğal malzemeyi modern zanaatkarlıkla buluşturuyor, yaşam alanlarına ruh katıyoruz.',
+    aboutHeroDescription: 'BarkOne olarak, doğanın sunduğu eşsiz dokuları işçilik ve yenilikçi yaklaşımlarla birleştirerek her projede zamansız eserler yaratıyoruz. Her parça, bir tasarım objesi olmanın ötesinde, yaşanmışlığın ve kalitenin bir simgesidir.',
     aboutHeroImage: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop',
     aboutStats: [
-        {
-            icon: Users,
-            title: '5000+',
-            description: 'Mutlu Müşteri'
-        },
-        {
-            icon: Award,
-            title: '25+',
-            description: 'Yıllık Deneyim'
-        },
-        {
-            icon: Building,
-            title: '1000+',
-            description: 'Tamamlanmış Proje'
-        },
-        {
-            icon: Star,
-            title: '4.9/5',
-            description: 'Müşteri Puanı'
-        }
+        { icon: Users, title: '5K+', description: 'Mutlu Müşteri' },
+        { icon: Award, title: '25', description: 'Yıllık Deneyim' },
+        { icon: Building, title: '1K+', description: 'Tamamlanmış Proje' },
+        { icon: Star, title: '4.9', description: 'Müşteri Puanı' }
     ],
     aboutValues: [
-        {
-            icon: Heart,
-            title: 'Kalite Odaklı',
-            description: 'Her projede en yüksek kalite standartlarını koruyarak uzun ömürlü ve estetik çözümler sunuyoruz.'
-        },
-        {
-            icon: Shield,
-            title: 'Güvenilirlik',
-            description: 'Söz verdiğimiz tarihte teslimat ve müşteri memnuniyetini her zaman ön planda tutuyoruz.'
-        },
-        {
-            icon: Lightbulb,
-            title: 'Yenilikçi',
-            description: 'Sektördeki trendleri takip ederek modern ve fonksiyonel tasarımlar geliştiriyoruz.'
-        },
-        {
-            icon: Handshake,
-            title: 'Müşteri Odaklı',
-            description: 'Her müşterinin ihtiyaçlarını anlayarak kişiselleştirilmiş çözümler üretiyoruz.'
-        }
+        { icon: Heart, title: 'Tutku', description: 'Ahşabın doğallığına olan tutkumuz, her detayda kendini gösterir.' },
+        { icon: Shield, title: 'Güven', description: 'Söz verdiğimiz kaliteden ve zamandan asla ödün vermeyiz.' },
+        { icon: Lightbulb, title: 'İnovasyon', description: 'Geleneksel dokuları modern teknolojilerle harmanlarız.' },
+        { icon: Handshake, title: 'Bağlılık', description: 'Müşterilerimizle kurduğumuz bağ, ürünlerimiz kadar sağlamdır.' }
     ],
     aboutProcess: [
-        {
-            title: 'Keşif ve Planlama',
-            description: 'Mekanınızı detaylıca inceliyor, ihtiyaçlarınızı analiz ediyor ve en uygun çözümü planlıyoruz.'
-        },
-        {
-            title: 'Tasarım ve Onay',
-            description: 'Modern tasarım prensipleriyle 3D görsellemeler hazırlayıp onayınız için sunuyoruz.'
-        },
-        {
-            title: 'Üretim ve Montaj',
-            description: 'Ustalarımız tarafından hassasiyetle üretilen ürünleri profesyonel ekiplerle montajını yapıyoruz.'
-        },
-        {
-            title: 'Teslimat ve Destek',
-            description: 'Projenin teslimatını yapıyor ve uzun vadeli destek hizmetimizle yanınızda oluyoruz.'
-        }
+        { title: 'Keşif', description: 'Mekanınızı ve hayallerinizi dinliyor, analiz ediyoruz.' },
+        { title: 'Tasarım', description: 'Estetik ve fonksiyonelliği birleştiren taslaklar hazırlıyoruz.' },
+        { title: 'Üretim', description: 'Usta ellerde, en kaliteli malzemelerle hayat buluyor.' },
+        { title: 'Teslimat', description: 'Evinizin en değerli köşesine özenle yerleştiriyoruz.' }
     ],
-    aboutCtaTitle: 'Projenizi Bizimle Hayata Geçirin',
-    aboutCtaSubtitle: 'Uzman ekibimizle tanışmak ve projeniz için özel çözümlerimiz hakkında bilgi almak için bizimle iletişime geçin.',
-    aboutCtaPrimaryLabel: 'Ücretsiz Danışmanlık',
+    aboutCtaTitle: 'Yeni bir soluk getirin.',
+    aboutCtaSubtitle: 'Evinizin hikayesini birlikte yeniden yazalım.',
+    aboutCtaPrimaryLabel: 'İletişime Geçin',
     aboutCtaPrimaryHref: '/contact',
-    aboutCtaSecondaryLabel: 'Referansları İncele',
-    aboutCtaSecondaryHref: '/#testimonials',
+    aboutCtaSecondaryLabel: 'Koleksiyonu Keşfet',
+    aboutCtaSecondaryHref: '/products',
     aboutTeamTitle: '',
     aboutTeamDescription: ''
 };
@@ -151,282 +88,195 @@ export default function AboutPage() {
     const [pageSettings, setPageSettings] = useState<AboutSettings>({
         ...DEFAULT_SETTINGS,
         ...(settings as any),
-        aboutTeamTitle: (settings?.aboutTeamTitle as string) || DEFAULT_SETTINGS.aboutTeamTitle,
-        aboutTeamDescription: (settings?.aboutTeamDescription as string) || DEFAULT_SETTINGS.aboutTeamDescription
+        // Ensure default fallbacks if settings keys exist but are empty strings? 
+        // Or trust the spread. Usually spread is fine for overrides.
     });
 
     useEffect(() => {
         setIsMounted(true);
-
+        // Also fetch from API to be sure we have latest server-side settings
+        // similar to original component
         const loadSettings = async () => {
             try {
                 const response = await fetch('/api/settings');
-                if (!response.ok) throw new Error('Failed to load settings');
+                if (!response.ok) return;
                 const data = await response.json();
                 setPageSettings(prev => ({ ...prev, ...data }));
             } catch (error) {
-                console.error('Error fetching about settings:', error);
+                // silent fail
             }
         };
-
-        loadSettings();
+        void loadSettings();
     }, []);
 
-    if (!isMounted) {
-        return null; // or a loading spinner
-    }
+    if (!isMounted) return null;
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-slate-50 to-white">
+        <div className="min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-stone-200">
             {/* Hero Section */}
-            <section className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-linear-to-br from-slate-900/10 to-transparent" />
-                <div className="container mx-auto px-4 py-20 lg:py-32">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+                <div className="container px-6 mx-auto">
+                    <div className="max-w-4xl mx-auto text-center mb-16 md:mb-24">
                         <motion.div
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                            className="space-y-8"
+                            className="inline-block py-2 px-4 rounded-full border border-stone-200 bg-white/50 backdrop-blur-sm text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-stone-500 mb-8"
                         >
-                            <Badge className="w-fit px-4 py-2 text-sm font-semibold bg-slate-100 text-slate-700 border-slate-200">
-                                {pageSettings.aboutHeroBadge}
-                            </Badge>
+                            {pageSettings.aboutHeroBadge}
+                        </motion.div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="text-5xl md:text-7xl lg:text-8xl font-serif text-stone-900 mb-8 tracking-tight leading-[0.9]"
+                        >
+                            {pageSettings.aboutHeroTitle}
+                        </motion.h1>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="text-lg md:text-2xl text-stone-600 font-light max-w-2xl mx-auto leading-relaxed"
+                        >
+                            {pageSettings.aboutHeroSubtitle}
+                        </motion.p>
+                    </div>
 
-                            <div className="space-y-4">
-                                <h1 className="text-4xl lg:text-6xl font-bold bg-linear-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-                                    {pageSettings.aboutHeroTitle}
-                                </h1>
-                                <p className="text-lg lg:text-xl text-slate-600 font-light">
-                                    {pageSettings.aboutHeroSubtitle}
-                                </p>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.3, duration: 0.8 }}
+                        className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-sm"
+                    >
+                        <Image
+                            src={pageSettings.aboutHeroImage}
+                            alt="About Hero"
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                        <div className="absolute inset-0 bg-black/10" />
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="max-w-3xl mx-auto mt-20 text-center"
+                    >
+                        <p className="text-xl md:text-2xl text-stone-800 font-serif leading-relaxed">
+                            "{pageSettings.aboutHeroDescription}"
+                        </p>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Stats Section - Minimalist */}
+            <section className="py-20 border-y border-stone-200 bg-white">
+                <div className="container px-6 mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                        {pageSettings.aboutStats.map((stat, idx) => (
+                            <div key={idx} className="space-y-2">
+                                <div className="text-4xl md:text-5xl font-serif text-stone-900">
+                                    {stat.title}
+                                </div>
+                                <div className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium">
+                                    {stat.description}
+                                </div>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-                            <p className="text-slate-600 leading-relaxed max-w-2xl">
-                                {pageSettings.aboutHeroDescription}
+            {/* Values - Editorial Grid */}
+            <section className="py-32">
+                <div className="container px-6 mx-auto">
+                    <div className="flex flex-col md:flex-row gap-16 md:items-start">
+                        <div className="md:w-1/3 sticky top-32">
+                            <h2 className="text-4xl md:text-5xl font-serif text-stone-900 mb-6">Değerlerimiz</h2>
+                            <p className="text-stone-600 leading-relaxed font-light text-lg">
+                                Bizi biz yapan, tasarımlarımıza yön veren temel inançlarımız.
                             </p>
-
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Button size="lg" className="bg-slate-900 hover:bg-slate-800 text-white" asChild>
-                                    <Link href={pageSettings.aboutCtaPrimaryHref}>
-                                        {pageSettings.aboutCtaPrimaryLabel}
-                                        <ArrowRight className="h-4 w-4 ml-2" />
-                                    </Link>
-                                </Button>
-                                <Button size="lg" variant="outline" asChild>
-                                    <Link href={pageSettings.aboutCtaSecondaryHref}>
-                                        {pageSettings.aboutCtaSecondaryLabel}
-                                    </Link>
-                                </Button>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="relative"
-                        >
-                            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                                <Image
-                                    src={pageSettings.aboutHeroImage}
-                                    alt="Hakkımızda"
-                                    width={600}
-                                    height={400}
-                                    className="w-full h-auto"
-                                />
-                                <div className="absolute inset-0 bg-linear-to-br from-slate-900/20 to-transparent" />
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Stats Section */}
-            <section className="py-20 bg-slate-50">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
-                            Rakamlarla BarkOne
-                        </h2>
-                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                            Yılların birikimi ve binlerce mutlu müşteriyle şekillendirdiğimiz başarı hikayemiz.
-                        </p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {pageSettings.aboutStats.map((stat, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                            >
-                                <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
-                                    <CardContent className="p-6 text-center">
-                                        <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
-                                            <stat.icon className="h-8 w-8 text-slate-600" />
-                                        </div>
-                                        <div className="text-3xl font-bold text-slate-900 mb-2">
-                                            {stat.title}
-                                        </div>
-                                        <div className="text-slate-600">
-                                            {stat.description}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Values Section */}
-            <section className="py-20">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
-                            Değerlerimiz
-                        </h2>
-                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                            Her projemizde rehberimiz olan temel değerlerimiz ve iş yapış biçimimiz.
-                        </p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {pageSettings.aboutValues.map((value, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                            >
-                                <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-                                    <CardContent className="p-6">
-                                        <div className="flex items-start gap-4">
-                                            <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                <value.icon className="h-6 w-6 text-slate-600" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <h3 className="text-xl font-semibold text-slate-900">
-                                                    {value.title}
-                                                </h3>
-                                                <p className="text-slate-600 leading-relaxed">
-                                                    {value.description}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Process Section */}
-            <section className="py-20 bg-slate-50">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center mb-12"
-                    >
-                        <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
-                            Çalışma Sürecimiz
-                        </h2>
-                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-                            Projenizi hayata geçirmek için izlediğimiz adımlar ve metodolojimiz.
-                        </p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {pageSettings.aboutProcess.map((process, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className="flex gap-6"
-                            >
-                                <div className="flex flex-col items-center">
-                                    <div className="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                                        {index + 1}
+                        </div>
+                        <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-16">
+                            {pageSettings.aboutValues.map((value, idx) => (
+                                <div key={idx} className="group">
+                                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-stone-100 text-stone-900 mb-6 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-500">
+                                        <value.icon size={24} strokeWidth={1.5} />
                                     </div>
-                                    {index < pageSettings.aboutProcess.length - 1 && (
-                                        <div className="w-0.5 h-16 bg-slate-300 mt-4" />
-                                    )}
-                                </div>
-                                <div className="flex-1">
-                                    <Card className="border-slate-200 bg-white shadow-sm">
-                                        <CardContent className="p-6">
-                                            <h3 className="text-xl font-semibold text-slate-900 mb-3">
-                                                {process.title}
-                                            </h3>
-                                            <p className="text-slate-600 leading-relaxed">
-                                                {process.description}
-                                            </p>
-                                        </CardContent>
-                                    </Card>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-20">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        <Card className="border-slate-200 bg-linear-to-br from-slate-50 to-white shadow-xl">
-                            <CardContent className="p-12 text-center">
-                                <div className="max-w-3xl mx-auto space-y-6">
-                                    <h2 className="text-3xl lg:text-4xl font-bold text-slate-900">
-                                        {pageSettings.aboutCtaTitle}
-                                    </h2>
-                                    <p className="text-lg text-slate-600 leading-relaxed">
-                                        {pageSettings.aboutCtaSubtitle}
+                                    <h3 className="text-xl font-serif text-stone-900 mb-3">{value.title}</h3>
+                                    <p className="text-stone-500 leading-relaxed font-light">
+                                        {value.description}
                                     </p>
-                                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                        <Button size="lg" className="bg-slate-900 hover:bg-slate-800 text-white" asChild>
-                                            <Link href={pageSettings.aboutCtaPrimaryHref}>
-                                                {pageSettings.aboutCtaPrimaryLabel}
-                                                <ArrowRight className="h-4 w-4 ml-2" />
-                                            </Link>
-                                        </Button>
-                                        <Button size="lg" variant="outline" asChild>
-                                            <Link href={pageSettings.aboutCtaSecondaryHref}>
-                                                {pageSettings.aboutCtaSecondaryLabel}
-                                            </Link>
-                                        </Button>
-                                    </div>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Process - Horizontal Timeline Styled */}
+            <section className="py-24 bg-stone-100/50">
+                <div className="container px-6 mx-auto">
+                    <div className="text-center mb-20">
+                        <span className="text-xs font-bold tracking-[0.2em] uppercase text-stone-500 block mb-3">
+                            Süreç
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-serif text-stone-900">Nasıl Çalışıyoruz?</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                        {/* Connecting Line (Desktop) */}
+                        <div className="hidden md:block absolute top-12 left-0 w-full h-[1px] bg-stone-300 -z-10" />
+
+                        {pageSettings.aboutProcess.map((step, idx) => (
+                            <div key={idx} className="relative pt-0 md:pt-8 group">
+                                <div className="hidden md:flex absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-stone-50 border border-stone-300 items-center justify-center z-10 text-xs font-bold text-stone-400 group-hover:border-stone-900 group-hover:text-stone-900 transition-colors duration-300">
+                                    {idx + 1}
+                                </div>
+                                <div className="bg-white p-8 md:p-6 rounded-sm shadow-sm md:shadow-none md:bg-transparent text-center md:text-center hover:bg-white hover:shadow-lg transition-all duration-300">
+                                    <h3 className="text-xl font-serif text-stone-900 mb-3">{step.title}</h3>
+                                    <p className="text-sm text-stone-500 leading-relaxed font-light">
+                                        {step.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Footer CTA */}
+            <section className="py-32 bg-stone-900 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
+                <div className="container px-6 mx-auto relative z-10 text-center">
+                    <h2 className="text-4xl md:text-6xl font-serif mb-8 max-w-3xl mx-auto leading-tight">
+                        {pageSettings.aboutCtaTitle}
+                    </h2>
+                    <p className="text-lg md:text-xl text-stone-400 font-light mb-12 max-w-xl mx-auto">
+                        {pageSettings.aboutCtaSubtitle}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <Button
+                            asChild
+                            variant="default"
+                            className="bg-white text-stone-900 hover:bg-stone-200 h-14 px-8 rounded-full uppercase tracking-widest text-xs font-bold"
+                        >
+                            <Link href={pageSettings.aboutCtaPrimaryHref}>
+                                {pageSettings.aboutCtaPrimaryLabel}
+                            </Link>
+                        </Button>
+                        <Button
+                            asChild
+                            variant="outline"
+                            className="border-stone-700 text-white hover:bg-stone-800 hover:text-white h-14 px-8 rounded-full uppercase tracking-widest text-xs font-bold"
+                        >
+                            <Link href={pageSettings.aboutCtaSecondaryHref}>
+                                {pageSettings.aboutCtaSecondaryLabel}
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </section>
         </div>
