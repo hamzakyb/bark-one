@@ -10,6 +10,7 @@ export interface SiteSettings {
   };
   contactEmailPrimary?: string;
   contactAddress?: string;
+  contactPhone?: string;
   homeHeroVerticalText?: string;
   [key: string]: unknown;
 }
