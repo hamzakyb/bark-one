@@ -146,18 +146,18 @@ export default function Header() {
                             {navItems.map((item) => (
                                 <motion.div
                                     key={item.href}
-                                    className="relative"
+                                    className="relative group/nav-item"
                                     whileHover="hover"
                                 >
                                     <Button
                                         asChild
                                         variant="ghost"
                                         className={cn(
-                                            'relative text-sm font-medium rounded-full transition-all duration-300 overflow-hidden group',
+                                            'relative text-sm font-medium rounded-full transition-colors duration-300',
                                             pathname === item.href
                                                 ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800'
                                                 : isTransparent
-                                                    ? 'text-white border border-white/20 hover:bg-white/10 hover:border-white/40' // Transparent mode styles
+                                                    ? 'text-white group-hover/nav-item:text-black border border-white/20 hover:bg-transparent' // Transparent mode styles
                                                     : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
                                         )}
                                     >
@@ -165,17 +165,19 @@ export default function Header() {
                                             {item.label}
                                         </Link>
                                     </Button>
-                                    <motion.div
-                                        className={cn(
-                                            "absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-                                            isTransparent ? "bg-white/10" : "bg-linear-to-r from-slate-100 to-slate-200"
-                                        )}
-                                        variants={{
-                                            hover: { scale: 1.05, opacity: 1 },
-                                            rest: { scale: 1, opacity: 0 }
-                                        }}
-                                        transition={{ duration: 0.3, ease: "easeOut" }}
-                                    />
+                                    {pathname !== item.href && (
+                                        <motion.div
+                                            className={cn(
+                                                "absolute inset-0 rounded-full opacity-0 group-hover/nav-item:opacity-100 transition-opacity duration-300",
+                                                isTransparent ? "bg-white" : "bg-linear-to-r from-slate-100 to-slate-200"
+                                            )}
+                                            variants={{
+                                                hover: { scale: 1.05, opacity: 1 },
+                                                rest: { scale: 1, opacity: 0 }
+                                            }}
+                                            transition={{ duration: 0.3, ease: "easeOut" }}
+                                        />
+                                    )}
                                     {pathname === item.href && (
                                         <motion.div
                                             className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-slate-900 rounded-full"
