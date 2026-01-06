@@ -101,20 +101,18 @@ export default function Header() {
     };
 
     const forceSolidHeader = pathname === '/login' || pathname === '/register' || pathname === '/profile';
-    const isHomePage = pathname === '/';
-    const isTransparent = isHomePage && !isScrolled && !forceSolidHeader;
 
     return (
         <header
             className={cn(
-                'fixed top-0 left-0 right-0 z-60 transition-all duration-500 border-b',
-                isTransparent
-                    ? 'bg-transparent border-transparent'
-                    : 'bg-background/95 backdrop-blur-lg shadow-lg border-border/50'
+                'sticky top-0 left-0 right-0 z-60 transition-all duration-300 border-b',
+                isScrolled || forceSolidHeader
+                    ? 'bg-background/95 backdrop-blur-lg shadow-lg border-border/50'
+                    : 'bg-background/80 backdrop-blur-md shadow-sm border-border/20'
             )}
         >
             <div className="container px-4 mx-auto">
-                <div className="flex items-center justify-between h-16">
+                <div className="flex items-center justify-between h-14 md:h-16">
                     {/* Left Section - Logo */}
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center">
@@ -128,10 +126,7 @@ export default function Header() {
                                     className="h-14 w-auto md:h-16"
                                 />
                             ) : (
-                                <span className={cn(
-                                    "text-2xl md:text-3xl font-bold transition-colors duration-300",
-                                    isTransparent ? "text-white" : "text-foreground"
-                                )}>
+                                <span className="text-2xl md:text-3xl font-bold text-foreground">
                                     bark<span className="text-primary">One</span>
                                 </span>
                             )}
@@ -153,8 +148,8 @@ export default function Header() {
                                         className={cn(
                                             'relative text-sm font-medium rounded-full transition-all duration-300 overflow-hidden group',
                                             pathname === item.href
-                                                ? (isTransparent ? 'bg-white text-black shadow-lg shadow-white/10' : 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800')
-                                                : (isTransparent ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200')
+                                                ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800'
+                                                : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
                                         )}
                                     >
                                         <Link href={item.href} className="relative z-10">
@@ -217,10 +212,7 @@ export default function Header() {
                                     setIsSearchOpen(!isSearchOpen);
                                     setIsMenuOpen(false);
                                 }}
-                                className={cn(
-                                    "h-8 w-8 transition-colors duration-300",
-                                    isTransparent ? "text-white hover:bg-white/10" : "text-foreground"
-                                )}
+                                className="h-8 w-8"
                             >
                                 <Search className="h-4 w-4" />
                                 <span className="sr-only">Ara</span>
@@ -313,10 +305,7 @@ export default function Header() {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={cn(
-                                "h-8 w-8 relative transition-colors duration-300",
-                                isTransparent ? "text-white hover:bg-white/10" : "text-foreground"
-                            )}
+                            className="h-8 w-8 relative"
                             asChild
                         >
                             <Link href="/cart">
@@ -337,10 +326,7 @@ export default function Header() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className={cn(
-                                            "md:hidden h-8 w-8 transition-colors duration-300",
-                                            isTransparent ? "text-white hover:bg-white/10" : "text-foreground"
-                                        )}
+                                        className="md:hidden h-8 w-8"
                                     >
                                         <Menu className="h-4 w-4" />
                                         <span className="sr-only">Menüyü Aç</span>
