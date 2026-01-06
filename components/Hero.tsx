@@ -93,22 +93,9 @@ export default function Hero({ settings }: HeroProps) {
   return (
     <section
       ref={ref}
-      className="relative w-full text-white flex items-center justify-center overflow-hidden"
-      style={{ height: 'calc(100dvh - 3.5rem)' }} // 3.5rem = 56px (mobile header)
+      className="relative w-full text-white flex items-center justify-center overflow-hidden h-[calc(100dvh-3.5rem)] md:h-[calc(100dvh-4rem)] min-h-[600px]"
     >
-      <div className="md:hidden" style={{ display: 'none' }}>
-        {/* Hack to handle desktop specific height in CSS modules or Tailwind arbitrary values if needed, 
-              but inline style is cleaner for dynamic calcs unless we use a custom class.
-              We'll use a style tag or Tailwind arbitrary value for responsive height.
-          */}
-      </div>
-      <style jsx global>{`
-        @media (min-width: 768px) {
-          section[class*="Hero"] {
-            height: calc(100dvh - 4rem) !important; /* 4rem = 64px (desktop header) */
-          }
-        }
-      `}</style>
+
 
       <Carousel opts={{ loop: true }} className="w-full h-full">
         <CarouselContent
