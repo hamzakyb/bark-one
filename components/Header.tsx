@@ -40,12 +40,12 @@ export default function Header() {
     const pathname = usePathname();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const { settings } = useSiteSettings();
-    
+
     const siteLogoLight = settings?.siteLogoLight?.toString().trim() || null;
 
     useEffect(() => {
         setIsMounted(true);
-        
+
         if (isSearchOpen && searchInputRef.current) {
             searchInputRef.current.focus();
         }
@@ -101,18 +101,20 @@ export default function Header() {
     };
 
     const forceSolidHeader = pathname === '/login' || pathname === '/register' || pathname === '/profile';
+    const isHomePage = pathname === '/';
+    const isTransparent = isHomePage && !isScrolled && !forceSolidHeader;
 
     return (
         <header
             className={cn(
-                'sticky top-0 left-0 right-0 z-60 transition-all duration-300 border-b',
-                isScrolled || forceSolidHeader 
-                    ? 'bg-background/95 backdrop-blur-lg shadow-lg border-border/50' 
-                    : 'bg-background/80 backdrop-blur-md shadow-sm border-border/20'
+                'fixed top-0 left-0 right-0 z-60 transition-all duration-500 border-b',
+                isTransparent
+                    ? 'bg-transparent border-transparent'
+                    : 'bg-background/95 backdrop-blur-lg shadow-lg border-border/50'
             )}
         >
             <div className="container px-4 mx-auto">
-                <div className="flex items-center justify-between h-14 md:h-16">
+                <div className="flex items-center justify-between h-16">
                     {/* Left Section - Logo */}
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center">
@@ -126,7 +128,10 @@ export default function Header() {
                                     className="h-14 w-auto md:h-16"
                                 />
                             ) : (
-                                <span className="text-2xl md:text-3xl font-bold text-foreground">
+                                <span className={cn(
+                                    "text-2xl md:text-3xl font-bold transition-colors duration-300",
+                                    isTransparent ? "text-white" : "text-foreground"
+                                )}>
                                     bark<span className="text-primary">One</span>
                                 </span>
                             )}
@@ -147,9 +152,9 @@ export default function Header() {
                                         variant="ghost"
                                         className={cn(
                                             'relative text-sm font-medium rounded-full transition-all duration-300 overflow-hidden group',
-                                            pathname === item.href 
-                                                ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800' 
-                                                : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
+                                            pathname === item.href
+                                                ? (isTransparent ? 'bg-white text-black shadow-lg shadow-white/10' : 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800')
+                                                : (isTransparent ? 'text-white/80 hover:text-white hover:bg-white/10' : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200')
                                         )}
                                     >
                                         <Link href={item.href} className="relative z-10">
@@ -212,7 +217,10 @@ export default function Header() {
                                     setIsSearchOpen(!isSearchOpen);
                                     setIsMenuOpen(false);
                                 }}
-                                className="h-8 w-8"
+                                className={cn(
+                                    "h-8 w-8 transition-colors duration-300",
+                                    isTransparent ? "text-white hover:bg-white/10" : "text-foreground"
+                                )}
                             >
                                 <Search className="h-4 w-4" />
                                 <span className="sr-only">Ara</span>
@@ -250,7 +258,7 @@ export default function Header() {
                                         {user.name.split(' ')[0]}
                                     </span>
                                 </Link>
-                                
+
                                 {/* Logout Button */}
                                 <div className="ml-auto">
                                     <Button
@@ -300,12 +308,15 @@ export default function Header() {
                                 </div>
                             </div>
                         )}
-                        
+
                         {/* Cart Button - Always visible */}
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 relative"
+                            className={cn(
+                                "h-8 w-8 relative transition-colors duration-300",
+                                isTransparent ? "text-white hover:bg-white/10" : "text-foreground"
+                            )}
                             asChild
                         >
                             <Link href="/cart">
@@ -326,7 +337,10 @@ export default function Header() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="md:hidden h-8 w-8"
+                                        className={cn(
+                                            "md:hidden h-8 w-8 transition-colors duration-300",
+                                            isTransparent ? "text-white hover:bg-white/10" : "text-foreground"
+                                        )}
                                     >
                                         <Menu className="h-4 w-4" />
                                         <span className="sr-only">Menüyü Aç</span>

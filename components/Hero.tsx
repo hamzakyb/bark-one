@@ -93,7 +93,7 @@ export default function Hero({ settings }: HeroProps) {
   return (
     <section
       ref={ref}
-      className="relative w-full text-white flex items-center justify-center overflow-hidden h-[calc(100dvh-3.5rem)] md:h-[calc(100dvh-4rem)] min-h-[600px]"
+      className="relative w-full text-white flex items-center justify-center overflow-hidden h-dvh min-h-[600px]"
     >
 
 
