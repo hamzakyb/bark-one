@@ -109,7 +109,7 @@ export default function Hero({ settings }: HeroProps) {
 
                 {/* Content Container */}
                 <div className="container mx-auto px-6 h-full flex items-center relative z-20">
-                  <div className="max-w-3xl">
+                  <div className="max-w-3xl -translate-y-8 md:-translate-y-12">
                     <AnimatePresence mode="wait">
                       {index === current && (
                         <motion.div
