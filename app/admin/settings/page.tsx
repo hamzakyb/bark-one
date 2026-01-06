@@ -1052,6 +1052,8 @@ export default function AdminSettingsPage() {
                 return renderProductsTab();
             case 'contact':
                 return renderContactTab();
+            case 'about':
+                return renderAboutTab();
             case 'company':
                 return renderCompanyTab();
             case 'bank':
