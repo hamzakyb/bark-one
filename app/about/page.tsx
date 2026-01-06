@@ -247,7 +247,26 @@ export default function AboutPage() {
 
             {/* Footer CTA */}
             <section className="py-32 bg-stone-900 text-white relative overflow-hidden">
-                <div className="absolute inset-0 opacity-40 bg-[url('/images/luxury-bg.png')] bg-cover bg-center mix-blend-overlay" />
+                <div className="absolute inset-0 opacity-100 bg-[url('/images/luxury-showroom-wall.png')] bg-cover bg-center">
+                    <div className="absolute inset-0 bg-stone-900/40" />
+                </div>
+                {/* Branded Watermark */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none">
+                    {/* Assuming siteLogoLight is available via settings context or we use text if image fails to load, but user asked for logo. 
+                         Since we are inside component, we can access settings.siteLogoLight.
+                         Wait, AboutPage has 'settings' from useSiteSettings, but 'pageSettings' is local state.
+                         I need to access 'settings.siteLogoLight'.
+                      */}
+                    <div className="relative w-[800px] h-[300px]">
+                        {/* We will rely on CSS mask or simple Opacity for the logo image if available, else text fallback */}
+                        <Image
+                            src={(settings?.siteLogoLight as string) || '/images/file.svg'}
+                            alt="BarkOne Brand"
+                            fill
+                            className="object-contain invert brightness-0" // Make it dark or light? White logo on dark wall -> Standard.
+                        />
+                    </div>
+                </div>
                 <div className="container px-6 mx-auto relative z-10 text-center">
                     <h2 className="text-4xl md:text-6xl font-serif mb-8 max-w-3xl mx-auto leading-tight">
                         {pageSettings.aboutCtaTitle}

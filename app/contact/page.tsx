@@ -83,7 +83,21 @@ export default function ContactPage() {
                 {/* Left Column: Context & Info (Sticky on Desktop) */}
                 <div className="w-full lg:w-5/12 relative bg-stone-900 text-white lg:min-h-screen p-8 lg:p-20 flex flex-col justify-between overflow-hidden">
                     {/* Background Texture/Image */}
-                    <div className="absolute inset-0 opacity-40 bg-[url('/images/luxury-bg.png')] bg-cover bg-center mix-blend-overlay" />
+                    <div className="absolute inset-0 opacity-100 bg-[url('/images/luxury-showroom-wall.png')] bg-cover bg-center">
+                        <div className="absolute inset-0 bg-stone-900/50" />
+                    </div>
+
+                    {/* Branded Watermark */}
+                    <div className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none blur-sm">
+                        <div className="relative w-[600px] h-[600px] rotate-90">
+                            <Image
+                                src={(settings?.siteLogoLight || '/images/file.svg') as string}
+                                alt="BarkOne Brand"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+                    </div>
                     <div className="absolute inset-0 bg-stone-900/50" />
 
                     <div className="relative z-10 pt-24 lg:pt-12">
