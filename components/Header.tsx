@@ -101,14 +101,18 @@ export default function Header() {
     };
 
     const forceSolidHeader = pathname === '/login' || pathname === '/register' || pathname === '/profile';
+    const isHomePage = pathname === '/';
+    const isTransparent = isHomePage && !isScrolled && !forceSolidHeader;
 
     return (
         <header
             className={cn(
-                'sticky top-0 left-0 right-0 z-60 transition-all duration-300 border-b',
+                'fixed top-0 left-0 right-0 z-60 transition-all duration-500',
                 isScrolled || forceSolidHeader
-                    ? 'bg-background/95 backdrop-blur-lg shadow-lg border-border/50'
-                    : 'bg-background/80 backdrop-blur-md shadow-sm border-border/20'
+                    ? 'bg-background/95 backdrop-blur-lg shadow-lg border-b border-border/50'
+                    : isTransparent
+                        ? 'bg-transparent border-transparent'
+                        : 'bg-background/80 backdrop-blur-md shadow-sm border-b border-border/20'
             )}
         >
             <div className="container px-4 mx-auto">

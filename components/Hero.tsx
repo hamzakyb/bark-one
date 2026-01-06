@@ -84,9 +84,9 @@ export default function Hero({ settings }: HeroProps) {
   return (
     <section className="relative w-full h-dvh min-h-[700px] overflow-hidden bg-black text-white">
       <Carousel setApi={setApi} opts={{ loop: true }} className="w-full h-full">
-        <CarouselContent className="w-full m-0 h-full">
+        <CarouselContent className="w-full m-0 h-full ml-0">
           {slides.map((slide, index) => (
-            <CarouselItem key={slide.id} className="w-full p-0 shrink-0 relative h-full">
+            <CarouselItem key={slide.id} className="w-full p-0 shrink-0 relative h-full pl-0">
               <div className="relative w-full h-full overflow-hidden">
                 {/* Background Image - Precisely Filled */}
                 <motion.div
