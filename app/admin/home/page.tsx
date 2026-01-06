@@ -16,6 +16,7 @@ import {
     X,
     Home,
     Upload,
+    Pencil,
 } from 'lucide-react';
 import { upload } from '@vercel/blob/client';
 
@@ -402,6 +403,8 @@ export default function AdminHomePage() {
             return { ...prev, galleryItems: items };
         });
     }, []);
+
+
 
     const addHeroSlide = useCallback(() => {
         setSettings((prev) => {
@@ -1735,12 +1738,134 @@ export default function AdminHomePage() {
                                     </div>
                                 )}
 
+                                {editingModal.type === 'gallery-section' && (
+                                    <div className="space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <h2 className="text-2xl font-semibold text-anthracite">Galeri Alanı Yönetimi</h2>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div className="space-y-3">
+                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Alan Rozeti</label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.galleryBadge ?? ''}
+                                                    onChange={(e) => updateSetting('galleryBadge', e.target.value)}
+                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                                                />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Başlık</label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.galleryHeading ?? ''}
+                                                    onChange={(e) => updateSetting('galleryHeading', e.target.value)}
+                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                                                />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Açıklama</label>
+                                                <textarea
+                                                    value={settings.galleryDescription ?? ''}
+                                                    onChange={(e) => updateSetting('galleryDescription', e.target.value)}
+                                                    rows={3}
+                                                    className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-4 pt-4 border-t border-stone-200">
+                                                <div className="flex items-center justify-between">
+                                                    <h3 className="text-sm font-semibold uppercase tracking-[0.35em] text-stone-500">Galeri Görselleri</h3>
+                                                    <Button
+                                                        onClick={addGalleryItem}
+                                                        className="inline-flex items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500"
+                                                    >
+                                                        <Plus size={14} /> Ekle
+                                                    </Button>
+                                                </div>
+
+                                                <div className="grid gap-3">
+                                                    {(settings.galleryItems ?? []).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-4 rounded-2xl border border-stone-200/60 bg-white/60 p-3 group hover:border-wood-300/50 hover:bg-white transition-all">
+                                                            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-stone-100 border border-stone-100">
+                                                                {item.image ? (
+                                                                    <div
+                                                                        className="h-full w-full bg-cover bg-center"
+                                                                        style={{ backgroundImage: `url(${item.image})` }}
+                                                                    />
+                                                                ) : (
+                                                                    <div className="flex h-full w-full items-center justify-center text-stone-300">
+                                                                        <ImageIcon size={20} />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="truncate text-sm font-medium text-stone-700">{item.label || 'Başlıksız Görsel'}</p>
+                                                                <p className="truncate text-xs text-stone-400">{item.tag || 'Etiket yok'}</p>
+                                                            </div>
+                                                            <div className="flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                                                                <Button
+                                                                    onClick={() => setEditingModal({ type: 'gallery', index })}
+                                                                    className="h-10 w-10 rounded-full border border-stone-200 bg-white text-stone-500 hover:border-wood-400 hover:text-wood-500 hover:bg-wood-50 p-0"
+                                                                >
+                                                                    <Pencil size={16} />
+                                                                </Button>
+                                                                <Button
+                                                                    onClick={() => removeGalleryItem(index)}
+                                                                    className="h-10 w-10 rounded-full border border-stone-200 bg-white text-stone-500 hover:border-red-400 hover:text-red-500 hover:bg-red-50 p-0"
+                                                                >
+                                                                    <Trash2 size={16} />
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <Button
+                                                onClick={() => setEditingModal(null)}
+                                                className="flex-1 rounded-full border border-stone-300/70 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-stone-400 hover:bg-white"
+                                            >
+                                                Kapat
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {editingModal.type === 'gallery' && settings?.galleryItems?.[editingModal.index] && (
                                     <div className="space-y-6">
                                         <h2 className="text-2xl font-semibold text-anthracite">Galeri Kartı Düzenle</h2>
                                         <div className="grid gap-4 md:grid-cols-2">
+                                            <div className="space-y-2 md:col-span-2">
+                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Görsel</label>
+                                                <div className="flex flex-wrap items-center gap-3">
+                                                    {settings.galleryItems[editingModal.index].image && (
+                                                        <div className="relative h-24 w-24 overflow-hidden rounded-2xl border border-stone-200/70 bg-stone-100">
+                                                            <div
+                                                                className="h-full w-full bg-cover bg-center"
+                                                                style={{ backgroundImage: `url(${settings.galleryItems[editingModal.index].image})` }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500">
+                                                        <ImageIcon size={16} />
+                                                        <span>Görsel Seç</span>
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            onChange={(e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (!file) return;
+                                                                void handleGalleryImageUpload(editingModal.index, file);
+                                                                e.target.value = '';
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </div>
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Etiket</label>
+                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Etiket (Label)</label>
                                                 <input
                                                     type="text"
                                                     value={settings.galleryItems[editingModal.index].label ?? ''}
@@ -1749,7 +1874,7 @@ export default function AdminHomePage() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Rozet</label>
+                                                <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Rozet (Tag)</label>
                                                 <input
                                                     type="text"
                                                     value={settings.galleryItems[editingModal.index].tag ?? ''}
@@ -1766,14 +1891,15 @@ export default function AdminHomePage() {
                                                     className="w-full rounded-2xl border border-stone-200/70 bg-white/80 px-4 py-3 text-sm text-anthracite focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                                                     placeholder="md:col-span-2 md:row-span-2"
                                                 />
+                                                <p className="text-[10px] text-stone-400">Örnek: md:col-span-2 md:row-span-2 (Büyük), md:col-span-1 md:row-span-1 (Küçük)</p>
                                             </div>
                                         </div>
                                         <div className="flex gap-3">
                                             <Button
-                                                onClick={() => setEditingModal(null)}
+                                                onClick={() => setEditingModal({ type: 'gallery-section', index: 0 })}
                                                 className="flex-1 rounded-full border border-stone-300/70 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-stone-400 hover:bg-white"
                                             >
-                                                Kapat
+                                                Geri Dön
                                             </Button>
                                             <Button
                                                 onClick={() => {
