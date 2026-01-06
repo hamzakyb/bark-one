@@ -80,24 +80,24 @@ export default function Hero({ settings }: HeroProps) {
   const slides = useMemo(() => settings?.slides && settings.slides.length > 0 ? settings.slides : DEFAULT_SLIDES, [settings]);
 
   return (
-    <section className="relative w-full h-[100vw] min-h-[700px] overflow-hidden bg-black text-white">
+    <section className="relative w-full h-dvh min-h-[700px] overflow-hidden bg-black text-white">
       <Carousel setApi={setApi} opts={{ loop: true }} className="w-full h-full">
         <CarouselContent className="w-full m-0 h-full">
           {slides.map((slide, index) => (
             <CarouselItem key={slide.id} className="w-full p-0 shrink-0 relative h-full">
               <div className="relative w-full h-full overflow-hidden">
-                {/* Background Image with Sophisticated Ken Burns Effect */}
+                {/* Background Image - Precisely Filled */}
                 <motion.div
-                  initial={{ scale: 1.1 }}
-                  animate={{ scale: index === current ? 1 : 1.1 }}
-                  transition={{ duration: 10, ease: "linear" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: index === current ? 1 : 0 }}
+                  transition={{ duration: 1, ease: "easeOut" }}
                   className="absolute inset-0 z-0"
                 >
                   <Image
                     src={slide.image || ''}
                     alt={slide.title || 'Luxury Furniture'}
                     fill
-                    className="object-cover opacity-80"
+                    className="object-cover"
                     priority={index === 0}
                     quality={100}
                   />
