@@ -53,7 +53,7 @@ const DEFAULT_SETTINGS = {
     aboutHeroTitle: 'Zamanın ötesinde estetik.',
     aboutHeroSubtitle: 'Doğal malzemeyi modern zanaatkarlıkla buluşturuyor, yaşam alanlarına ruh katıyoruz.',
     aboutHeroDescription: 'BarkOne olarak, doğanın sunduğu eşsiz dokuları işçilik ve yenilikçi yaklaşımlarla birleştirerek her projede zamansız eserler yaratıyoruz. Her parça, bir tasarım objesi olmanın ötesinde, yaşanmışlığın ve kalitenin bir simgesidir.',
-    aboutHeroImage: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop',
+    aboutHeroImage: '/images/about-hero-luxury.png',
     aboutStats: [
         { icon: Users, title: '180+ Proje', description: 'ÖZEL ÖLÇÜ RAF ÇÖZÜMLERİNİ İÇ MİMARLAR VE KONUT SAHİPLERİ İÇİN HAYATA GEÇİRDİK.' },
         { icon: Award, title: '12 Kişilik Ekip', description: 'TASARIMDAN MONTAJA KADAR SÜRECİ YÖNETEN MULTİDİSİPLİNER EKİP.' },

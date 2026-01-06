@@ -54,6 +54,7 @@ const SETTINGS_TABS = [
     { id: 'homepage', label: 'Anasayfa' },
     { id: 'products', label: 'Ürünler Sayfası' },
     { id: 'contact', label: 'İletişim Sayfası' },
+    { id: 'about', label: 'Hakkımızda Sayfası' },
     { id: 'company', label: 'Şirket Bilgileri' },
     { id: 'bank', label: 'Banka Bilgileri' },
 ];
@@ -229,6 +230,7 @@ export default function AdminSettingsPage() {
         homeHeroImage: 'Anasayfa hero görseli',
         productsHeroImage: 'Ürünler hero görseli',
         contactHeroImage: 'İletişim hero görseli',
+        aboutHeroImage: 'Hakkımızda hero görseli',
     };
 
     const fetchSettings = useCallback(async () => {
@@ -773,6 +775,59 @@ export default function AdminSettingsPage() {
                     </div>
                 </div>
             </section>
+        </div>
+    );
+
+    const renderAboutTab = () => (
+        <div className="space-y-8">
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Rozet</label>
+                            <input
+                                value={settings.aboutHeroBadge ?? ''}
+                                onChange={(e) => updateSetting('aboutHeroBadge', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Başlık</label>
+                            <input
+                                value={settings.aboutHeroTitle ?? ''}
+                                onChange={(e) => updateSetting('aboutHeroTitle', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Alt Başlık</label>
+                        <textarea
+                            value={settings.aboutHeroSubtitle ?? ''}
+                            onChange={(e) => updateSetting('aboutHeroSubtitle', e.target.value)}
+                            rows={3}
+                            className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Açıklama</label>
+                        <textarea
+                            value={settings.aboutHeroDescription ?? ''}
+                            onChange={(e) => updateSetting('aboutHeroDescription', e.target.value)}
+                            rows={4}
+                            className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                        />
+                    </div>
+                </div>
+            </section>
+            <ImageUploader
+                label="Hakkımızda Hero Görseli"
+                helper="Hakkımızda sayfasının üst alanında kullanılacak ana görsel."
+                value={settings.aboutHeroImage}
+                onUpload={(file) => handleFile(file, 'aboutHeroImage')}
+                onRemove={() => handleRemoveImage('aboutHeroImage')}
+                isUploading={pendingUploads.aboutHeroImage}
+            />
         </div>
     );
 

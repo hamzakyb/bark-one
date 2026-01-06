@@ -149,7 +149,7 @@ const SiteSettingsSchema = new mongoose.Schema({
     },
     aboutHeroImage: {
         type: String,
-        default: 'https://images.unsplash.com/photo-1616627567555-7a48bd348b7e?q=80&w=2600&auto=format&fit=crop',
+        default: '/images/about-hero-luxury.png',
     },
     aboutIntroTitle: {
         type: String,
