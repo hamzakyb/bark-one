@@ -206,7 +206,7 @@ export default function Header() {
                                 className={cn(
                                     "h-10 w-10 rounded-full transition-colors duration-300",
                                     isTransparent
-                                        ? "text-white hover:bg-white hover:text-stone-900" // Stronger hover effect on transparent
+                                        ? "bg-white text-stone-900 hover:bg-stone-200"
                                         : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                 )}
                             >
@@ -225,7 +225,7 @@ export default function Header() {
                                             className={cn(
                                                 "h-10 w-10 rounded-full transition-colors duration-300",
                                                 isTransparent
-                                                    ? "text-white hover:bg-white hover:text-stone-900"
+                                                    ? "bg-white text-stone-900 hover:bg-stone-200"
                                                     : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                             )}
                                         >
@@ -260,7 +260,7 @@ export default function Header() {
                                     className={cn(
                                         "h-10 w-10 rounded-full transition-colors duration-300",
                                         isTransparent
-                                            ? "text-white hover:bg-white hover:text-stone-900"
+                                            ? "bg-white text-stone-900 hover:bg-stone-200"
                                             : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                     )}
                                 >
@@ -279,7 +279,7 @@ export default function Header() {
                             className={cn(
                                 "h-10 w-10 relative rounded-full transition-colors duration-300",
                                 isTransparent
-                                    ? "text-white hover:bg-white hover:text-stone-900"
+                                    ? "bg-white text-stone-900 hover:bg-stone-200"
                                     : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                             )}
                         >
@@ -301,7 +301,7 @@ export default function Header() {
                                         className={cn(
                                             "h-10 w-10 rounded-full transition-colors duration-300",
                                             isTransparent
-                                                ? "text-white hover:bg-white hover:text-stone-900"
+                                                ? "bg-white text-stone-900 hover:bg-stone-200"
                                                 : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                         )}
                                     >
