@@ -48,13 +48,13 @@ export default function CartPage() {
         const res = await fetch('/api/products');
         if (!res.ok) return;
         const allProducts = await res.json();
-        
+
         // Exclude items already in cart
         const cartProductIds = cart.map(item => item.product._id);
         const filtered = (allProducts as Product[])
           .filter((product: Product) => !cartProductIds.includes(product._id))
           .slice(0, 4);
-        
+
         setRecommendedProducts(filtered);
       } catch (error) {
         console.error('Error loading recommended products:', error);
@@ -91,14 +91,14 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
+    <div className="container mx-auto px-4 pt-32 pb-12 md:pt-40 md:pb-24">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Alışveriş Sepetim</h1>
         <p className="text-muted-foreground mt-2">
           {cart.length} ürün sepetinizde
         </p>
       </div>
-      
+
       <div className="grid gap-8 md:grid-cols-3">
         {/* Cart Items */}
         <div className="md:col-span-2 space-y-6">
@@ -130,7 +130,7 @@ export default function CartPage() {
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                  
+
                   <div className="mt-4 flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Button
@@ -171,7 +171,7 @@ export default function CartPage() {
                 <span className="text-sm text-muted-foreground">Ara Toplam</span>
                 <span>{formatCurrency(totalAmount)}</span>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Kargo</span>
@@ -179,7 +179,7 @@ export default function CartPage() {
                     {shippingCost === 0 ? 'Ücretsiz Kargo' : formatCurrency(shippingCost)}
                   </span>
                 </div>
-                
+
                 {remainingForFreeShipping > 0 && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -192,9 +192,9 @@ export default function CartPage() {
                   </div>
                 )}
               </div>
-              
+
               <Separator className="my-2" />
-              
+
               <div className="flex justify-between font-medium">
                 <span>Toplam</span>
                 <span>{formatCurrency(orderTotal)}</span>
@@ -215,8 +215,8 @@ export default function CartPage() {
               <CardTitle className="text-lg">Ödeme Yöntemi</CardTitle>
             </CardHeader>
             <CardContent>
-              <RadioGroup 
-                value={selectedPaymentMethod} 
+              <RadioGroup
+                value={selectedPaymentMethod}
                 onValueChange={setSelectedPaymentMethod}
                 className="space-y-3"
               >
@@ -229,7 +229,7 @@ export default function CartPage() {
                     </Label>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3 rounded-lg border p-4 hover:border-primary">
                   <RadioGroupItem value="bankTransfer" id="bankTransfer" />
                   <div className="flex-1">
@@ -242,14 +242,14 @@ export default function CartPage() {
               </RadioGroup>
             </CardContent>
           </Card>
-          
+
           <div className="flex items-center justify-center space-x-2 rounded-lg bg-primary/5 p-4 text-sm">
             <ShieldCheck className="h-5 w-5 text-primary" />
             <span className="text-muted-foreground">Güvenli ödeme ile alışveriş yapın</span>
           </div>
         </div>
       </div>
-      
+
       {recommendedProducts.length > 0 && (
         <div className="mt-12">
           <Card>
@@ -285,8 +285,8 @@ export default function CartPage() {
                       <p className="text-lg font-semibold">
                         {formatCurrency(product.price)}
                       </p>
-                      <Button 
-                        className="mt-3 w-full" 
+                      <Button
+                        className="mt-3 w-full"
                         size="sm"
                         onClick={() => {
                           // Add to cart functionality would go here
