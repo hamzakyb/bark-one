@@ -93,19 +93,32 @@ export default function Hero({ settings }: HeroProps) {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen w-full text-white flex items-center justify-center overflow-hidden"
-      style={{ height: '100dvh' }}
+      className="relative w-full text-white flex items-center justify-center overflow-hidden"
+      style={{ height: 'calc(100dvh - 3.5rem)' }} // 3.5rem = 56px (mobile header)
     >
-      <Carousel className="w-full" opts={{ loop: true }} style={{ height: '100dvh' }}>
+      <div className="md:hidden" style={{ display: 'none' }}>
+        {/* Hack to handle desktop specific height in CSS modules or Tailwind arbitrary values if needed, 
+              but inline style is cleaner for dynamic calcs unless we use a custom class.
+              We'll use a style tag or Tailwind arbitrary value for responsive height.
+          */}
+      </div>
+      <style jsx global>{`
+        @media (min-width: 768px) {
+          section[class*="Hero"] {
+            height: calc(100dvh - 4rem) !important; /* 4rem = 64px (desktop header) */
+          }
+        }
+      `}</style>
+
+      <Carousel opts={{ loop: true }} className="w-full h-full">
         <CarouselContent
-          className="w-full m-0"
-          style={{ height: '100dvh' }}
+          className="w-full m-0 h-full"
         >
           {slides.map((slide, index) => {
             const isDataImage = slide.image?.startsWith('data:') ?? false;
 
             return (
-              <CarouselItem key={slide.id} className="w-full p-0 shrink-0 relative" style={{ height: '100dvh' }}>
+              <CarouselItem key={slide.id} className="w-full p-0 shrink-0 relative h-full">
                 {/* Parallax Background */}
                 <motion.div style={{ y }} className="absolute inset-0 z-0 select-none">
                   {/* Luxury Gradient Overlay - Clearer bottom for text contrast */}
@@ -136,7 +149,7 @@ export default function Hero({ settings }: HeroProps) {
                 {/* Content */}
                 <motion.div
                   style={{ opacity }}
-                  className="container mx-auto px-4 relative z-20 text-center h-full flex flex-col items-center justify-center pt-20"
+                  className="container mx-auto px-4 relative z-20 text-center h-full flex flex-col items-center justify-center"
                 >
                   <div className="max-w-4xl mx-auto flex flex-col items-center">
                     {/* Badge */}
@@ -160,7 +173,7 @@ export default function Hero({ settings }: HeroProps) {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.8, delay: 0.2 }}
-                      className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-medium mb-8 tracking-tight leading-[1.1] md:leading-[1.1] text-balance drop-shadow-2xl"
+                      className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-medium mb-6 md:mb-8 tracking-tight leading-[1.1] md:leading-[1.1] text-balance drop-shadow-2xl"
                     >
                       {normalizeTitle(slide.title || '')}
                     </motion.h1>

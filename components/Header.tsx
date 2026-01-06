@@ -40,12 +40,12 @@ export default function Header() {
     const pathname = usePathname();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const { settings } = useSiteSettings();
-
+    
     const siteLogoLight = settings?.siteLogoLight?.toString().trim() || null;
 
     useEffect(() => {
         setIsMounted(true);
-
+        
         if (isSearchOpen && searchInputRef.current) {
             searchInputRef.current.focus();
         }
@@ -101,18 +101,14 @@ export default function Header() {
     };
 
     const forceSolidHeader = pathname === '/login' || pathname === '/register' || pathname === '/profile';
-    const isHomePage = pathname === '/';
 
     return (
         <header
             className={cn(
-                'z-50 transition-all duration-300',
-                // Layout positioning
-                isHomePage ? 'fixed top-0 left-0 right-0 border-b-0' : 'sticky top-0 left-0 right-0 border-b',
-                // Visual styles
-                isScrolled || forceSolidHeader || !isHomePage
-                    ? 'bg-white/80 backdrop-blur-md shadow-sm border-wood-100 text-wood-900'
-                    : 'bg-transparent border-transparent text-white'
+                'sticky top-0 left-0 right-0 z-60 transition-all duration-300 border-b',
+                isScrolled || forceSolidHeader 
+                    ? 'bg-background/95 backdrop-blur-lg shadow-lg border-border/50' 
+                    : 'bg-background/80 backdrop-blur-md shadow-sm border-border/20'
             )}
         >
             <div className="container px-4 mx-auto">
@@ -130,11 +126,8 @@ export default function Header() {
                                     className="h-14 w-auto md:h-16"
                                 />
                             ) : (
-                                <span className={cn(
-                                    "text-2xl md:text-3xl font-bold",
-                                    isHomePage && !isScrolled ? "text-white" : "text-wood-900"
-                                )}>
-                                    bark<span className={cn(isHomePage && !isScrolled ? "text-white/80" : "text-wood-500")}>One</span>
+                                <span className="text-2xl md:text-3xl font-bold text-foreground">
+                                    bark<span className="text-primary">One</span>
                                 </span>
                             )}
                         </Link>
@@ -154,12 +147,9 @@ export default function Header() {
                                         variant="ghost"
                                         className={cn(
                                             'relative text-sm font-medium rounded-full transition-all duration-300 overflow-hidden group',
-                                            pathname === item.href
-                                                ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800'
-                                                : cn(
-                                                    'border border-transparent',
-                                                    isHomePage && !isScrolled ? 'text-white hover:text-white hover:bg-white/20' : 'text-slate-700 hover:text-slate-900 hover:border-slate-200'
-                                                )
+                                            pathname === item.href 
+                                                ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800' 
+                                                : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
                                         )}
                                     >
                                         <Link href={item.href} className="relative z-10">
@@ -222,10 +212,7 @@ export default function Header() {
                                     setIsSearchOpen(!isSearchOpen);
                                     setIsMenuOpen(false);
                                 }}
-                                className={cn(
-                                    "h-8 w-8",
-                                    isHomePage && !isScrolled ? "text-white hover:bg-white/20" : ""
-                                )}
+                                className="h-8 w-8"
                             >
                                 <Search className="h-4 w-4" />
                                 <span className="sr-only">Ara</span>
@@ -239,10 +226,7 @@ export default function Header() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className={cn(
-                                            "h-8 w-8 relative",
-                                            isHomePage && !isScrolled ? "text-white hover:bg-white/20" : "text-foreground hover:bg-muted/50"
-                                        )}
+                                        className="h-8 w-8 text-foreground hover:bg-muted/50 relative"
                                     >
                                         <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-background">
                                             <span className="sr-only">Çevrimiçi</span>
@@ -266,7 +250,7 @@ export default function Header() {
                                         {user.name.split(' ')[0]}
                                     </span>
                                 </Link>
-
+                                
                                 {/* Logout Button */}
                                 <div className="ml-auto">
                                     <Button
@@ -316,15 +300,12 @@ export default function Header() {
                                 </div>
                             </div>
                         )}
-
+                        
                         {/* Cart Button - Always visible */}
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={cn(
-                                "h-8 w-8 relative",
-                                isHomePage && !isScrolled ? "text-white hover:bg-white/20" : ""
-                            )}
+                            className="h-8 w-8 relative"
                             asChild
                         >
                             <Link href="/cart">
@@ -345,10 +326,7 @@ export default function Header() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className={cn(
-                                            "md:hidden h-8 w-8",
-                                            isHomePage && !isScrolled ? "text-white hover:bg-white/20" : ""
-                                        )}
+                                        className="md:hidden h-8 w-8"
                                     >
                                         <Menu className="h-4 w-4" />
                                         <span className="sr-only">Menüyü Aç</span>
