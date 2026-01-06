@@ -260,27 +260,9 @@ const ADMIN_SECTION_LINKS: { id: string; label: string; description: string; ico
         icon: Home,
     },
     {
-        id: 'products-showcase',
-        label: 'Ürünler Vitrini',
-        description: 'Ürün kahramanı ve boş sonuç durumları',
-        icon: Layers,
-    },
-    {
-        id: 'about-page',
-        label: 'Hakkımızda',
-        description: 'Hero, intro, değerler ve süreç akışı',
-        icon: Stars,
-    },
-    {
-        id: 'contact-page',
-        label: 'İletişim',
-        description: 'CTA butonları ve iletişim bilgileri',
-        icon: Quote,
-    },
-    {
-        id: 'features',
+        id: 'features-section',
         label: 'Özellikler',
-        description: 'Avantaj metinleri ve özellik kartları',
+        description: 'Bölüm başlığı ve özellik listesi',
         icon: GalleryVerticalEnd,
     },
     {
@@ -1520,10 +1502,14 @@ export default function AdminHomePage() {
                                     </div>
                                 )}
 
-                                {editingModal.type === 'products-showcase' && (
+                                {editingModal.type === 'features-section' && (
                                     <div className="space-y-6">
-                                        <h2 className="text-2xl font-semibold text-anthracite">Ürünler Vitrini Ayarları</h2>
-                                        <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h2 className="text-2xl font-semibold text-anthracite">Özellikler Bölümü Ayarları</h2>
+                                        </div>
+
+                                        <div className="space-y-4 rounded-[24px] border border-stone-200/70 bg-stone-50/80 p-6">
+                                            <h3 className="text-sm font-semibold uppercase tracking-[0.35em] text-stone-500">Bölüm Başlığı</h3>
                                             <div className="grid gap-4 md:grid-cols-2">
                                                 <div className="space-y-2">
                                                     <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">Rozet</label>
@@ -1557,6 +1543,63 @@ export default function AdminHomePage() {
                                                 />
                                             </div>
                                         </div>
+
+                                        <div className="space-y-4 rounded-[24px] border border-stone-200/70 bg-stone-50/80 p-6">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <h3 className="text-sm font-semibold uppercase tracking-[0.35em] text-stone-500">Özellik Listesi</h3>
+                                                    <p className="text-xs text-stone-500">Müşterilerinize sunduğunuz temel avantajlar.</p>
+                                                </div>
+                                                <Button
+                                                    onClick={() => {
+                                                        addFeature();
+                                                        // We rely on the layout to just add it, user can click edit. 
+                                                        // Or ideally we switch to edit mode for the last item.
+                                                        // For simplicity, we just add it and let them click edit.
+                                                    }}
+                                                    className="inline-flex items-center gap-2 rounded-full border border-stone-300/70 bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-wood-400 hover:text-wood-500"
+                                                >
+                                                    <Plus size={14} /> Ekle
+                                                </Button>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                {(!settings.features || settings.features.length === 0) && (
+                                                    <div className="py-8 text-center text-sm text-stone-400 border border-dashed border-stone-300 rounded-2xl">
+                                                        Henüz özellik eklenmedi.
+                                                    </div>
+                                                )}
+                                                {settings.features?.map((feature, idx) => (
+                                                    <div key={idx} className="flex items-center gap-4 rounded-2xl border border-stone-200/60 bg-white p-4 shadow-sm transition-all hover:border-wood-200 hover:shadow-md">
+                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-stone-100 text-stone-500">
+                                                            <span className="font-serif font-bold">{idx + 1}</span>
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="font-medium text-stone-900 truncate">{feature.title || 'İsimsiz Özellik'}</p>
+                                                            <p className="text-xs text-stone-500 truncate">{feature.description || 'Açıklama yok'}</p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <Button
+                                                                onClick={() => setEditingModal({ type: 'feature-edit', index: idx })}
+                                                                className="h-8 rounded-full border border-stone-200 px-3 text-xs font-medium text-stone-600 hover:bg-stone-50"
+                                                                variant="ghost"
+                                                            >
+                                                                Düzenle
+                                                            </Button>
+                                                            <Button
+                                                                onClick={() => removeFeature(idx)}
+                                                                className="h-8 w-8 rounded-full border border-red-100 text-red-500 hover:bg-red-50"
+                                                                variant="ghost"
+                                                                size="icon"
+                                                            >
+                                                                <Trash2 size={14} />
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
                                         <div className="flex gap-3">
                                             <Button
                                                 onClick={() => setEditingModal(null)}
@@ -1577,7 +1620,7 @@ export default function AdminHomePage() {
                                     </div>
                                 )}
 
-                                {editingModal.type === 'feature' && (
+                                {editingModal.type === 'feature-edit' && (
                                     <div className="space-y-6">
                                         <h2 className="text-2xl font-semibold text-anthracite">Özellik Düzenle</h2>
                                         <div className="grid gap-4 md:grid-cols-2">
@@ -1622,19 +1665,10 @@ export default function AdminHomePage() {
                                         </div>
                                         <div className="flex gap-3">
                                             <Button
-                                                onClick={() => setEditingModal(null)}
+                                                onClick={() => setEditingModal({ type: 'features-section', index: 0 })}
                                                 className="flex-1 rounded-full border border-stone-300/70 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-stone-600 transition-all hover:border-stone-400 hover:bg-white"
                                             >
-                                                Kapat
-                                            </Button>
-                                            <Button
-                                                onClick={() => {
-                                                    setEditingModal(null);
-                                                    handleSave();
-                                                }}
-                                                className="flex-1 rounded-full border border-wood-400/70 bg-wood-50 px-4 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-wood-600 transition-all hover:border-wood-500 hover:bg-wood-100"
-                                            >
-                                                Kaydet
+                                                Geri Dön
                                             </Button>
                                         </div>
                                     </div>
@@ -1923,16 +1957,8 @@ export default function AdminHomePage() {
                                             return;
                                         }
 
-                                        if (section.id === 'products-showcase') {
-                                            setEditingModal({ type: 'products-showcase', index: 0 });
-                                            return;
-                                        }
-
-                                        if (section.id === 'features') {
-                                            if ((settings?.features?.length ?? 0) === 0) {
-                                                addFeature();
-                                            }
-                                            setEditingModal({ type: 'feature', index: 0 });
+                                        if (section.id === 'features-section') {
+                                            setEditingModal({ type: 'features-section', index: 0 });
                                             return;
                                         }
 
