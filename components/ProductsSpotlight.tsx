@@ -197,7 +197,7 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                                             className="group h-full"
                                         >
                                             <Link href={spotlight?.href || '#'} className="block h-full">
-                                                <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-6 rounded-sm">
+                                                <div className="relative aspect-[4/5] overflow-hidden bg-stone-100 mb-6 rounded-sm">
                                                     {spotlight?.image ? (
                                                         <Image
                                                             src={spotlight.image}

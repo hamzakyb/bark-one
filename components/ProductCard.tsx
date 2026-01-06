@@ -26,19 +26,19 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     const { addToCart } = useCart();
-    
+
     const isInStock = (product.stock || 0) > 0;
     const formattedPrice = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(product.price);
-    
+
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (!isInStock) {
             toast.error('Bu ürün stokta bulunmamaktadır');
             return;
         }
-        
+
         try {
             await addToCart(product, 1);
             toast.success(`${product.name} sepete eklendi`);
@@ -46,7 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             toast.error('Ürün sepete eklenirken bir hata oluştu');
         }
     };
-    
+
     const handleAddToWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -64,7 +64,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Link href={`/product/${product._id}`} className="block h-full">
                 <Card className="h-full overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white">
                     {/* Product Image Section */}
-                    <div className="relative aspect-4/5 overflow-hidden">
+                    <div className="relative aspect-[4/5] overflow-hidden">
                         {product.images && product.images.length > 0 ? (
                             <>
                                 <Image
@@ -73,10 +73,10 @@ export default function ProductCard({ product }: ProductCardProps) {
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
-                                
+
                                 {/* Overlay on hover */}
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-                                
+
                                 {/* Stock Badge */}
                                 {!isInStock && (
                                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
@@ -85,12 +85,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                                         </Badge>
                                     </div>
                                 )}
-                                
+
                                 {/* Category Badge */}
                                 {product.category && (
                                     <div className="absolute top-3 left-3">
-                                        <Badge 
-                                            variant="secondary" 
+                                        <Badge
+                                            variant="secondary"
                                             className="bg-white/90 backdrop-blur text-xs font-medium"
                                         >
                                             {product.category === 'signature' && 'Signature'}
@@ -99,7 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                                         </Badge>
                                     </div>
                                 )}
-                                
+
                                 {/* Quick Actions - Only show wishlist and view */}
                                 <div className="absolute inset-x-3 bottom-3 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                                     <Button
@@ -136,12 +136,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                             <h3 className="font-semibold text-lg text-gray-900 line-clamp-2">
                                 {product.name}
                             </h3>
-                            
+
                             {/* Description */}
                             <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
                                 {product.description}
                             </p>
-                            
+
                             {/* Rating */}
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center">
