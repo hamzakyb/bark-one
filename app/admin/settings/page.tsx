@@ -609,59 +609,41 @@ export default function AdminSettingsPage() {
                             className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Kısa Açıklama</label>
-                        <textarea
-                            value={settings.contactHeroDescription ?? ''}
-                            onChange={(e) => updateSetting('contactHeroDescription', e.target.value)}
-                            rows={3}
-                            className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                        />
-                    </div>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Birincil CTA</label>
-                            <input
-                                value={settings.contactCtaPrimaryLabel ?? ''}
-                                onChange={(e) => updateSetting('contactCtaPrimaryLabel', e.target.value)}
-                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Birincil CTA URL</label>
-                            <input
-                                value={settings.contactCtaPrimaryHref ?? ''}
-                                onChange={(e) => updateSetting('contactCtaPrimaryHref', e.target.value)}
-                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">İkincil CTA</label>
-                            <input
-                                value={settings.contactCtaSecondaryLabel ?? ''}
-                                onChange={(e) => updateSetting('contactCtaSecondaryLabel', e.target.value)}
-                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">İkincil CTA URL</label>
-                            <input
-                                value={settings.contactCtaSecondaryHref ?? ''}
-                                onChange={(e) => updateSetting('contactCtaSecondaryHref', e.target.value)}
-                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                            />
-                        </div>
-                    </div>
                 </div>
             </section>
+
             <ImageUploader
                 label="İletişim Hero Görseli"
-                helper="İletişim sayfasının hero alanında gösterilecek görseli yükleyin."
+                helper="Sol taraftaki koyu alanın arka planında görünecek görsel."
                 value={settings.contactHeroImage}
                 onUpload={(file) => handleFile(file, 'contactHeroImage')}
                 onRemove={() => handleRemoveImage('contactHeroImage')}
                 isUploading={pendingUploads.contactHeroImage}
             />
+
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-anthracite">Form Alanı</h3>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Form Başlığı</label>
+                        <input
+                            value={settings.contactFormTitle ?? ''}
+                            onChange={(e) => updateSetting('contactFormTitle', e.target.value)}
+                            className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Form Alt Başlığı</label>
+                        <textarea
+                            value={settings.contactFormSubtitle ?? ''}
+                            onChange={(e) => updateSetting('contactFormSubtitle', e.target.value)}
+                            rows={2}
+                            className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                        />
+                    </div>
+                </div>
+            </section>
+
             <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
                 <div className="space-y-6">
                     <h3 className="text-lg font-semibold text-anthracite">İletişim Bilgileri</h3>
@@ -675,26 +657,10 @@ export default function AdminSettingsPage() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">İkincil E-posta</label>
-                            <input
-                                value={settings.contactEmailSecondary ?? ''}
-                                onChange={(e) => updateSetting('contactEmailSecondary', e.target.value)}
-                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus;border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                            />
-                        </div>
-                        <div className="space-y-2">
                             <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Telefon</label>
                             <input
                                 value={settings.contactPhone ?? ''}
                                 onChange={(e) => updateSetting('contactPhone', e.target.value)}
-                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Telefon Çalışma Saatleri</label>
-                            <input
-                                value={settings.contactPhoneHours ?? ''}
-                                onChange={(e) => updateSetting('contactPhoneHours', e.target.value)}
                                 className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                             />
                         </div>
@@ -705,15 +671,6 @@ export default function AdminSettingsPage() {
                             value={settings.contactAddress ?? ''}
                             onChange={(e) => updateSetting('contactAddress', e.target.value)}
                             rows={2}
-                            className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Destek Açıklaması</label>
-                        <textarea
-                            value={settings.contactSupportDescription ?? ''}
-                            onChange={(e) => updateSetting('contactSupportDescription', e.target.value)}
-                            rows={3}
                             className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
                         />
                     </div>

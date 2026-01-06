@@ -22,10 +22,13 @@ const DEFAULT_SETTINGS = {
     contactHeroBadge: 'İletişim',
     contactHeroTitle: 'Bize Ulaşın',
     contactHeroSubtitle: 'Projeleriniz, sorularınız veya sadece merhaba demek için.',
+    contactHeroImage: '/images/luxury-showroom-wall.png',
     contactEmailPrimary: 'info@barkone.com',
     contactPhone: '+90 555 123 45 67',
     contactAddress: 'Mobilyacılar Sitesi, A Blok, Ümraniye/İstanbul',
-    contactMapEmbedUrl: 'https://www.google.com/maps/embed?pb=...'
+    contactMapEmbedUrl: 'https://www.google.com/maps/embed?pb=...',
+    contactFormTitle: 'Size nasıl yardımcı olabiliriz?',
+    contactFormSubtitle: 'Formu doldurun, tasarım ekibimiz en kısa sürede sizinle iletişime geçsin.'
 };
 
 export default function ContactPage() {
@@ -83,7 +86,14 @@ export default function ContactPage() {
                 {/* Left Column: Context & Info (Sticky on Desktop) */}
                 <div className="w-full lg:w-5/12 relative bg-stone-900 text-white lg:min-h-screen p-8 lg:p-20 flex flex-col justify-between overflow-hidden">
                     {/* Background Texture/Image */}
-                    <div className="absolute inset-0 opacity-100 bg-[url('/images/luxury-showroom-wall.png')] bg-cover bg-center">
+                    {/* Background Texture/Image */}
+                    <div className="absolute inset-0 opacity-100">
+                        <Image
+                            src={contactSettings.contactHeroImage || '/images/luxury-showroom-wall.png'}
+                            alt="Contact Hero"
+                            fill
+                            className="object-cover"
+                        />
                         <div className="absolute inset-0 bg-stone-900/50" />
                     </div>
 
@@ -151,8 +161,8 @@ export default function ContactPage() {
                 <div className="w-full lg:w-7/12 bg-stone-50 p-8 lg:p-24 flex items-center justify-center">
                     <div className="w-full max-w-xl py-12 lg:py-0">
                         <div className="mb-12">
-                            <h2 className="text-3xl font-serif text-stone-900 mb-4">Size nasıl yardımcı olabiliriz?</h2>
-                            <p className="text-stone-500 font-light">Formu doldurun, tasarım ekibimiz en kısa sürede sizinle iletişime geçsin.</p>
+                            <h2 className="text-3xl font-serif text-stone-900 mb-4">{contactSettings.contactFormTitle}</h2>
+                            <p className="text-stone-500 font-light">{contactSettings.contactFormSubtitle}</p>
                         </div>
 
                         {isSent ? (
