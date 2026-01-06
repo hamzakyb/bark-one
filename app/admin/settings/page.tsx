@@ -238,6 +238,7 @@ export default function AdminSettingsPage() {
             setIsLoading(true);
             const response = await fetch('/api/settings');
             const data = await response.json();
+            console.log('Admin settings fetched:', data); // Debug log
             setSettings(data);
             setGlobalSettings(data);
         } catch (error) {
