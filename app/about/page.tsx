@@ -25,12 +25,12 @@ interface AboutSettings {
     aboutHeroDescription: string;
     aboutHeroImage: string;
     aboutStats: Array<{
-        icon: React.ComponentType<{ className?: string }>;
+        icon: any;
         title: string;
         description: string;
     }>;
     aboutValues: Array<{
-        icon: React.ComponentType<{ className?: string }>;
+        icon: any;
         title: string;
         description: string;
     }>;
