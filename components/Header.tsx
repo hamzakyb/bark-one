@@ -107,19 +107,19 @@ export default function Header() {
     return (
         <header
             className={cn(
-                'fixed top-0 left-0 right-0 z-60 transition-all duration-500',
+                'fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out',
                 isScrolled || forceSolidHeader
-                    ? 'bg-background/95 backdrop-blur-lg shadow-lg border-b border-border/50'
+                    ? 'bg-white/80 backdrop-blur-md border-b border-stone-200/50 py-2'
                     : isTransparent
-                        ? 'bg-transparent border-transparent'
-                        : 'bg-background/80 backdrop-blur-md shadow-sm border-b border-border/20'
+                        ? 'bg-transparent border-transparent py-4'
+                        : 'bg-white/80 backdrop-blur-md shadow-sm border-b border-stone-200/50 py-2'
             )}
         >
-            <div className="container px-4 mx-auto">
+            <div className="container px-6 mx-auto">
                 <div className="flex items-center justify-between h-14 md:h-16">
                     {/* Left Section - Logo */}
-                    <div className="flex items-center">
-                        <Link href="/" className="flex items-center">
+                    <div className="flex items-center w-[200px]">
+                        <Link href="/" className="flex items-center group">
                             {siteLogoLight ? (
                                 <Image
                                     src={siteLogoLight}
@@ -127,65 +127,49 @@ export default function Header() {
                                     width={200}
                                     height={60}
                                     priority
-                                    className="h-14 w-auto md:h-16"
+                                    className="h-12 w-auto md:h-14 transition-transform duration-500 group-hover:scale-105"
                                 />
                             ) : (
                                 <span className={cn(
-                                    "text-2xl md:text-3xl font-bold transition-colors",
-                                    isTransparent ? "text-white" : "text-foreground"
+                                    "text-2xl md:text-3xl font-serif font-bold tracking-tight transition-colors duration-300",
+                                    isTransparent ? "text-white" : "text-stone-900"
                                 )}>
-                                    bark<span className={cn(isTransparent ? "text-white" : "text-primary")}>One</span>
+                                    bark<span className={cn("font-light", isTransparent ? "text-white/80" : "text-stone-500")}>One</span>
                                 </span>
                             )}
                         </Link>
                     </div>
 
-                    {/* Center Section - Navigation */}
-                    <div className="hidden md:flex items-center justify-center flex-1 px-4">
-                        <nav className="flex items-center gap-1">
+                    {/* Center Section - Navigation (Redesigned) */}
+                    <div className="hidden md:flex items-center justify-center flex-1">
+                        <nav className="flex items-center gap-8 lg:gap-12">
                             {navItems.map((item) => (
-                                <motion.div
+                                <Link
                                     key={item.href}
-                                    className="relative group/nav-item"
+                                    href={item.href}
+                                    className={cn(
+                                        "relative group py-2 text-xs font-bold tracking-[0.15em] uppercase transition-colors duration-300",
+                                        pathname === item.href
+                                            ? isTransparent ? "text-white" : "text-stone-900"
+                                            : isTransparent
+                                                ? "text-white/80 hover:text-white"
+                                                : "text-stone-500 hover:text-stone-900"
+                                    )}
                                 >
-                                    <Button
-                                        asChild
-                                        variant="ghost"
-                                        className={cn(
-                                            'relative text-sm font-medium rounded-full transition-colors duration-300',
-                                            pathname === item.href
-                                                ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 border border-slate-800'
-                                                : isTransparent
-                                                    ? 'text-white group-hover/nav-item:text-black border border-white/20 hover:bg-transparent' // Transparent mode styles
-                                                    : 'text-slate-700 hover:text-slate-900 border border-transparent hover:border-slate-200'
-                                        )}
-                                    >
-                                        <Link href={item.href} className="relative z-10">
-                                            {item.label}
-                                        </Link>
-                                    </Button>
-                                    {pathname !== item.href && (
-                                        <div
-                                            className={cn(
-                                                "absolute inset-0 rounded-full opacity-0 group-hover/nav-item:opacity-100 transition-all duration-300 transform scale-95 group-hover/nav-item:scale-105 ease-out",
-                                                isTransparent ? "bg-white" : "bg-linear-to-r from-slate-100 to-slate-200"
-                                            )}
-                                        />
-                                    )}
-                                    {pathname === item.href && (
-                                        <motion.div
-                                            className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-slate-900 rounded-full"
-                                            layoutId="activeTab"
-                                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                        />
-                                    )}
-                                </motion.div>
+                                    {item.label}
+                                    {/* Animated Underline */}
+                                    <span className={cn(
+                                        "absolute bottom-0 left-0 w-full h-[2px] transform scale-x-0 transition-transform duration-300 ease-out origin-left group-hover:scale-x-100",
+                                        pathname === item.href ? "scale-x-100" : "",
+                                        isTransparent ? "bg-white" : "bg-stone-900"
+                                    )} />
+                                </Link>
                             ))}
                         </nav>
                     </div>
 
                     {/* Right Section - Actions */}
-                    <div className="flex items-center gap-1 md:gap-2">
+                    <div className="flex items-center justify-end gap-2 md:gap-4 w-[200px]">
                         {/* Search */}
                         <div className="relative">
                             <AnimatePresence>
@@ -194,19 +178,19 @@ export default function Header() {
                                         initial={{ width: 0, opacity: 0 }}
                                         animate={{ width: 180, opacity: 1 }}
                                         exit={{ width: 0, opacity: 0 }}
-                                        className="absolute right-0 top-1/2 -translate-y-1/2 overflow-hidden"
+                                        className="absolute right-0 top-1/2 -translate-y-1/2 overflow-hidden bg-white rounded-full shadow-lg"
                                     >
-                                        <form onSubmit={handleSearch} className="flex">
+                                        <form onSubmit={handleSearch} className="flex items-center pr-2">
                                             <input
                                                 ref={searchInputRef}
                                                 type="text"
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                placeholder="Ürün ara..."
-                                                className="h-8 w-full rounded-l-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                                placeholder="Ara..."
+                                                className="h-9 w-full bg-transparent px-4 text-xs tracking-wide focus:outline-none placeholder:text-stone-400"
                                             />
-                                            <Button type="submit" size="sm" variant="outline" className="h-8 rounded-l-none">
-                                                <Search className="h-4 w-4" />
+                                            <Button type="submit" size="sm" variant="ghost" className="h-7 w-7 rounded-full p-0">
+                                                <Search className="h-3 w-3" />
                                             </Button>
                                         </form>
                                     </motion.div>
@@ -215,314 +199,195 @@ export default function Header() {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                type="button"
                                 onClick={() => {
                                     setIsSearchOpen(!isSearchOpen);
                                     setIsMenuOpen(false);
                                 }}
                                 className={cn(
-                                    "h-8 w-8 rounded-full",
+                                    "h-10 w-10 rounded-full transition-colors duration-300",
                                     isTransparent
-                                        ? "bg-white text-black hover:bg-white/90"
-                                        : "bg-transparent text-foreground hover:bg-accent"
+                                        ? "text-white hover:bg-white/10"
+                                        : "text-stone-600 hover:bg-stone-100"
                                 )}
                             >
-                                <Search className="h-4 w-4" />
-                                <span className="sr-only">Ara</span>
+                                <Search className="h-5 w-5 stroke-[1.5]" />
                             </Button>
                         </div>
 
-                        {/* Profile Button */}
-                        {user ? (
-                            <>
-                                <Link href="/profile" className="flex items-center gap-2 group">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className={cn(
-                                            "h-8 w-8 relative rounded-full",
-                                            isTransparent
-                                                ? "bg-white text-black hover:bg-white/90"
-                                                : "text-foreground hover:bg-muted/50"
-                                        )}
-                                    >
-                                        <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-background">
-                                            <span className="sr-only">Çevrimiçi</span>
-                                        </span>
-                                        {user?.avatar ? (
-                                            <Image
-                                                src={user.avatar}
-                                                alt={user.name}
-                                                width={32}
-                                                height={32}
-                                                className="rounded-full h-6 w-6 object-cover"
-                                            />
-                                        ) : (
-                                            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                                <User className="h-3.5 w-3.5 text-primary" />
-                                            </div>
-                                        )}
-                                        <span className="sr-only">Profil</span>
-                                    </Button>
-                                    <span className={cn(
-                                        "hidden md:inline text-sm font-normal group-hover:underline",
-                                        isTransparent ? "text-white" : "text-foreground"
-                                    )}>
-                                        {user.name.split(' ')[0]}
-                                    </span>
-                                </Link>
-
-                                {/* Logout Button */}
-                                <div className="ml-auto">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={handleLogout}
-                                        className={cn(
-                                            "hidden md:flex items-center gap-1.5 text-xs",
-                                            isTransparent
-                                                ? "bg-white/10 text-white border-white/20 hover:bg-red-500 hover:text-white hover:border-red-500"
-                                                : "text-destructive hover:bg-destructive/10 hover:text-destructive"
-                                        )}
-                                    >
-                                        <LogOut className="h-3.5 w-3.5" />
-                                        <span>Çıkış Yap</span>
-                                    </Button>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="flex items-center gap-2">
+                        {/* Profile & Auth */}
+                        <div className="hidden md:flex items-center">
+                            {user ? (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className={cn(
+                                                "h-10 w-10 rounded-full transition-colors duration-300",
+                                                isTransparent
+                                                    ? "text-white hover:bg-white/10"
+                                                    : "text-stone-600 hover:bg-stone-100"
+                                            )}
+                                        >
+                                            <User className="h-5 w-5 stroke-[1.5]" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-xl border-stone-100">
+                                        <div className="px-2 py-1.5 mb-1 border-b border-stone-100">
+                                            <p className="text-sm font-medium text-stone-900">{user.name}</p>
+                                            <p className="text-xs text-stone-500 truncate">{user.email}</p>
+                                        </div>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/profile" className="cursor-pointer rounded-lg">
+                                                <User className="mr-2 h-4 w-4" />
+                                                <span>Profilim</span>
+                                            </Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-red-500 focus:text-red-500 focus:bg-red-50 rounded-lg cursor-pointer"
+                                            onClick={handleLogout}
+                                        >
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <span>Çıkış Yap</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            ) : (
                                 <Button
                                     asChild
-                                    variant="outline"
-                                    size="sm"
+                                    variant="ghost"
+                                    size="icon"
                                     className={cn(
-                                        "hidden md:flex h-8 text-xs",
+                                        "h-10 w-10 rounded-full transition-colors duration-300",
                                         isTransparent
-                                            ? "bg-white/10 text-white border-white/20 hover:bg-white hover:text-black"
-                                            : ""
+                                            ? "text-white hover:bg-white/10"
+                                            : "text-stone-600 hover:bg-stone-100"
                                     )}
                                 >
-                                    <Link href="/login">Giriş Yap</Link>
+                                    <Link href="/login">
+                                        <User className="h-5 w-5 stroke-[1.5]" />
+                                    </Link>
                                 </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(
-                                        "hidden md:flex h-8 text-xs",
-                                        isTransparent
-                                            ? "bg-white text-black hover:bg-white/90"
-                                            : ""
-                                    )}
-                                >
-                                    <Link href="/register">Üye Ol</Link>
-                                </Button>
-                                <div className="md:hidden">
-                                    {isMounted && (
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className={cn(
-                                                        "h-8 w-8 rounded-full",
-                                                        isTransparent
-                                                            ? "bg-white text-black hover:bg-white/90"
-                                                            : ""
-                                                    )}
-                                                >
-                                                    <User className="h-4 w-4" />
-                                                    <span className="sr-only">Hesap</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-48">
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="/login" className="w-full cursor-pointer">
-                                                        <LogIn className="mr-2 h-4 w-4" />
-                                                        <span>Giriş Yap</span>
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="/register" className="w-full cursor-pointer">
-                                                        <UserPlus className="mr-2 h-4 w-4" />
-                                                        <span>Üye Ol</span>
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    )}
-                                </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
 
-                        {/* Cart Button - Always visible */}
+                        {/* Cart Button */}
                         <Button
                             variant="ghost"
                             size="icon"
-                            className={cn(
-                                "h-8 w-8 relative rounded-full",
-                                isTransparent
-                                    ? "bg-white text-black hover:bg-white/90"
-                                    : "bg-transparent text-foreground hover:bg-accent"
-                            )}
                             asChild
+                            className={cn(
+                                "h-10 w-10 relative rounded-full transition-colors duration-300",
+                                isTransparent
+                                    ? "text-white hover:bg-white/10"
+                                    : "text-stone-600 hover:bg-stone-100"
+                            )}
                         >
                             <Link href="/cart">
-                                <ShoppingCart className="h-4 w-4" />
+                                <ShoppingCart className="h-5 w-5 stroke-[1.5]" />
                                 {totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-white text-[10px] flex items-center justify-center">
-                                        {totalItems}
-                                    </span>
+                                    <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
                                 )}
-                                <span className="sr-only">Sepetim</span>
                             </Link>
                         </Button>
 
-                        {/* Mobile Menu Button */}
-                        {isMounted && (
+                        {/* Mobile Menu Trigger */}
+                        <div className="md:hidden">
                             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                                 <SheetTrigger asChild>
                                     <Button
                                         variant="ghost"
                                         size="icon"
                                         className={cn(
-                                            "md:hidden h-8 w-8 rounded-full",
+                                            "h-10 w-10 rounded-full transition-colors duration-300",
                                             isTransparent
-                                                ? "bg-white text-black hover:bg-white/90"
-                                                : "bg-transparent text-foreground hover:bg-accent"
+                                                ? "text-white hover:bg-white/10"
+                                                : "text-stone-600 hover:bg-stone-100"
                                         )}
                                     >
-                                        <Menu className="h-4 w-4" />
-                                        <span className="sr-only">Menüyü Aç</span>
+                                        <Menu className="h-6 w-6 stroke-[1.5]" />
                                     </Button>
                                 </SheetTrigger>
-                                <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
+                                <SheetContent side="right" className="w-[300px] border-l-stone-100 bg-white/95 backdrop-blur-xl p-0">
                                     <div className="flex flex-col h-full">
-                                        <div className="flex items-center justify-between p-4 border-b">
-                                            <Link
-                                                href="/"
-                                                className="text-lg font-bold"
-                                                onClick={() => setIsMenuOpen(false)}
-                                            >
-                                                {siteLogoLight ? (
-                                                    <Image
-                                                        src={siteLogoLight}
-                                                        alt="Site logosu"
-                                                        width={100}
-                                                        height={32}
-                                                        className="h-8 w-auto"
-                                                    />
-                                                ) : (
-                                                    <span className="text-foreground">
-                                                        bark<span className="text-primary">One</span>
-                                                    </span>
-                                                )}
-                                            </Link>
+                                        <div className="flex items-center justify-between p-6 border-b border-stone-100">
+                                            <span className="text-2xl font-serif font-bold text-stone-900">
+                                                bark<span className="font-light text-stone-500">One</span>
+                                            </span>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => setIsMenuOpen(false)}
+                                                className="text-stone-400 hover:text-stone-900"
                                             >
-                                                <X className="h-4 w-4" />
-                                                <span className="sr-only">Menüyü Kapat</span>
+                                                <X className="h-5 w-5" />
                                             </Button>
                                         </div>
 
-                                        <nav className="flex-1 p-4 space-y-2">
+                                        <nav className="flex-1 px-6 py-8 space-y-6">
                                             {navItems.map((item) => (
-                                                <Button
-                                                    key={item.href}
-                                                    asChild
-                                                    variant="ghost"
-                                                    className={cn(
-                                                        'block py-2 px-4 text-sm',
-                                                        pathname === item.href ? 'bg-accent text-black' : 'hover:bg-accent/50 hover:text-black text-black'
-                                                    )}
-                                                    onClick={() => setIsMenuOpen(false)}
-                                                >
-                                                    <Link href={item.href}>{item.label}</Link>
-                                                </Button>
+                                                <div key={item.href}>
+                                                    <Link
+                                                        href={item.href}
+                                                        onClick={() => setIsMenuOpen(false)}
+                                                        className={cn(
+                                                            "text-2xl font-serif font-medium block transition-colors duration-300",
+                                                            pathname === item.href ? "text-stone-900" : "text-stone-400 hover:text-stone-900"
+                                                        )}
+                                                    >
+                                                        {item.label}
+                                                    </Link>
+                                                </div>
                                             ))}
                                         </nav>
 
-                                        <div className="border-t p-4 space-y-2">
+                                        <div className="p-6 border-t border-stone-100 space-y-4">
                                             {user ? (
-                                                <>
-                                                    <div className="flex items-center space-x-3 p-2 rounded-md bg-accent/50">
-                                                        <div className="shrink-0">
-                                                            {user.avatar ? (
-                                                                <Image
-                                                                    src={user.avatar}
-                                                                    alt={user.name}
-                                                                    width={36}
-                                                                    height={36}
-                                                                    className="h-9 w-9 rounded-full"
-                                                                />
-                                                            ) : (
-                                                                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
-                                                                    <User className="h-4.5 w-4.5 text-primary" />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="min-w-0">
-                                                            <p className="text-sm font-medium truncate">{user.name}</p>
-                                                            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-3 px-2">
+                                                        {user.avatar ? (
+                                                            <Image
+                                                                src={user.avatar}
+                                                                alt={user.name}
+                                                                width={40}
+                                                                height={40}
+                                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-stone-100"
+                                                            />
+                                                        ) : (
+                                                            <div className="h-10 w-10 rounded-full bg-stone-100 flex items-center justify-center">
+                                                                <User className="h-5 w-5 text-stone-500" />
+                                                            </div>
+                                                        )}
+                                                        <div>
+                                                            <p className="font-medium text-stone-900">{user.name}</p>
+                                                            <p className="text-xs text-stone-500">{user.email}</p>
                                                         </div>
                                                     </div>
-                                                    <Button
-                                                        variant="ghost"
-                                                        className="w-full justify-start"
-                                                        onClick={() => {
-                                                            router.push('/profile');
-                                                            setIsMenuOpen(false);
-                                                        }}
-                                                    >
-                                                        <User className="mr-2 h-4 w-4" />
-                                                        Profilim
+                                                    <Button variant="outline" className="w-full justify-start rounded-xl h-11 border-stone-200" onClick={() => router.push('/profile')}>
+                                                        <User className="mr-3 h-4 w-4" /> Profilim
                                                     </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        className="w-full justify-start text-red-500 hover:text-red-600"
-                                                        onClick={() => {
-                                                            void handleLogout();
-                                                            setIsMenuOpen(false);
-                                                        }}
-                                                    >
-                                                        <LogOut className="mr-2 h-4 w-4" />
-                                                        Çıkış Yap
+                                                    <Button variant="ghost" className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600 rounded-xl h-11" onClick={handleLogout}>
+                                                        <LogOut className="mr-3 h-4 w-4" /> Çıkış Yap
                                                     </Button>
-                                                </>
+                                                </div>
                                             ) : (
-                                                <>
-                                                    <Button
-                                                        variant="outline"
-                                                        className="w-full"
-                                                        onClick={() => {
-                                                            router.push('/login');
-                                                            setIsMenuOpen(false);
-                                                        }}
-                                                    >
-                                                        Giriş Yap
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    <Button variant="outline" className="rounded-xl h-11 border-stone-200" onClick={() => router.push('/login')}>
+                                                        Giriş
                                                     </Button>
-                                                    <Button
-                                                        className="w-full"
-                                                        onClick={() => {
-                                                            router.push('/register');
-                                                            setIsMenuOpen(false);
-                                                        }}
-                                                    >
+                                                    <Button className="rounded-xl h-11 bg-stone-900 text-white hover:bg-stone-800" onClick={() => router.push('/register')}>
                                                         Üye Ol
                                                     </Button>
-                                                </>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
                                 </SheetContent>
                             </Sheet>
-                        )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </header >
+        </header>
     );
 }
