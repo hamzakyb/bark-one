@@ -109,7 +109,7 @@ export default function Hero({ settings }: HeroProps) {
 
                 {/* Content Container */}
                 <div className="container mx-auto px-6 h-full flex items-center relative z-20">
-                  <div className="max-w-3xl -translate-y-8 md:-translate-y-12">
+                  <div className="max-w-3xl -translate-y-4 md:-translate-y-6">
                     <AnimatePresence mode="wait">
                       {index === current && (
                         <motion.div
@@ -189,7 +189,7 @@ export default function Hero({ settings }: HeroProps) {
         </CarouselContent>
 
         {/* Custom Minimalist Controls */}
-        <div className="absolute bottom-12 right-12 z-30 flex items-center gap-8">
+        <div className="absolute bottom-20 right-12 z-30 flex items-center gap-8">
           {/* Progress Indicator */}
           <div className="hidden md:flex items-center gap-4">
             <span className="text-xs font-medium tracking-widest">0{current + 1}</span>
