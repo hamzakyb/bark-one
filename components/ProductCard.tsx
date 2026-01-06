@@ -64,7 +64,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Link href={`/product/${product._id}`} className="block h-full">
                 <Card className="h-full overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white">
                     {/* Product Image Section */}
-                    <div className="relative aspect-[4/5] overflow-hidden">
+                    <div className="relative aspect-square overflow-hidden">
                         {product.images && product.images.length > 0 ? (
                             <>
                                 <Image

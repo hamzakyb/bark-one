@@ -79,12 +79,11 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
     ) ?? [];
 
     const hasSpotlightItems = rawSpotlightItems.length > 0;
-    // For infinite scroll to feel seamless, duplicate content if we don't have enough items
-    // Using 10 as safe threshold for "looping" without gaps on wide screens
-    // If using default products, we slice a larger chunk
+
     let displayItems: (SpotlightItem | Product)[] = [];
 
     if (hasSpotlightItems) {
+        // Reduced duplication threshold slightly as we are using slide widths efficiently
         displayItems = rawSpotlightItems.length < 5 ? [...rawSpotlightItems, ...rawSpotlightItems, ...rawSpotlightItems] : rawSpotlightItems;
     } else {
         const productSource = products.slice(0, 10);
@@ -96,7 +95,6 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
         loop: true,
         align: 'start',
         slidesToScroll: 1,
-        // dragFree: true // Allows free dragging like a real slider
     }, [
         Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: false, rootNode: (emblaRoot) => emblaRoot.parentElement })
     ]);
@@ -179,8 +177,8 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                 </div>
 
                 {/* Embla Slider */}
-                <div className="overflow-hidden -mx-6 px-6" ref={emblaRef}>
-                    <div className="flex gap-6 cursor-grab active:cursor-grabbing">
+                <div className="overflow-hidden" ref={emblaRef}>
+                    <div className="flex -ml-6 cursor-grab active:cursor-grabbing">
                         {displayItems.map((item, idx) => {
                             // Determine if it's a SpotlightItem or Product
                             const isSpotlightItem = 'title' in item && !('slug' in item);
@@ -189,7 +187,7 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                             const key = product ? `prod-${product._id}-${idx}` : `spot-${spotlight?._id || idx}-${idx}`;
 
                             return (
-                                <div key={key} className="flex-[0_0_80%] md:flex-[0_0_40%] lg:flex-[0_0_22%] min-w-0">
+                                <div key={key} className="flex-[0_0_80%] md:flex-[0_0_40%] lg:flex-[0_0_22%] min-w-0 pl-6">
                                     {isSpotlightItem ? (
                                         <motion.div
                                             whileHover={{ y: -8 }}
@@ -197,7 +195,7 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                                             className="group h-full"
                                         >
                                             <Link href={spotlight?.href || '#'} className="block h-full">
-                                                <div className="relative aspect-[4/5] overflow-hidden bg-stone-100 mb-6 rounded-sm">
+                                                <div className="relative aspect-square overflow-hidden bg-stone-100 mb-4 rounded-sm">
                                                     {spotlight?.image ? (
                                                         <Image
                                                             src={spotlight.image}
@@ -219,8 +217,8 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <h3 className="text-lg font-serif text-stone-900 group-hover:text-wood-600 transition-colors duration-300">
+                                                <div className="space-y-1">
+                                                    <h3 className="text-lg font-serif text-stone-900 group-hover:text-wood-600 transition-colors duration-300 truncate">
                                                         {spotlight?.title}
                                                     </h3>
                                                     <p className="text-sm text-stone-500 line-clamp-2 leading-relaxed font-light">

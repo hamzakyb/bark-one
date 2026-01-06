@@ -68,11 +68,12 @@ export default function Testimonials({ settings }: TestimonialsProps) {
     const description = settings?.description || DEFAULT_DESCRIPTION;
     // Ensure we have enough items for a nice slider loop, duplicate defaults if needed for demo
     const testimonialsSource = settings?.testimonials?.length ? settings.testimonials : DEFAULT_TESTIMONIALS;
-    const testimonials = testimonialsSource.length < 4 ? [...testimonialsSource, ...testimonialsSource] : testimonialsSource;
+    // Duplicate more aggressively to ensure smooth loop for wide screens
+    const testimonials = testimonialsSource.length < 5 ? [...testimonialsSource, ...testimonialsSource, ...testimonialsSource] : testimonialsSource;
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
         loop: true,
-        align: 'center',
+        align: 'start', // Changed to start for better multi-slide behavior
         slidesToScroll: 1,
     }, [
         Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
@@ -132,10 +133,10 @@ export default function Testimonials({ settings }: TestimonialsProps) {
                 </div>
 
                 {/* Embla Slider */}
-                <div className="overflow-hidden -mx-4 px-4 py-8" ref={emblaRef}>
-                    <div className="flex gap-8 cursor-grab active:cursor-grabbing">
+                <div className="overflow-hidden" ref={emblaRef}>
+                    <div className="flex -ml-6 cursor-grab active:cursor-grabbing">
                         {testimonials.map((testimonial, index) => (
-                            <div key={index} className="flex-[0_0_100%] md:flex-[0_0_45%] lg:flex-[0_0_30%] min-w-0">
+                            <div key={index} className="flex-[0_0_100%] md:flex-[0_0_45%] lg:flex-[0_0_30%] min-w-0 pl-6">
                                 <div className="h-full bg-white px-8 py-10 rounded-2xl border border-stone-100 shadow-sm transition-all duration-500 hover:shadow-xl hover:shadow-wood-900/5 hover:-translate-y-2 relative overflow-hidden group">
                                     {/* Subtle Wood Gradient Overlay on Hover */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-wood-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
