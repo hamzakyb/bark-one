@@ -55,16 +55,14 @@ const DEFAULT_SETTINGS = {
     aboutHeroDescription: 'BarkOne olarak, doğanın sunduğu eşsiz dokuları işçilik ve yenilikçi yaklaşımlarla birleştirerek her projede zamansız eserler yaratıyoruz. Her parça, bir tasarım objesi olmanın ötesinde, yaşanmışlığın ve kalitenin bir simgesidir.',
     aboutHeroImage: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop',
     aboutStats: [
-        { icon: Users, title: '5K+', description: 'Mutlu Müşteri' },
-        { icon: Award, title: '25', description: 'Yıllık Deneyim' },
-        { icon: Building, title: '1K+', description: 'Tamamlanmış Proje' },
-        { icon: Star, title: '4.9', description: 'Müşteri Puanı' }
+        { icon: Users, title: '180+ Proje', description: 'ÖZEL ÖLÇÜ RAF ÇÖZÜMLERİNİ İÇ MİMARLAR VE KONUT SAHİPLERİ İÇİN HAYATA GEÇİRDİK.' },
+        { icon: Award, title: '12 Kişilik Ekip', description: 'TASARIMDAN MONTAJA KADAR SÜRECİ YÖNETEN MULTİDİSİPLİNER EKİP.' },
+        { icon: Shield, title: '2 Yıl Garanti', description: 'TÜM ÜRÜNLERİMİZDE MALZEME VE İŞÇİLİK GARANTİSİ SUNUYORUZ.' },
     ],
     aboutValues: [
-        { icon: Heart, title: 'Tutku', description: 'Ahşabın doğallığına olan tutkumuz, her detayda kendini gösterir.' },
-        { icon: Shield, title: 'Güven', description: 'Söz verdiğimiz kaliteden ve zamandan asla ödün vermeyiz.' },
-        { icon: Lightbulb, title: 'İnovasyon', description: 'Geleneksel dokuları modern teknolojilerle harmanlarız.' },
-        { icon: Handshake, title: 'Bağlılık', description: 'Müşterilerimizle kurduğumuz bağ, ürünlerimiz kadar sağlamdır.' }
+        { icon: Heart, title: 'Sürdürülebilir Malzeme', description: 'Sertifikalı ormanlardan elde edilen masif ahşap ve geri dönüştürülebilir metal bileşenler kullanıyoruz.' },
+        { icon: Shield, title: 'Zanaat & Teknoloji', description: 'El işçiliğini CNC üretimle buluşturup kusursuz yüzey kalitesi ve dayanıklılık sağlıyoruz.' },
+        { icon: Lightbulb, title: 'İş Birlikçi Tasarım', description: 'Kullanıcı alışkanlıklarını dinleyip yaşam alanına özel modüler raf senaryoları geliştiriyoruz.' },
     ],
     aboutProcess: [
         { title: 'Keşif', description: 'Mekanınızı ve hayallerinizi dinliyor, analiz ediyoruz.' },
@@ -174,13 +172,13 @@ export default function AboutPage() {
             {/* Stats Section - Minimalist */}
             <section className="py-20 border-y border-stone-200 bg-white">
                 <div className="container px-6 mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-5xl mx-auto">
                         {pageSettings.aboutStats.map((stat, idx) => (
-                            <div key={idx} className="space-y-2">
+                            <div key={idx} className="space-y-4">
                                 <div className="text-4xl md:text-5xl font-serif text-stone-900">
                                     {stat.title}
                                 </div>
-                                <div className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium">
+                                <div className="text-xs uppercase tracking-[0.2em] text-stone-500 font-medium leading-relaxed max-w-[250px] mx-auto">
                                     {stat.description}
                                 </div>
                             </div>
@@ -203,7 +201,7 @@ export default function AboutPage() {
                             {pageSettings.aboutValues.map((value, idx) => (
                                 <div key={idx} className="group">
                                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-stone-100 text-stone-900 mb-6 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-500">
-                                        <value.icon size={24} strokeWidth={1.5} />
+                                        {value.icon && <value.icon size={24} strokeWidth={1.5} />}
                                     </div>
                                     <h3 className="text-xl font-serif text-stone-900 mb-3">{value.title}</h3>
                                     <p className="text-stone-500 leading-relaxed font-light">
@@ -270,9 +268,9 @@ export default function AboutPage() {
                         <Button
                             asChild
                             variant="outline"
-                            className="border-stone-700 text-white hover:bg-stone-800 hover:text-white h-14 px-8 rounded-full uppercase tracking-widest text-xs font-bold"
+                            className="border-stone-700 bg-white text-stone-900 hover:bg-stone-200 hover:text-stone-900 h-14 px-8 rounded-full uppercase tracking-widest text-xs font-bold"
                         >
-                            <Link href={pageSettings.aboutCtaSecondaryHref}>
+                            <Link href={pageSettings.aboutCtaSecondaryHref} className="text-stone-900">
                                 {pageSettings.aboutCtaSecondaryLabel}
                             </Link>
                         </Button>
