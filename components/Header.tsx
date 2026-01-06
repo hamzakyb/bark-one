@@ -147,7 +147,6 @@ export default function Header() {
                                 <motion.div
                                     key={item.href}
                                     className="relative group/nav-item"
-                                    whileHover="hover"
                                 >
                                     <Button
                                         asChild
@@ -166,16 +165,11 @@ export default function Header() {
                                         </Link>
                                     </Button>
                                     {pathname !== item.href && (
-                                        <motion.div
+                                        <div
                                             className={cn(
-                                                "absolute inset-0 rounded-full opacity-0 group-hover/nav-item:opacity-100 transition-opacity duration-300",
+                                                "absolute inset-0 rounded-full opacity-0 group-hover/nav-item:opacity-100 transition-all duration-300 transform scale-95 group-hover/nav-item:scale-105 ease-out",
                                                 isTransparent ? "bg-white" : "bg-linear-to-r from-slate-100 to-slate-200"
                                             )}
-                                            variants={{
-                                                hover: { scale: 1.05, opacity: 1 },
-                                                rest: { scale: 1, opacity: 0 }
-                                            }}
-                                            transition={{ duration: 0.3, ease: "easeOut" }}
                                         />
                                     )}
                                     {pathname === item.href && (
