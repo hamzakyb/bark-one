@@ -10,12 +10,22 @@ import { Toaster } from 'sonner';
 
 type SiteSettingsData = Record<string, unknown> & { _id?: string };
 
+import { Playfair_Display } from "next/font/google";
+
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-inter",
   weight: ["400", "500", "600", "700"],
   style: ["normal"],
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
 });
 
 async function getSiteSettings(): Promise<SiteSettingsData> {
@@ -49,15 +59,8 @@ export default async function RootLayout({
   const siteSettings = await getSiteSettings();
 
   return (
-    <html lang="tr" className={`${inter.variable} font-sans`}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="tr" className={`${inter.variable} ${playfair.variable} font-sans`}>
+      <head />
       <body className="antialiased flex flex-col min-h-screen bg-white bg-opacity-50 backdrop-blur-sm">
         <SiteSettingsProvider initialSettings={siteSettings}>
           <CartProvider>
