@@ -39,7 +39,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
     title: 'Eviniz için \nduvar rafları',
     subtitle:
       'Modüler raf seçeneklerimizle oturma odasından mutfağa kadar her alanda düzen ve estetik sağlayın. Seçeneklerinizi kişiselleştirin, alanınızı verimli kullanın.',
-    image: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=2400&auto=format&fit=crop',
+    image: '/hero-luxury.png',
     primaryCtaLabel: 'Rafları İncele',
     primaryCtaUrl: '/products',
     secondaryCtaLabel: 'Destek Al',
@@ -173,7 +173,7 @@ export default function Hero({ settings }: HeroProps) {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.8, delay: 0.2 }}
-                      className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-medium mb-6 md:mb-8 tracking-tight leading-[1.1] md:leading-[1.1] text-balance drop-shadow-2xl"
+                      className="text-3xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-medium mb-6 md:mb-8 tracking-tight leading-[1.1] md:leading-[1.1] text-balance drop-shadow-2xl"
                     >
                       {normalizeTitle(slide.title || '')}
                     </motion.h1>
@@ -195,7 +195,7 @@ export default function Hero({ settings }: HeroProps) {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.8, delay: 0.6 }}
-                      className="flex flex-col sm:flex-row gap-5 items-center justify-center w-full sm:w-auto"
+                      className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full sm:w-auto px-4 sm:px-0"
                     >
                       {/* Primary Button - Charismatic & Modern */}
                       {slide.primaryCtaLabel && (
