@@ -251,13 +251,8 @@ export default function AboutPage() {
                     <div className="absolute inset-0 bg-stone-900/40" />
                 </div>
                 {/* Branded Watermark */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none select-none">
-                    {/* Assuming siteLogoLight is available via settings context or we use text if image fails to load, but user asked for logo. 
-                         Since we are inside component, we can access settings.siteLogoLight.
-                         Wait, AboutPage has 'settings' from useSiteSettings, but 'pageSettings' is local state.
-                         I need to access 'settings.siteLogoLight'.
-                      */}
-                    <div className="relative w-[800px] h-[300px]">
+                <div className="absolute top-1/2 left-0 -translate-y-1/2 opacity-10 pointer-events-none select-none ml-[-10%] md:ml-0">
+                    <div className="relative w-[600px] h-[300px] md:w-[800px]">
                         {/* We will rely on CSS mask or simple Opacity for the logo image if available, else text fallback */}
                         <Image
                             src={(settings?.siteLogoLight as string) || '/images/file.svg'}
