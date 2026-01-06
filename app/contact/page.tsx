@@ -233,7 +233,16 @@ export default function ContactPage() {
             {/* Optional Map Strip */}
             <div className="h-64 w-full bg-stone-200 grayscale opacity-80">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.981274921595!2d29.11467167674907!3d41.02963537134786!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab7e99389c9bb%3A0xf65794048bb2c0d7!2s%C3%9Cmran%C4%B0ye%20Mobilyac%C4%B1lar%20Sitesi!5e0!3m2!1str!2str!4v1732302560000!5m2!1str!2str"
+                    src={(() => {
+                        const url = contactSettings.contactMapEmbedUrl;
+                        if (!url) return "about:blank";
+                        // If user pastes whole iframe tag, extract src
+                        if (url.includes('<iframe')) {
+                            const match = url.match(/src="([^"]+)"/);
+                            return match ? match[1] : url;
+                        }
+                        return url;
+                    })()}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
