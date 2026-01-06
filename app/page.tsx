@@ -1,5 +1,6 @@
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
+import ProductsSpotlight from '@/components/ProductsSpotlight';
 import ProductCard from '@/components/ProductCard';
 import InspirationGallery from '@/components/InspirationGallery';
 import Testimonials from '@/components/Testimonials';
@@ -251,127 +252,7 @@ export default async function Home() {
 
       <Features settings={featureSettings} />
 
-      {/* Products Section */}
-      <section id="products" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4 text-sm font-medium">
-              {spotlightSettings.badge || 'Öne Çıkan Ürünler'}
-            </Badge>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              {spotlightSettings.heading || (
-                <>
-                  Modern <span className="text-primary">Duvar Rafları</span>
-                </>
-              )}
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-              {spotlightSettings.description ||
-                'Minimalist tasarımlarımızla yaşam alanlarınızda düzen ve estetik bir araya geliyor. Kaliteli malzemeler, pratik kurulum ve şık görünüm.'}
-            </p>
-            <Button asChild variant="outline" size="lg">
-              <Link href={spotlightSettings.ctaUrl || '/products'}>
-                {spotlightSettings.ctaLabel || 'Tüm Ürünleri Gör'}
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-
-          {/* Trust Badges */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <Card className="text-center p-6 border-0 shadow-sm">
-              <CardContent className="p-0">
-                <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-1">2 Yıl Garanti</h3>
-                <p className="text-sm text-gray-600">Tüm ürünlerimizde</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-0 shadow-sm">
-              <CardContent className="p-0">
-                <Truck className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-1">Ücretsiz Kargo</h3>
-                <p className="text-sm text-gray-600">1500 TL ve üzeri</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-0 shadow-sm">
-              <CardContent className="p-0">
-                <Package className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-1">Hızlı Teslimat</h3>
-                <p className="text-sm text-gray-600">3-5 iş günü</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6 border-0 shadow-sm">
-              <CardContent className="p-0">
-                <Star className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-1">Müşteri Memnuniyeti</h3>
-                <p className="text-sm text-gray-600">4.8/5 puan</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Spotlight Items */}
-          {spotlightItems.length > 0 && (
-            <div className="mb-16">
-              <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Öne Çıkanlar</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {spotlightItems.map((item) => (
-                  <Card key={item._id ?? item.title} className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                    <Link href={item.href && item.href.startsWith('/') ? item.href : item.href || '#'}>
-                      <div className="relative aspect-video overflow-hidden">
-                        {item.image ? (
-                          <Image
-                            src={item.image}
-                            alt={item.title || 'Öne çıkan ürün'}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            sizes="(min-width: 1024px) 400px, (min-width: 768px) 360px, 100vw"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                            <Package className="h-12 w-12 text-gray-400" />
-                          </div>
-                        )}
-                        {item.price && (
-                          <div className="absolute top-4 right-4">
-                            <Badge className="bg-white/90 backdrop-blur text-gray-900">
-                              {item.price}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                      <CardContent className="p-6">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                        <p className="text-gray-600 line-clamp-2">{item.description}</p>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Products Grid */}
-          {products.length === 0 ? (
-            <Card className="text-center p-12 border-2 border-dashed border-gray-300">
-              <CardContent className="p-0">
-                <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Yakında</h3>
-                <p className="text-gray-600">
-                  Raf ürünlerimize yeni tasarımlar ekliyoruz. İlk haberdar olmak için bültenimize katılın.
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {products.map((product: FormattedProduct) => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+      <ProductsSpotlight settings={spotlightSettings} products={products} />
 
       <InspirationGallery settings={gallerySettings} />
 
