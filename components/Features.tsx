@@ -15,13 +15,7 @@ import {
     Layers,
     Box,
 } from 'lucide-react';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { cn } from '@/lib/utils';
 
 type FeatureItem = {
     _id?: string;
@@ -63,129 +57,126 @@ export default function Features({ settings }: FeaturesProps) {
     const normalizedFeatures: FeatureItem[] = items?.length
         ? items
         : [
-              {
-                  title: 'Dayanıklı Malzeme',
-                  description: 'Uzun ömürlü kullanım için seçilen malzemelerle raf ömrünü uzatın.',
-                  icon: 'ShieldCheck',
-              },
-              {
-                  title: 'Pratik Kurulum',
-                  description: 'Araç gereçleri azaltan paketleme ile hızlı kurulum sağlayın.',
-                  icon: 'Hammer',
-              },
-              {
-                  title: 'Kişiselleştirilebilir',
-                  description: 'Farklı ölçüler ve renk kombinasyonlarıyla alanınıza uyarlayın.',
-                  icon: 'Palette',
-              },
-          ];
+            {
+                title: 'Dayanıklı Malzeme',
+                description: 'Uzun ömürlü kullanım için seçilen masif ahşap ve birinci sınıf metallerle, nesiller boyu sürecek bir sağlamlık.',
+                icon: 'ShieldCheck',
+            },
+            {
+                title: 'Pratik Kurulum',
+                description: 'Karmaşık montaj süreçlerine son. Akıllı bağlantı detayları ve kullanıcı dostu kılavuzlarla dakikalar içinde hazır.',
+                icon: 'Hammer',
+            },
+            {
+                title: 'Kişiselleştirilebilir',
+                description: 'Mekanınızın ruhuna uyum sağlayan modüler tasarım. Farklı ölçü, doku ve renk seçenekleriyle tamamen size özel.',
+                icon: 'Palette',
+            },
+        ];
 
-    const badge = settings?.badge || 'BarkOne Raf Sistemleri';
-    const heading =
-        settings?.heading || (
-            <>
-                Güven veren <span className="font-serif italic">raflar</span> için üç temel sözümüz
-            </>
-        );
-    const description =
-        settings?.description ||
-        'Dayanıklı malzeme, özenli üretim ve uzun ömürlü kullanım. Yaşam alanınıza uygun raf çözümünü kolayca seçmeniz için her detayı netleştiriyoruz.';
+    const badge = settings?.badge || 'BarkOne Prensibi';
+    const heading = settings?.heading || 'Tasarım ve Fonksiyonun Kusursuz Dengesi';
 
     return (
-        <section className="relative overflow-hidden py-28 md:py-36 bg-gradient-to-b from-stone-50 via-white to-stone-50">
-            {/* Luxury Background Elements */}
-            <div className="absolute inset-0">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-stone-200 rounded-full filter blur-3xl opacity-10"></div>
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-stone-300 rounded-full filter blur-3xl opacity-10"></div>
-            </div>
+        <section className="relative py-32 md:py-40 bg-stone-50 overflow-hidden">
+            {/* Abstract Background Art */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[600px] h-[600px] rounded-full bg-stone-100/50 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-[500px] h-[500px] rounded-full bg-stone-200/30 blur-3xl pointer-events-none" />
 
-            <div className="container relative z-10 mx-auto px-6 sm:px-8">
-                {/* Premium Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="mx-auto mb-24 text-center max-w-4xl"
-                >
-                    {/* Modern Lux Brand Identity */}
-                    <div className="mb-16 relative flex flex-col items-center">
-                        <h3 className="text-2xl md:text-3xl font-serif font-light text-stone-800 tracking-[0.5em] uppercase mb-4">
-                            {badge}
-                        </h3>
-                        <div className="w-32 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent"></div>
+            <div className="container mx-auto px-6">
+                {/* Header Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-24 items-end">
+                    <div className="lg:col-span-5">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <span className="block text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-stone-500 mb-6">
+                                {badge}
+                            </span>
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 leading-[1.1]">
+                                {heading}
+                            </h2>
+                        </motion.div>
                     </div>
-                    
-                    {/* Statement Heading */}
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-stone-900 mb-8 leading-tight tracking-tight">
-                        {heading}
-                    </h2>
-                    
-                    {/* Refined Description */}
-                    <p className="text-xl text-stone-600 max-w-3xl mx-auto font-light leading-relaxed tracking-wide">
-                        {description}
-                    </p>
-                </motion.div>
+                    <div className="lg:col-span-7 lg:pl-12">
+                        <motion.div
+                            className="h-px bg-stone-300 w-full mb-8"
+                            initial={{ scaleX: 0, originX: 0 }}
+                            whileInView={{ scaleX: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                        />
+                        <motion.p
+                            className="text-lg md:text-xl text-stone-600 font-light leading-relaxed max-w-2xl"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                        >
+                            {settings?.description || 'Her detayında zanaatkarlığı hissettiren, modern yaşamın ihtiyaçlarına yanıt veren ve zamansız estetiğiyle mekanınızı dönüştüren raf sistemleri.'}
+                        </motion.p>
+                    </div>
+                </div>
 
-                {/* Unique Luxury Card Design */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                {/* Editorial List Layout */}
+                <div className="mt-20">
                     {normalizedFeatures.map((feature, index) => {
                         const iconKey = normalizeIconKey(feature.icon);
                         const IconComponent = iconKey ? ICONS[iconKey] : undefined;
-                        
+                        const number = (index + 1).toString().padStart(2, '0');
+
                         return (
                             <motion.div
-                                key={feature._id ?? `${feature.title ?? 'feature'}-${index}`}
-                                initial={{ opacity: 0, y: 50 }}
+                                key={feature._id ?? index}
+                                initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.7, delay: index * 0.2 }}
-                                className="group"
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                className="group relative border-t border-stone-200 py-12 md:py-16 transition-colors duration-500 hover:bg-white"
                             >
-                                <Card className="h-full border-0 bg-gradient-to-br from-white via-white to-stone-50 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden hover:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] transition-all duration-700 relative">
-                                    {/* Decorative Accent Elements */}
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-stone-400 to-stone-300"></div>
-                                    <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-stone-200 opacity-20"></div>
-                                    <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-stone-100 opacity-20"></div>
-                                    
-                                    <CardHeader className="pb-6 text-center relative z-10">
-                                        {/* Premium Icon Display */}
-                                        <div className="mx-auto mb-8 relative">
-                                            <div className="absolute inset-0 bg-stone-200 rounded-2xl transform rotate-6 opacity-10"></div>
-                                            <div className="relative inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br from-stone-50 to-white border border-stone-100 shadow-lg">
-                                                <div className="absolute inset-0 bg-gradient-to-br from-stone-300/5 to-transparent rounded-2xl"></div>
-                                                {IconComponent ? (
-                                                    <IconComponent className="h-12 w-12 text-stone-600" strokeWidth={1.25} />
-                                                ) : (
-                                                    <span className="text-3xl font-serif text-stone-600">★</span>
-                                                )}
-                                            </div>
+                                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                                    {/* Large Index Number */}
+                                    <div className="md:col-span-2">
+                                        <span className="block text-6xl md:text-7xl font-serif text-stone-200 group-hover:text-stone-900 transition-colors duration-500 opacity-50 group-hover:opacity-100">
+                                            {number}
+                                        </span>
+                                    </div>
+
+                                    {/* Icon & Content */}
+                                    <div className="md:col-span-3">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            {IconComponent && (
+                                                <div className="p-3 rounded-full bg-stone-100 text-stone-600 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-500">
+                                                    <IconComponent size={24} strokeWidth={1.5} />
+                                                </div>
+                                            )}
+                                            <h3 className="text-2xl font-serif text-stone-900">
+                                                {feature.title}
+                                            </h3>
                                         </div>
-                                        
-                                        {/* Elegant Title */}
-                                        <CardTitle className="text-2xl font-light text-stone-800 mb-4 tracking-wide relative">
-                                            <span className="relative z-10">{feature.title}</span>
-                                            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-stone-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                        </CardTitle>
-                                    </CardHeader>
-                                    
-                                    <CardContent className="text-center pt-0 px-8 pb-12 relative z-10">
-                                        {/* Sophisticated Description */}
-                                        <p className="text-stone-600 leading-relaxed tracking-wide font-light text-lg">
+                                    </div>
+
+                                    <div className="md:col-span-6 md:col-start-7">
+                                        <p className="text-lg text-stone-500 font-light leading-relaxed group-hover:text-stone-700 transition-colors duration-500">
                                             {feature.description}
                                         </p>
-                                        
-                                        {/* Subtle CTA Element */}
-                                        <div className="mt-8 flex justify-center">
-                                            <div className="w-8 h-8 rounded-full border-2 border-stone-200 flex items-center justify-center group-hover:border-stone-400 transition-colors duration-300">
-                                                <div className="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-stone-400 transition-colors duration-300"></div>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+
+                                    {/* Interactive Arrow on Hover (Optional Decorative) */}
+                                    <div className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </motion.div>
                         );
                     })}
+                    {/* Final Border */}
+                    <div className="border-t border-stone-200" />
                 </div>
             </div>
         </section>
