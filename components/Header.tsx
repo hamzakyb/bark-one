@@ -189,7 +189,7 @@ export default function Header() {
                                                 placeholder="Ara..."
                                                 className="h-9 w-full bg-transparent px-4 text-xs tracking-wide focus:outline-none placeholder:text-stone-400"
                                             />
-                                            <Button type="submit" size="sm" variant="ghost" className="h-7 w-7 rounded-full p-0">
+                                            <Button type="submit" size="sm" variant="ghost" className="h-7 w-7 rounded-full p-0 hover:bg-stone-100">
                                                 <Search className="h-3 w-3" />
                                             </Button>
                                         </form>
@@ -206,8 +206,8 @@ export default function Header() {
                                 className={cn(
                                     "h-10 w-10 rounded-full transition-colors duration-300",
                                     isTransparent
-                                        ? "text-white hover:bg-white/10"
-                                        : "text-stone-600 hover:bg-stone-100"
+                                        ? "text-white hover:bg-white hover:text-stone-900" // Stronger hover effect on transparent
+                                        : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                 )}
                             >
                                 <Search className="h-5 w-5 stroke-[1.5]" />
@@ -225,20 +225,20 @@ export default function Header() {
                                             className={cn(
                                                 "h-10 w-10 rounded-full transition-colors duration-300",
                                                 isTransparent
-                                                    ? "text-white hover:bg-white/10"
-                                                    : "text-stone-600 hover:bg-stone-100"
+                                                    ? "text-white hover:bg-white hover:text-stone-900"
+                                                    : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                             )}
                                         >
                                             <User className="h-5 w-5 stroke-[1.5]" />
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-xl border-stone-100">
+                                    <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-xl border-stone-100 bg-white/95 backdrop-blur-md">
                                         <div className="px-2 py-1.5 mb-1 border-b border-stone-100">
                                             <p className="text-sm font-medium text-stone-900">{user.name}</p>
                                             <p className="text-xs text-stone-500 truncate">{user.email}</p>
                                         </div>
                                         <DropdownMenuItem asChild>
-                                            <Link href="/profile" className="cursor-pointer rounded-lg">
+                                            <Link href="/profile" className="cursor-pointer rounded-lg hover:bg-stone-50">
                                                 <User className="mr-2 h-4 w-4" />
                                                 <span>Profilim</span>
                                             </Link>
@@ -260,8 +260,8 @@ export default function Header() {
                                     className={cn(
                                         "h-10 w-10 rounded-full transition-colors duration-300",
                                         isTransparent
-                                            ? "text-white hover:bg-white/10"
-                                            : "text-stone-600 hover:bg-stone-100"
+                                            ? "text-white hover:bg-white hover:text-stone-900"
+                                            : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                     )}
                                 >
                                     <Link href="/login">
@@ -279,8 +279,8 @@ export default function Header() {
                             className={cn(
                                 "h-10 w-10 relative rounded-full transition-colors duration-300",
                                 isTransparent
-                                    ? "text-white hover:bg-white/10"
-                                    : "text-stone-600 hover:bg-stone-100"
+                                    ? "text-white hover:bg-white hover:text-stone-900"
+                                    : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                             )}
                         >
                             <Link href="/cart">
@@ -301,24 +301,40 @@ export default function Header() {
                                         className={cn(
                                             "h-10 w-10 rounded-full transition-colors duration-300",
                                             isTransparent
-                                                ? "text-white hover:bg-white/10"
-                                                : "text-stone-600 hover:bg-stone-100"
+                                                ? "text-white hover:bg-white hover:text-stone-900"
+                                                : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
                                         )}
                                     >
                                         <Menu className="h-6 w-6 stroke-[1.5]" />
                                     </Button>
                                 </SheetTrigger>
-                                <SheetContent side="right" className="w-[300px] border-l-stone-100 bg-white/95 backdrop-blur-xl p-0">
+                                {/* Hide default close button with [&>button]:hidden */}
+                                <SheetContent side="right" className="w-[300px] border-l-stone-100 bg-white/95 backdrop-blur-xl p-0 [&>button]:hidden">
                                     <div className="flex flex-col h-full">
                                         <div className="flex items-center justify-between p-6 border-b border-stone-100">
-                                            <span className="text-2xl font-serif font-bold text-stone-900">
-                                                bark<span className="font-light text-stone-500">One</span>
-                                            </span>
+                                            {/* Mobile Menu Logo */}
+                                            <div className="flex items-center">
+                                                {siteLogoLight ? (
+                                                    <Image
+                                                        src={siteLogoLight}
+                                                        alt="Site logosu"
+                                                        width={120}
+                                                        height={40}
+                                                        className="h-8 w-auto filter grayscale opacity-90"
+                                                    />
+                                                ) : (
+                                                    <span className="text-2xl font-serif font-bold text-stone-900">
+                                                        bark<span className="font-light text-stone-500">One</span>
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {/* Custom Close Button */}
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => setIsMenuOpen(false)}
-                                                className="text-stone-400 hover:text-stone-900"
+                                                className="text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-full"
                                             >
                                                 <X className="h-5 w-5" />
                                             </Button>
@@ -363,7 +379,7 @@ export default function Header() {
                                                             <p className="text-xs text-stone-500">{user.email}</p>
                                                         </div>
                                                     </div>
-                                                    <Button variant="outline" className="w-full justify-start rounded-xl h-11 border-stone-200" onClick={() => router.push('/profile')}>
+                                                    <Button variant="outline" className="w-full justify-start rounded-xl h-11 border-stone-200 hover:bg-stone-50" onClick={() => router.push('/profile')}>
                                                         <User className="mr-3 h-4 w-4" /> Profilim
                                                     </Button>
                                                     <Button variant="ghost" className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600 rounded-xl h-11" onClick={handleLogout}>
@@ -372,7 +388,7 @@ export default function Header() {
                                                 </div>
                                             ) : (
                                                 <div className="grid grid-cols-2 gap-3">
-                                                    <Button variant="outline" className="rounded-xl h-11 border-stone-200" onClick={() => router.push('/login')}>
+                                                    <Button variant="outline" className="rounded-xl h-11 border-stone-200 hover:bg-stone-50" onClick={() => router.push('/login')}>
                                                         Giriş
                                                     </Button>
                                                     <Button className="rounded-xl h-11 bg-stone-900 text-white hover:bg-stone-800" onClick={() => router.push('/register')}>
