@@ -83,7 +83,7 @@ export default function ContactPage() {
                 {/* Left Column: Context & Info (Sticky on Desktop) */}
                 <div className="w-full lg:w-5/12 relative bg-stone-900 text-white lg:min-h-screen p-8 lg:p-20 flex flex-col justify-between overflow-hidden">
                     {/* Background Texture/Image */}
-                    <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
+                    <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
                     <div className="absolute inset-0 bg-stone-900/50" />
 
                     <div className="relative z-10 pt-24 lg:pt-12">

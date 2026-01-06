@@ -247,7 +247,7 @@ export default function AboutPage() {
 
             {/* Footer CTA */}
             <section className="py-32 bg-stone-900 text-white relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" />
+                <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
                 <div className="container px-6 mx-auto relative z-10 text-center">
                     <h2 className="text-4xl md:text-6xl font-serif mb-8 max-w-3xl mx-auto leading-tight">
                         {pageSettings.aboutCtaTitle}
