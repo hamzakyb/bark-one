@@ -1,4 +1,5 @@
 'use client';
+// Redundancy check - triggering build
 
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
