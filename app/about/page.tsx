@@ -34,7 +34,7 @@ interface AboutSettings {
         title: string;
         description: string;
     }>;
-    aboutProcess: Array<{
+    aboutProcessItems: Array<{
         title: string;
         description: string;
     }>;
@@ -48,6 +48,10 @@ interface AboutSettings {
     aboutCtaSecondaryHref: string;
 }
 
+const ICON_MAP: Record<string, any> = {
+    Users, Award, Heart, Shield, ArrowUpRight, Lightbulb, Building, Handshake, Star
+};
+
 const DEFAULT_SETTINGS = {
     aboutHeroBadge: 'Hikayemiz',
     aboutHeroTitle: 'Zamanın ötesinde estetik.',
@@ -55,16 +59,16 @@ const DEFAULT_SETTINGS = {
     aboutHeroDescription: 'BarkOne olarak, doğanın sunduğu eşsiz dokuları işçilik ve yenilikçi yaklaşımlarla birleştirerek her projede zamansız eserler yaratıyoruz. Her parça, bir tasarım objesi olmanın ötesinde, yaşanmışlığın ve kalitenin bir simgesidir.',
     aboutHeroImage: '/images/about-hero-luxury.png',
     aboutStats: [
-        { icon: Users, title: '180+ Proje', description: 'ÖZEL ÖLÇÜ RAF ÇÖZÜMLERİNİ İÇ MİMARLAR VE KONUT SAHİPLERİ İÇİN HAYATA GEÇİRDİK.' },
-        { icon: Award, title: '12 Kişilik Ekip', description: 'TASARIMDAN MONTAJA KADAR SÜRECİ YÖNETEN MULTİDİSİPLİNER EKİP.' },
-        { icon: Shield, title: '2 Yıl Garanti', description: 'TÜM ÜRÜNLERİMİZDE MALZEME VE İŞÇİLİK GARANTİSİ SUNUYORUZ.' },
+        { icon: 'Users', title: '180+ Proje', description: 'ÖZEL ÖLÇÜ RAF ÇÖZÜMLERİNİ İÇ MİMARLAR VE KONUT SAHİPLERİ İÇİN HAYATA GEÇİRDİK.' },
+        { icon: 'Award', title: '12 Kişilik Ekip', description: 'TASARIMDAN MONTAJA KADAR SÜRECİ YÖNETEN MULTİDİSİPLİNER EKİP.' },
+        { icon: 'Shield', title: '2 Yıl Garanti', description: 'TÜM ÜRÜNLERİMİZDE MALZEME VE İŞÇİLİK GARANTİSİ SUNUYORUZ.' },
     ],
     aboutValues: [
-        { icon: Heart, title: 'Sürdürülebilir Malzeme', description: 'Sertifikalı ormanlardan elde edilen masif ahşap ve geri dönüştürülebilir metal bileşenler kullanıyoruz.' },
-        { icon: Shield, title: 'Zanaat & Teknoloji', description: 'El işçiliğini CNC üretimle buluşturup kusursuz yüzey kalitesi ve dayanıklılık sağlıyoruz.' },
-        { icon: Lightbulb, title: 'İş Birlikçi Tasarım', description: 'Kullanıcı alışkanlıklarını dinleyip yaşam alanına özel modüler raf senaryoları geliştiriyoruz.' },
+        { icon: 'Heart', title: 'Sürdürülebilir Malzeme', description: 'Sertifikalı ormanlardan elde edilen masif ahşap ve geri dönüştürülebilir metal bileşenler kullanıyoruz.' },
+        { icon: 'Shield', title: 'Zanaat & Teknoloji', description: 'El işçiliğini CNC üretimle buluşturup kusursuz yüzey kalitesi ve dayanıklılık sağlıyoruz.' },
+        { icon: 'Lightbulb', title: 'İş Birlikçi Tasarım', description: 'Kullanıcı alışkanlıklarını dinleyip yaşam alanına özel modüler raf senaryoları geliştiriyoruz.' },
     ],
-    aboutProcess: [
+    aboutProcessItems: [
         { title: 'Keşif', description: 'Mekanınızı ve hayallerinizi dinliyor, analiz ediyoruz.' },
         { title: 'Tasarım', description: 'Estetik ve fonksiyonelliği birleştiren taslaklar hazırlıyoruz.' },
         { title: 'Üretim', description: 'Usta ellerde, en kaliteli malzemelerle hayat buluyor.' },
@@ -201,7 +205,10 @@ export default function AboutPage() {
                             {pageSettings.aboutValues.map((value, idx) => (
                                 <div key={idx} className="group">
                                     <div className="w-12 h-12 flex items-center justify-center rounded-full bg-stone-100 text-stone-900 mb-6 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-500">
-                                        {value.icon && <value.icon size={24} strokeWidth={1.5} />}
+                                        {(() => {
+                                            const Icon = ICON_MAP[value.icon as string] || Shield;
+                                            return <Icon size={24} strokeWidth={1.5} />;
+                                        })()}
                                     </div>
                                     <h3 className="text-xl font-serif text-stone-900 mb-3">{value.title}</h3>
                                     <p className="text-stone-500 leading-relaxed font-light">
@@ -228,7 +235,7 @@ export default function AboutPage() {
                         {/* Connecting Line (Desktop) */}
                         <div className="hidden md:block absolute top-12 left-0 w-full h-[1px] bg-stone-300 -z-10" />
 
-                        {pageSettings.aboutProcess.map((step, idx) => (
+                        {pageSettings.aboutProcessItems.map((step, idx) => (
                             <div key={idx} className="relative pt-0 md:pt-8 group">
                                 <div className="hidden md:flex absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-stone-50 border border-stone-300 items-center justify-center z-10 text-xs font-bold text-stone-400 group-hover:border-stone-900 group-hover:text-stone-900 transition-colors duration-300">
                                     {idx + 1}

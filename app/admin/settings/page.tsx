@@ -299,6 +299,20 @@ export default function AdminSettingsPage() {
         });
     }, []);
 
+    const updateArrayItem = useCallback((arrayKey: string, index: number, field: string, value: any) => {
+        setSettings((prev) => {
+            if (!prev) return null;
+            const newArray = [...(prev[arrayKey] || [])];
+            // Ensure object exists at index
+            if (!newArray[index]) {
+                // Initialize structure based on key if needed, or just empty object
+                newArray[index] = {};
+            }
+            newArray[index] = { ...newArray[index], [field]: value };
+            return { ...prev, [arrayKey]: newArray };
+        });
+    }, []);
+
     const handleFile = useCallback(async (file: File, key: string) => {
         try {
             setPendingUploads((prev) => ({ ...prev, [key]: true }));
@@ -828,6 +842,174 @@ export default function AdminSettingsPage() {
                 onRemove={() => handleRemoveImage('aboutHeroImage')}
                 isUploading={pendingUploads.aboutHeroImage}
             />
+
+            {/* Stats Section */}
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-anthracite">İstatistikler</h3>
+                    {[0, 1, 2].map((idx) => (
+                        <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border border-stone-100 rounded-xl bg-stone-50/50">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">İkon ({idx + 1})</label>
+                                <input
+                                    value={settings.aboutStats?.[idx]?.icon ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutStats', idx, 'icon', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                    placeholder="örn: Users"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Başlık ({idx + 1})</label>
+                                <input
+                                    value={settings.aboutStats?.[idx]?.title ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutStats', idx, 'title', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Açıklama ({idx + 1})</label>
+                                <input
+                                    value={settings.aboutStats?.[idx]?.description ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutStats', idx, 'description', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                    <p className="text-xs text-stone-400 italic">Mevcut ikonlar: Users, Award, Shield, Heart, Lightbulb, Building, Handshake, Star</p>
+                </div>
+            </section>
+
+            {/* Values Section */}
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-anthracite">Değerlerimiz</h3>
+                    {[0, 1, 2].map((idx) => (
+                        <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border border-stone-100 rounded-xl bg-stone-50/50">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">İkon ({idx + 1})</label>
+                                <input
+                                    value={settings.aboutValues?.[idx]?.icon ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutValues', idx, 'icon', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                    placeholder="örn: Heart"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Başlık ({idx + 1})</label>
+                                <input
+                                    value={settings.aboutValues?.[idx]?.title ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutValues', idx, 'title', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Açıklama ({idx + 1})</label>
+                                <input
+                                    value={settings.aboutValues?.[idx]?.description ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutValues', idx, 'description', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Process Section */}
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-anthracite">Süreç Adımları (Nasıl Çalışıyoruz?)</h3>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Süreç Başlığı</label>
+                        <input
+                            value={settings.aboutProcessTitle ?? ''}
+                            onChange={(e) => updateSetting('aboutProcessTitle', e.target.value)}
+                            className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                        />
+                    </div>
+                    {[0, 1, 2, 3].map((idx) => (
+                        <div key={idx} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border border-stone-100 rounded-xl bg-stone-50/50">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Adım {idx + 1} Başlık</label>
+                                <input
+                                    value={settings.aboutProcessItems?.[idx]?.title ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutProcessItems', idx, 'title', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">Adım {idx + 1} Açıklama</label>
+                                <input
+                                    value={settings.aboutProcessItems?.[idx]?.description ?? ''}
+                                    onChange={(e) => updateArrayItem('aboutProcessItems', idx, 'description', e.target.value)}
+                                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-anthracite">Alt Çağrı Alanı (CTA)</h3>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Başlık</label>
+                            <input
+                                value={settings.aboutCtaTitle ?? ''}
+                                onChange={(e) => updateSetting('aboutCtaTitle', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Alt Başlık</label>
+                            <input
+                                value={settings.aboutCtaSubtitle ?? ''}
+                                onChange={(e) => updateSetting('aboutCtaSubtitle', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Birincil Buton</label>
+                            <input
+                                value={settings.aboutCtaPrimaryLabel ?? ''}
+                                onChange={(e) => updateSetting('aboutCtaPrimaryLabel', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Birincil URL</label>
+                            <input
+                                value={settings.aboutCtaPrimaryHref ?? ''}
+                                onChange={(e) => updateSetting('aboutCtaPrimaryHref', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">İkincil Buton</label>
+                            <input
+                                value={settings.aboutCtaSecondaryLabel ?? ''}
+                                onChange={(e) => updateSetting('aboutCtaSecondaryLabel', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">İkincil URL</label>
+                            <input
+                                value={settings.aboutCtaSecondaryHref ?? ''}
+                                onChange={(e) => updateSetting('aboutCtaSecondaryHref', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
     );
 
