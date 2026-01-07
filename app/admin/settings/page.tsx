@@ -483,13 +483,181 @@ export default function AdminSettingsPage() {
                 </div>
             </section>
             <ImageUploader
-                label="Hero Görseli"
-                helper="PNG, JPG veya WEBP önerilir. İlk görsel ziyaretçilere gösterilecektir."
+                label="Fallback Hero Görseli"
+                helper="Eğer aşağıdaki slaytlar boşsa bu görsel tek başına gösterilir."
                 value={settings.homeHeroImage}
                 onUpload={(file) => handleFile(file, 'homeHeroImage')}
                 onRemove={() => handleRemoveImage('homeHeroImage')}
                 isUploading={pendingUploads.homeHeroImage}
             />
+
+            <section className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-stone-400">Hero Slaytları (Carousel)</h3>
+                    <button
+                        onClick={() => {
+                            const newSlides = [...(settings.homeHeroSlides || [])];
+                            newSlides.push({
+                                _id: Date.now().toString(),
+                                badge: 'Yeni Slayt',
+                                title: 'Yeni Başlık',
+                                subtitle: 'Yeni alt başlık açıklaması',
+                                image: '',
+                                primaryCtaLabel: 'Keşfet',
+                                primaryCtaUrl: '/products'
+                            });
+                            updateSetting('homeHeroSlides', newSlides);
+                        }}
+                        className="flex items-center gap-2 rounded-xl bg-wood-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all hover:bg-wood-600"
+                    >
+                        <Sparkles size={14} />
+                        Slayt Ekle
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                    {(settings.homeHeroSlides || []).map((slide: any, index: number) => (
+                        <div key={slide._id || index} className="group relative rounded-[24px] border border-stone-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                            <button
+                                onClick={() => {
+                                    const newSlides = settings.homeHeroSlides.filter((_: any, i: number) => i !== index);
+                                    updateSetting('homeHeroSlides', newSlides);
+                                }}
+                                className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition-transform hover:scale-110"
+                            >
+                                <X size={16} />
+                            </button>
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Slayt Rozeti</label>
+                                        <input
+                                            value={slide.badge || ''}
+                                            onChange={(e) => {
+                                                const newSlides = [...settings.homeHeroSlides];
+                                                newSlides[index].badge = e.target.value;
+                                                updateSetting('homeHeroSlides', newSlides);
+                                            }}
+                                            className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Slayt Başlığı</label>
+                                        <textarea
+                                            value={slide.title || ''}
+                                            onChange={(e) => {
+                                                const newSlides = [...settings.homeHeroSlides];
+                                                newSlides[index].title = e.target.value;
+                                                updateSetting('homeHeroSlides', newSlides);
+                                            }}
+                                            rows={2}
+                                            className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Slayt Alt Başlığı</label>
+                                        <textarea
+                                            value={slide.subtitle || ''}
+                                            onChange={(e) => {
+                                                const newSlides = [...settings.homeHeroSlides];
+                                                newSlides[index].subtitle = e.target.value;
+                                                updateSetting('homeHeroSlides', newSlides);
+                                            }}
+                                            rows={2}
+                                            className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Slayt Görseli</label>
+                                        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-stone-100 bg-stone-50">
+                                            {slide.image ? (
+                                                <>
+                                                    <NextImage
+                                                        src={slide.image}
+                                                        alt="Slide Preview"
+                                                        fill
+                                                        className="object-cover"
+                                                    />
+                                                    <button
+                                                        onClick={() => {
+                                                            const newSlides = [...settings.homeHeroSlides];
+                                                            newSlides[index].image = '';
+                                                            updateSetting('homeHeroSlides', newSlides);
+                                                        }}
+                                                        className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity hover:opacity-100"
+                                                    >
+                                                        <Trash2 className="text-white" size={24} />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+                                                    <input
+                                                        type="file"
+                                                        id={`slide-upload-${index}`}
+                                                        className="hidden"
+                                                        onChange={async (e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                const compressed = await compressImage(file);
+                                                                const blob = await upload(compressed.name, compressed, {
+                                                                    access: 'public',
+                                                                    handleUploadUrl: '/api/upload',
+                                                                    addRandomSuffix: true,
+                                                                } as any);
+                                                                if (blob?.url) {
+                                                                    const newSlides = [...settings.homeHeroSlides];
+                                                                    newSlides[index].image = blob.url;
+                                                                    updateSetting('homeHeroSlides', newSlides);
+                                                                }
+                                                            }
+                                                        }}
+                                                    />
+                                                    <label
+                                                        htmlFor={`slide-upload-${index}`}
+                                                        className="cursor-pointer rounded-lg bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest shadow-sm hover:bg-stone-50"
+                                                    >
+                                                        Görsel Yükle
+                                                    </label>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Buton Metni</label>
+                                            <input
+                                                value={slide.primaryCtaLabel || ''}
+                                                onChange={(e) => {
+                                                    const newSlides = [...settings.homeHeroSlides];
+                                                    newSlides[index].primaryCtaLabel = e.target.value;
+                                                    updateSetting('homeHeroSlides', newSlides);
+                                                }}
+                                                className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Buton Linki</label>
+                                            <input
+                                                value={slide.primaryCtaUrl || ''}
+                                                onChange={(e) => {
+                                                    const newSlides = [...settings.homeHeroSlides];
+                                                    newSlides[index].primaryCtaUrl = e.target.value;
+                                                    updateSetting('homeHeroSlides', newSlides);
+                                                }}
+                                                className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 

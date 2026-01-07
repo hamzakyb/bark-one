@@ -96,12 +96,14 @@ export default function Hero({ settings }: HeroProps) {
                   className="absolute inset-0 z-0"
                 >
                   <Image
-                    src={slide.image || ''}
+                    key={slide.image}
+                    src={slide.image || '/hero-luxury.png'}
                     alt={slide.title || 'Luxury Furniture'}
                     fill
                     className="object-cover"
                     priority={index === 0}
                     quality={100}
+                    unoptimized
                   />
                   {/* Cinematic Overlays */}
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />

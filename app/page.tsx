@@ -4,7 +4,7 @@ import ProductsSpotlight from '@/components/ProductsSpotlight';
 import ProductCard from '@/components/ProductCard';
 import InspirationGallery from '@/components/InspirationGallery';
 import Testimonials from '@/components/Testimonials';
-import dbConnect from '@/lib/db';
+import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 import SiteSettings from '@/models/SiteSettings';
 import Link from 'next/link';
@@ -156,7 +156,7 @@ type FormattedProduct = {
 };
 
 async function getProducts(): Promise<FormattedProduct[]> {
-  await dbConnect();
+  await connectDB();
   const products = await Product.find({}).sort({ createdAt: -1 }).lean();
 
   // Convert _id and dates to string to pass to client component
@@ -175,7 +175,7 @@ async function getProducts(): Promise<FormattedProduct[]> {
 }
 
 async function getSiteSettings(): Promise<SiteSettingsData> {
-  await dbConnect();
+  await connectDB();
 
   let settings = await SiteSettings.findOne().lean<SiteSettingsData & { _id: string }>();
 

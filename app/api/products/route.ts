@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
+import connectDB from '@/lib/mongodb';
 import Product from '@/models/Product';
 
 export async function GET() {
     try {
-        await dbConnect();
+        await connectDB();
         const products = await Product.find({}).sort({ createdAt: -1 }).lean();
 
         return NextResponse.json(products);
@@ -15,7 +15,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        await dbConnect();
+        await connectDB();
 
         const body = await request.json();
         const {
