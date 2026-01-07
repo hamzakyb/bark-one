@@ -158,14 +158,22 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(139,92,52,0.08),transparent_70%)]" />
                 {value ? (
                     <div className="relative z-10 h-[260px] w-full">
-                        <NextImage
-                            src={value}
-                            alt={`${label} önizleme`}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-contain"
-                            unoptimized
-                        />
+                        {value.startsWith('blob:') ? (
+                            <img
+                                src={value}
+                                alt={`${label} önizleme`}
+                                className="h-full w-full object-contain"
+                            />
+                        ) : (
+                            <NextImage
+                                src={value}
+                                alt={`${label} önizleme`}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                className="object-contain"
+                                unoptimized
+                            />
+                        )}
                         <div className="pointer-events-none absolute inset-x-5 bottom-5 flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/75 px-4 py-2 text-xs font-medium uppercase tracking-[0.32em] text-wood-500 shadow-[0_18px_48px_-32px_rgba(15,15,15,0.45)]">
                             <Upload size={16} /> Yeni görsel sürükleyip bırakarak güncelleyebilirsiniz
                         </div>
@@ -332,7 +340,6 @@ export default function AdminSettingsPage() {
             const blob = await upload(compressedFile.name, compressedFile, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
-                addRandomSuffix: true,
             } as any);
 
             if (blob && blob.url) {
@@ -586,12 +593,21 @@ export default function AdminSettingsPage() {
                                         <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-stone-100 bg-stone-50">
                                             {slide.image ? (
                                                 <>
-                                                    <NextImage
-                                                        src={slide.image}
-                                                        alt="Slide Preview"
-                                                        fill
-                                                        className="object-cover"
-                                                    />
+                                                    {slide.image.startsWith('blob:') ? (
+                                                        <img
+                                                            src={slide.image}
+                                                            alt="Local Slide Preview"
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <NextImage
+                                                            src={slide.image}
+                                                            alt="Slide Preview"
+                                                            fill
+                                                            className="object-cover"
+                                                            unoptimized
+                                                        />
+                                                    )}
                                                     {pendingUploads[`carousel-slide-${index}`] && (
                                                         <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
                                                             <Loader2 className="h-8 w-8 animate-spin text-white" />
