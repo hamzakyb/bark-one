@@ -272,12 +272,13 @@ const ADMIN_SECTION_LINKS: { id: string; label: string; description: string; ico
         description: 'Öne çıkan ürün kartlarını yönetin',
         icon: ImageIcon,
     },
-    {
-        id: 'gallery',
-        label: 'İlham Galerisi',
-        description: 'Galeri grid ve görsel kartlar',
-        icon: Layers,
-    },
+    // Gallery management moved to Settings page
+    // {
+    //     id: 'gallery',
+    //     label: 'İlham Galerisi',
+    //     description: 'Galeri grid ve görsel kartlar',
+    //     icon: Layers,
+    // },
     {
         id: 'testimonials',
         label: 'Referanslar',
