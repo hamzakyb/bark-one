@@ -1,7 +1,7 @@
 'use client';
 
 import NextImage from 'next/image';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Loader2, Save, Upload, Trash2, RefreshCcw, Sparkles, CheckCircle, AlertTriangle, X } from 'lucide-react';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { upload } from '@vercel/blob/client';
