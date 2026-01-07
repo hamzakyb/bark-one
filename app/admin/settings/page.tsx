@@ -316,13 +316,17 @@ export default function AdminSettingsPage() {
         });
     }, []);
 
-    const handleFile = useCallback(async (file: File, key: string) => {
+    const handleFile = useCallback(async (file: File, key: string, customUpdate?: (url: string) => void) => {
         try {
             setPendingUploads((prev) => ({ ...prev, [key]: true }));
 
             // Optimistic feedback with local URL
             const previewUrl = URL.createObjectURL(file);
-            updateSetting(key, previewUrl);
+            if (customUpdate) {
+                customUpdate(previewUrl);
+            } else {
+                updateSetting(key, previewUrl);
+            }
 
             const compressedFile = await compressImage(file);
             const blob = await upload(compressedFile.name, compressedFile, {
@@ -332,7 +336,11 @@ export default function AdminSettingsPage() {
             } as any);
 
             if (blob && blob.url) {
-                updateSetting(key, blob.url);
+                if (customUpdate) {
+                    customUpdate(blob.url);
+                } else {
+                    updateSetting(key, blob.url);
+                }
                 setToasts((prev) => [
                     ...prev,
                     {
@@ -584,6 +592,11 @@ export default function AdminSettingsPage() {
                                                         fill
                                                         className="object-cover"
                                                     />
+                                                    {pendingUploads[`carousel-slide-${index}`] && (
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                                                            <Loader2 className="h-8 w-8 animate-spin text-white" />
+                                                        </div>
+                                                    )}
                                                     <button
                                                         onClick={() => {
                                                             const newSlides = [...settings.homeHeroSlides];
@@ -597,33 +610,34 @@ export default function AdminSettingsPage() {
                                                 </>
                                             ) : (
                                                 <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-                                                    <input
-                                                        type="file"
-                                                        id={`slide-upload-${index}`}
-                                                        className="hidden"
-                                                        onChange={async (e) => {
-                                                            const file = e.target.files?.[0];
-                                                            if (file) {
-                                                                const compressed = await compressImage(file);
-                                                                const blob = await upload(compressed.name, compressed, {
-                                                                    access: 'public',
-                                                                    handleUploadUrl: '/api/upload',
-                                                                    addRandomSuffix: true,
-                                                                } as any);
-                                                                if (blob?.url) {
-                                                                    const newSlides = [...settings.homeHeroSlides];
-                                                                    newSlides[index].image = blob.url;
-                                                                    updateSetting('homeHeroSlides', newSlides);
-                                                                }
-                                                            }
-                                                        }}
-                                                    />
-                                                    <label
-                                                        htmlFor={`slide-upload-${index}`}
-                                                        className="cursor-pointer rounded-lg bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest shadow-sm hover:bg-stone-50"
-                                                    >
-                                                        Görsel Yükle
-                                                    </label>
+                                                    {pendingUploads[`carousel-slide-${index}`] ? (
+                                                        <Loader2 className="h-8 w-8 animate-spin text-wood-500" />
+                                                    ) : (
+                                                        <>
+                                                            <input
+                                                                type="file"
+                                                                id={`slide-upload-${index}`}
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={async (e) => {
+                                                                    const file = e.target.files?.[0];
+                                                                    if (file) {
+                                                                        void handleFile(file, `carousel-slide-${index}`, (url) => {
+                                                                            const newSlides = [...settings.homeHeroSlides];
+                                                                            newSlides[index].image = url;
+                                                                            updateSetting('homeHeroSlides', newSlides);
+                                                                        });
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <label
+                                                                htmlFor={`slide-upload-${index}`}
+                                                                className="cursor-pointer rounded-lg bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest shadow-sm hover:bg-stone-50"
+                                                            >
+                                                                Görsel Yükle
+                                                            </label>
+                                                        </>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
