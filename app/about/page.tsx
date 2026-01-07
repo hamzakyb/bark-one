@@ -151,11 +151,13 @@ export default function AboutPage() {
                         className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-sm"
                     >
                         <Image
+                            key={pageSettings.aboutHeroImage}
                             src={pageSettings.aboutHeroImage}
                             alt="About Hero"
                             fill
                             className="object-cover"
                             priority
+                            unoptimized
                         />
                         <div className="absolute inset-0 bg-black/10" />
                     </motion.div>

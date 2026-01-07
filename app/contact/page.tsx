@@ -44,10 +44,25 @@ export default function ContactPage() {
     const [contactSettings, setContactSettings] = useState(DEFAULT_SETTINGS);
 
     useEffect(() => {
-        // Hydrate settings
+        // Hydrate from context
         if (settings) {
             setContactSettings(prev => ({ ...prev, ...settings }));
         }
+
+        // Also fetch from API to be sure we have latest server-side settings
+        const loadSettings = async () => {
+            try {
+                const response = await fetch('/api/settings');
+                if (!response.ok) return;
+                const data = await response.json();
+                if (data) {
+                    setContactSettings(prev => ({ ...prev, ...data }));
+                }
+            } catch (error) {
+                console.error('Contact settings fetch error:', error);
+            }
+        };
+        void loadSettings();
     }, [settings]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -89,10 +104,13 @@ export default function ContactPage() {
                     {/* Background Texture/Image */}
                     <div className="absolute inset-0 opacity-100">
                         <Image
+                            key={contactSettings.contactHeroImage}
                             src={contactSettings.contactHeroImage || '/images/luxury-showroom-wall.png'}
                             alt="Contact Hero"
                             fill
                             className="object-cover"
+                            priority
+                            unoptimized
                         />
                         <div className="absolute inset-0 bg-stone-900/50" />
                     </div>

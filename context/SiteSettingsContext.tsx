@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
 
 export interface SiteSettings {
   socialMedia?: {
@@ -43,6 +43,13 @@ export function SiteSettingsProvider({
   const [settings, setSettings] = useState<SiteSettings | null>(
     initialSettings ?? null
   );
+
+  // Sync state if initialSettings changes (important for server revalidation)
+  useEffect(() => {
+    if (initialSettings) {
+      setSettings(initialSettings);
+    }
+  }, [initialSettings]);
 
   const value = useMemo(
     () => ({

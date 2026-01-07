@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+export const revalidate = 0;
 import { CartProvider } from "@/context/CartContext";
 import ConditionalLayout from "@/components/ConditionalLayout";
 import connectDB from "@/lib/mongodb";
