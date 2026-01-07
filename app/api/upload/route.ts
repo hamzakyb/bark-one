@@ -16,6 +16,7 @@ export async function POST(request: Request): Promise<NextResponse> {
                 // Şimdilik bark-one için herkese açık (admin panelinde olunduğu varsayılıyor)
                 return {
                     allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+                    addRandomSuffix: true,
                     tokenPayload: JSON.stringify({
                         // Ekstra veri göndermek isterseniz buraya ekleyebilirsiniz
                     }),
