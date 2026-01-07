@@ -96,8 +96,8 @@ export default function Hero({ settings }: HeroProps) {
                   className="absolute inset-0 z-0"
                 >
                   <Image
-                    key={slide.image}
-                    src={slide.image || '/hero-luxury.png'}
+                    key={slide.image || 'fallback'}
+                    src={slide.image && slide.image.trim() !== '' ? slide.image : '/hero-luxury.png'}
                     alt={slide.title || 'Luxury Furniture'}
                     fill
                     className="object-cover"

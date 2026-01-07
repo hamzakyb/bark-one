@@ -8,10 +8,12 @@ export async function GET() {
         await connectDB();
 
         let settings = await SiteSettings.findOne();
+        console.log('GET /api/settings - Found settings ID:', settings?._id?.toString() || 'none');
 
         // If no settings exist, create default
         if (!settings) {
             settings = await SiteSettings.create({});
+            console.log('GET /api/settings - Created default settings with ID:', settings._id.toString());
         }
 
         return NextResponse.json(settings);
@@ -46,6 +48,7 @@ export async function POST(request: Request) {
             { $set: updatePayload },
             { new: true, upsert: true, setDefaultsOnInsert: true }
         );
+        console.log('POST /api/settings - Successfully updated document ID:', settings?._id?.toString());
 
         const serialized = settings?.toObject ? settings.toObject() : settings;
 

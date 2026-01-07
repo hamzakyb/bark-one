@@ -184,11 +184,13 @@ async function getSiteSettings(): Promise<SiteSettingsData> {
     settings = created.toObject();
   }
 
+  console.log('Server: siteSettings fetched from DB, ID:', settings?._id?.toString() || 'none');
   return JSON.parse(JSON.stringify(settings));
 }
 
 export default async function Home() {
   const [products, siteSettings] = await Promise.all([getProducts(), getSiteSettings()]);
+  console.log('Server: Home page rendering with siteSettings slides count:', siteSettings?.homeHeroSlides?.length || 0);
 
   const heroSettings = {
     slides: siteSettings?.homeHeroSlides && siteSettings.homeHeroSlides.length > 0

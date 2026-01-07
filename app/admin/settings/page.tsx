@@ -250,6 +250,8 @@ export default function AdminSettingsPage() {
         }
     }, [setGlobalSettings]);
 
+    const isAnyUploading = useMemo(() => Object.values(pendingUploads).some(Boolean), [pendingUploads]);
+
     useEffect(() => {
         void fetchSettings();
     }, [fetchSettings]);
@@ -1250,11 +1252,11 @@ export default function AdminSettingsPage() {
                     <div className="flex flex-col gap-3 md:items-end">
                         <button
                             onClick={handleSave}
-                            disabled={isSaving}
+                            disabled={isSaving || isAnyUploading}
                             className="inline-flex items-center gap-2 rounded-full border border-wood-500/60 bg-wood-500 px-6 py-3 text-sm font-semibold uppercase tracking-[0.35em] text-white transition-colors duration-300 hover:border-wood-600 hover:bg-wood-600 disabled:cursor-not-allowed disabled:opacity-70"
                         >
                             {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save size={18} />}
-                            Kaydet
+                            {isAnyUploading ? 'Yükleniyor...' : 'Kaydet'}
                         </button>
                         <button
                             type="button"
