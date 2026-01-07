@@ -84,6 +84,7 @@ type ImageUploaderProps = {
 
 function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }: ImageUploaderProps) {
     const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const processFile = async (file?: File | null) => {
         if (!file) return;
@@ -133,10 +134,20 @@ function ImageUploader({ label, helper, value, onUpload, onRemove, isUploading }
                     {helper && <p className="text-sm text-stone-500 max-w-xl">{helper}</p>}
                 </div>
                 <div className="flex gap-3">
-                    <label className="inline-flex items-center gap-2 rounded-full border border-wood-500/60 bg-wood-500 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition-all duration-300 hover:border-wood-600 hover:bg-wood-600 cursor-pointer">
+                    <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center gap-2 rounded-full border border-wood-500/60 bg-wood-500 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition-all duration-300 hover:border-wood-600 hover:bg-wood-600 cursor-pointer"
+                    >
                         <Upload size={16} /> Görsel Yükle
-                        <input type="file" accept="image/*" multiple className="hidden" onChange={handleInputChange} />
-                    </label>
+                    </button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleInputChange}
+                    />
                     {value && (
                         <button
                             type="button"
