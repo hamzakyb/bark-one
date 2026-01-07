@@ -52,6 +52,7 @@ type SiteSettings = Record<string, any>;
 const SETTINGS_TABS = [
     { id: 'brand', label: 'Marka' },
     { id: 'homepage', label: 'Anasayfa' },
+    { id: 'gallery', label: 'Galeri' },
     { id: 'products', label: 'Ürünler Sayfası' },
     { id: 'contact', label: 'İletişim Sayfası' },
     { id: 'about', label: 'Hakkımızda Sayfası' },
@@ -1220,12 +1221,213 @@ export default function AdminSettingsPage() {
         </div>
     );
 
+    const renderGalleryTab = () => (
+        <div className="space-y-8">
+            <section className="rounded-[24px] border border-stone-200 bg-white p-6 shadow-[0_20px_70px_-48px_rgba(15,15,15,0.35)]">
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Rozet</label>
+                            <input
+                                value={settings.galleryBadge ?? ''}
+                                onChange={(e) => updateSetting('galleryBadge', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                                placeholder="Galeri"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Başlık</label>
+                            <input
+                                value={settings.galleryHeading ?? ''}
+                                onChange={(e) => updateSetting('galleryHeading', e.target.value)}
+                                className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                                placeholder="Yaşam alanınıza ilham veren sahneler"
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-400">Açıklama</label>
+                        <textarea
+                            value={settings.galleryDescription ?? ''}
+                            onChange={(e) => updateSetting('galleryDescription', e.target.value)}
+                            rows={3}
+                            className="w-full resize-none rounded-2xl border border-stone-200 px-4 py-3 text-sm font-medium text-anthracite shadow-inner focus:border-wood-400 focus:outline-none focus:ring-2 focus:ring-wood-100"
+                            placeholder="Ürünlerimizi mekânınızın farklı zonlarına taşıyarak dengeyi keşfedin."
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <section className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-stone-400">Galeri Görselleri</h3>
+                    <button
+                        onClick={() => {
+                            const newItems = [...(settings.galleryItems || [])];
+                            newItems.push({
+                                _id: Date.now().toString(),
+                                image: '',
+                                label: 'Yeni Görsel',
+                                tag: 'Koleksiyon',
+                                span: 'md:col-span-1 md:row-span-1'
+                            });
+                            updateSetting('galleryItems', newItems);
+                        }}
+                        className="flex items-center gap-2 rounded-xl bg-wood-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all hover:bg-wood-600"
+                    >
+                        <Sparkles size={14} />
+                        Görsel Ekle
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                    {(settings.galleryItems || []).map((item: any, index: number) => (
+                        <div key={item._id || index} className="group relative rounded-[24px] border border-stone-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                            <button
+                                onClick={() => {
+                                    const newItems = settings.galleryItems.filter((_: any, i: number) => i !== index);
+                                    updateSetting('galleryItems', newItems);
+                                }}
+                                className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition-transform hover:scale-110"
+                            >
+                                <X size={16} />
+                            </button>
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Görsel</label>
+                                        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-stone-100 bg-stone-50">
+                                            {item.image ? (
+                                                <>
+                                                    {item.image.startsWith('blob:') ? (
+                                                        <img
+                                                            src={item.image}
+                                                            alt="Local Preview"
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <NextImage
+                                                            src={item.image}
+                                                            alt="Gallery Preview"
+                                                            fill
+                                                            className="object-cover"
+                                                            unoptimized
+                                                        />
+                                                    )}
+                                                    {pendingUploads[`gallery-item-${index}`] && (
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                                                            <Loader2 className="h-8 w-8 animate-spin text-white" />
+                                                        </div>
+                                                    )}
+                                                    <button
+                                                        onClick={() => {
+                                                            const newItems = [...settings.galleryItems];
+                                                            newItems[index].image = '';
+                                                            updateSetting('galleryItems', newItems);
+                                                        }}
+                                                        className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity hover:opacity-100"
+                                                    >
+                                                        <Trash2 className="text-white" size={24} />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+                                                    {pendingUploads[`gallery-item-${index}`] ? (
+                                                        <Loader2 className="h-8 w-8 animate-spin text-wood-500" />
+                                                    ) : (
+                                                        <>
+                                                            <input
+                                                                type="file"
+                                                                id={`gallery-upload-${index}`}
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={async (e) => {
+                                                                    const file = e.target.files?.[0];
+                                                                    if (file) {
+                                                                        void handleFile(file, `gallery-item-${index}`, (url) => {
+                                                                            const newItems = [...settings.galleryItems];
+                                                                            newItems[index].image = url;
+                                                                            updateSetting('galleryItems', newItems);
+                                                                        });
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <label
+                                                                htmlFor={`gallery-upload-${index}`}
+                                                                className="cursor-pointer rounded-lg bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest shadow-sm hover:bg-stone-50"
+                                                            >
+                                                                Görsel Yükle
+                                                            </label>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Etiket</label>
+                                        <input
+                                            value={item.label || ''}
+                                            onChange={(e) => {
+                                                const newItems = [...settings.galleryItems];
+                                                newItems[index].label = e.target.value;
+                                                updateSetting('galleryItems', newItems);
+                                            }}
+                                            className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                            placeholder="Modern Oturma Odası"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Tag</label>
+                                        <input
+                                            value={item.tag || ''}
+                                            onChange={(e) => {
+                                                const newItems = [...settings.galleryItems];
+                                                newItems[index].tag = e.target.value;
+                                                updateSetting('galleryItems', newItems);
+                                            }}
+                                            className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                            placeholder="Signature Koleksiyon"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Grid Düzeni</label>
+                                        <select
+                                            value={item.span || 'md:col-span-1 md:row-span-1'}
+                                            onChange={(e) => {
+                                                const newItems = [...settings.galleryItems];
+                                                newItems[index].span = e.target.value;
+                                                updateSetting('galleryItems', newItems);
+                                            }}
+                                            className="w-full rounded-xl border border-stone-100 bg-stone-50 px-3 py-2 text-xs font-medium focus:border-wood-400 focus:outline-none"
+                                        >
+                                            <option value="md:col-span-1 md:row-span-1">Küçük (1x1)</option>
+                                            <option value="md:col-span-2 md:row-span-1">Geniş (2x1)</option>
+                                            <option value="md:col-span-1 md:row-span-2">Uzun (1x2)</option>
+                                            <option value="md:col-span-2 md:row-span-2">Büyük (2x2)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </div>
+    );
+
     const renderActiveTab = () => {
         switch (activeTab) {
             case 'brand':
                 return renderBrandTab();
             case 'homepage':
                 return renderHomeTab();
+            case 'gallery':
+                return renderGalleryTab();
             case 'products':
                 return renderProductsTab();
             case 'contact':
