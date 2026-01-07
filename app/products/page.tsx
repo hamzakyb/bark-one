@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCart } from '@/context/CartContext';
+import { useSiteSettings } from '@/context/SiteSettingsContext';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -52,6 +53,13 @@ type Product = {
   specifications?: Record<string, string | undefined>;
 };
 
+interface ProductsSettings {
+  productsHeroBadge: string;
+  productsHeroTitle: string;
+  productsHeroSubtitle: string;
+  productsHeroImage: string;
+}
+
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(value);
 
@@ -65,7 +73,14 @@ const categories = [
 function ProductsContent() {
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
+  const { settings } = useSiteSettings();
   const [products, setProducts] = useState<Product[]>([]);
+  const [productsSettings, setProductsSettings] = useState<ProductsSettings>({
+    productsHeroBadge: 'Ürün Kataloğu',
+    productsHeroTitle: 'Ürünler',
+    productsHeroSubtitle: 'Modern ve şık duvar rafları koleksiyonumuzu keşfedin',
+    productsHeroImage: '/images/products-hero.png'
+  });
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -95,7 +110,21 @@ function ProductsContent() {
     };
 
     loadProducts();
-  }, []);
+
+    // Also load settings
+    const loadSettings = async () => {
+      try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+          const data = await res.json();
+          setProductsSettings(prev => ({ ...prev, ...data }));
+        }
+      } catch (error) {
+        console.error('Error loading products settings:', error);
+      }
+    };
+    loadSettings();
+  }, [settings]);
 
   // Filter products
   useEffect(() => {
@@ -173,13 +202,32 @@ function ProductsContent() {
   }
 
   return (
-    <div className="container px-4 pt-24 pb-8 mx-auto">
+    <div className="container px-4 pt-32 pb-8 mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Ürünler</h1>
-        <p className="mt-2 text-muted-foreground">
-          Modern ve şık duvar rafları koleksiyonumuzu keşfedin
-        </p>
+      <div className="mb-12">
+        <div className="flex flex-col md:flex-row gap-8 md:items-center mb-12">
+          <div className="flex-1">
+            <div className="inline-block py-1 px-3 border border-stone-200 rounded-full text-[10px] tracking-[0.2em] uppercase font-bold text-stone-500 mb-6 bg-white/50 backdrop-blur-sm">
+              {productsSettings.productsHeroBadge}
+            </div>
+            <h1 className="text-4xl md:text-6xl font-serif tracking-tight text-slate-900 mb-6">{productsSettings.productsHeroTitle}</h1>
+            <p className="text-lg text-muted-foreground font-light max-w-xl leading-relaxed">
+              {productsSettings.productsHeroSubtitle}
+            </p>
+          </div>
+          <div className="w-full md:w-1/2 aspect-[16/6] relative overflow-hidden rounded-sm">
+            <Image
+              key={productsSettings.productsHeroImage}
+              src={productsSettings.productsHeroImage}
+              alt="Products Hero"
+              fill
+              className="object-cover"
+              priority
+              unoptimized
+            />
+            <div className="absolute inset-0 bg-stone-900/5" />
+          </div>
+        </div>
       </div>
 
       <div className="flex gap-6">
