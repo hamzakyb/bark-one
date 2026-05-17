@@ -177,8 +177,8 @@ export default function ProductsSpotlight({ settings, products }: ProductsSpotli
                 </div>
 
                 {/* Embla Slider */}
-                <div className="overflow-hidden" ref={emblaRef}>
-                    <div className="flex -ml-6 cursor-grab active:cursor-grabbing">
+                <div className="overflow-hidden -mx-4 px-4" ref={emblaRef}>
+                    <div className="flex -ml-6 py-6 cursor-grab active:cursor-grabbing">
                         {displayItems.map((item, idx) => {
                             // Determine if it's a SpotlightItem or Product
                             const isSpotlightItem = 'title' in item && !('slug' in item);
