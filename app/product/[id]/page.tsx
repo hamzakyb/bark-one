@@ -152,7 +152,7 @@ export default function ProductDetailPage() {
   const isInStock = (product.stock || 0) > 0;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-32">
       <div className="container px-4 pb-6 mx-auto">
         {/* Breadcrumb */}
         <Breadcrumb className="mb-6">
