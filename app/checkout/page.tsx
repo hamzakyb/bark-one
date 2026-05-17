@@ -208,7 +208,7 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="container px-4 py-12 mx-auto">
+      <div className="container px-4 pt-32 pb-12 mx-auto">
         <Card className="max-w-2xl mx-auto text-center">
           <CardHeader>
             <CardTitle>Sepetiniz Boş</CardTitle>
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
 
   if (showPaymentInstructions) {
     return (
-      <div className="container px-4 py-12 mx-auto">
+      <div className="container px-4 pt-32 pb-12 mx-auto">
         <Card className="max-w-2xl mx-auto">
           <CardHeader className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="container px-4 py-8 mx-auto">
+    <div className="container px-4 pt-32 pb-8 mx-auto">
       {/* Header */}
       <div className="mb-8">
         <Link 
